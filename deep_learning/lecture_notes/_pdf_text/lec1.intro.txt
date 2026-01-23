@@ -1,0 +1,1640 @@
+Neural Networks
+
+    1. Introduction
+       Spring 2026
+
+                                                                                                                     1
+Logistics: By now you must have...
+
+· Already seen the logistics post on piazza
+
+     ­ And possibly watched lecture 0 (logistics)
+     ­ If not do so at once
+
+· Been to the course website
+
+     ­ http://deeplearning.cs.cmu.edu
+     ­ If you have not done so, please visit it at once
+
+· Course objectives, logistics, quiz and homework policies, and
+   grading policies, all have been explained in both, the logistics
+   lecture and on the course page
+
+· Please familiarize yourself with this information
+
+                                                                                                                                                              2
+            Logistics: Part 2
+
+· You should already have
+
+    ­ Signed on to piazza
+    ­ Verified you have access to Canvas and Autolab
+
+· You must have got a note on forming study groups
+
+    ­ We recommend this; you learn better in teams than you
+       do by yourself
+
+    ­ Please sign up for the study groups immediately!!!!!!!!!!
+
+                                                                                                                                                              3
+ Course philosophy and resources
+
+· No student left behind : In our ideal world everyone of you would earn an A
+
+· Please use the available resources
+
+      ­ TAs
+      ­ Study groups and TA mentors
+
+              · Collaboration is encouraged
+
+      ­ Dozens of office hours weekly
+      ­ Me (email me, or just walk into my office if I'm free)
+      ­ Your classmates and friends
+
+· If under stress/unable to perform, please reach out
+
+      ­ To your TA mentor
+      ­ To me
+      ­ We will do our best to help you
+
+                                                                                                                                                              4
+             This Saturday
+
+· On Saturday 17th, we will have a meet-and-
+  greet + lab + hackathon
+
+   ­ Meet your colleagues, make some
+      friends/collaborators, form study groups
+
+         · If you already have a study group, come as a group
+
+   ­ Learn how to get started with DL code
+   ­ Pizza, not piazza!!!
+
+                                                                                                                                                              5
+ Course Objectives: By the end of the
+      course you will be able to...
+
+1. Understand some of the theory behind
+   neural networks
+
+2. Build your own neural net components and
+   tools
+
+3. Work on large-scale problems
+
+                                                                                                                                                              6
+ Course Objectives: By the end of the
+      course you will be able to...
+
+1. Understanding some of the theory behind neural
+    networks
+
+    ­ The what, the why and the how
+
+          · The math
+          · And the occasional history
+
+    ­ Will help you contextualize 2 and 3 below
+    ­ Will help you develop and extend your ideas in the topic
+
+          · Research / Grad school
+          · And job interviews!
+
+2. Build your own neural net components and tools
+3. Work on large-scale problems
+
+                                                                                                                                                              7
+ Course Objectives: By the end of the
+      course you will be able to...
+
+1. Understanding some of the theory behind
+   neural networks
+
+2. Build your own neural net components and
+   tools
+
+   ­ Part 1s of your homeworks
+   ­ Bonus problems
+
+3. Work on large-scale problems
+
+                                                                                                                                                              8
+ Course Objectives: By the end of the
+      course you will be able to...
+
+1. Understanding some of the theory behind
+   neural networks
+
+2. Build your own neural net components and
+   tools
+
+3. Work on large-scale problems
+
+   ­ Part 2s of your homeworks
+
+                                                                                                                                                              9
+ Course Objectives: By the end of the
+      course you will be able to...
+
+1. Understanding some of the theory behind
+   neural networks
+
+2. Build your own neural net components and
+   tools
+
+3. Work on large-scale problems
+
+· Course projects may relate to 1, 2 or 3
+
+                                                                                                                                                            10
+             Lecture Style
+
+· My lecture style is verbose, with lots of visualization
+
+· Many many slides
+
+    ­ With a lot of animation
+
+· Given a choice between deriving an equation
+   symbolically, and explaining it with 30 slides of pictures
+   and animation, I usually choose the latter
+
+· If this will not work for you, this is not the class for you
+
+                                                                                                                                                            11
+              Attendance
+
+· We will use in-class polls for class participation
+
+    ­ Multiple polls posted at random times through the class
+    ­ For in-class lectures polls will be posted on piazza
+
+           · Piazza post numbers for the polls will be called out in class
+           · Please keep your piazza (and only your piazza) open
+
+    ­ Zoom lectures will have zoom polls
+    ­ You must respond to all polls
+
+           · We don't score you on correctness, only on whether you responded
+
+· Students who have permission to view videos instead:
+   please watch mediatech videos
+
+    ­ We will gather your attendance from there
+
+                                                                                                                                                            12
+       Classroom Engagement
+
+· This is an interactive class
+· We like questions
+
+    ­ No question is silly/wrong/embarrassing
+    ­ If you have a question, odds are that others have it too
+
+· We will try different tactics to encourage interaction
+
+    ­ E.g. calling out to students
+
+· Please participate
+
+                                                                                                                                                            13
+   Students hate this one trick...
+
+· Each of you will be issued a pokemon name
+
+    ­ This is your secret ID for the class
+
+· During in-person classes I will call out random pokemon
+   names, and ask questions
+
+    ­ If it is your pokemon, you must answer
+
+          · Otherwise we will understand that you're effectively absent, and
+             mark you absent
+
+· For zoom classes, we track zoom chat and responses
+
+                                                                                                                                                            14
+What to expect from the course...
+
+· "Professor Ramakrishnan is one of the rudest professors I have had during
+    my university studies, and he makes some rather bizarre decisions about
+    how he teaches his class. The university has required lectures to be
+    recorded in case students can't attend during regular class times, but Dr.
+    Ramakrishnan continues to require attendance despite also checking
+    student understanding with weekend quizzes. He treats graduate students
+    like high school students by checking that we are paying attention using
+    additional pop quizzes. I considered starting to ask for permission to go to
+    the restroom (to not miss any pop quizzes), but I figured that it is a bad
+    idea to criticize the person with power over my grade."
+
+· From one of my FCEs
+
+                                                                                                                                                            15
+     Classroom Engagement: 2
+
+· This is a "dumb" classroom
+
+    ­ Keep your smart devices shut
+    ­ No phones or laptops open except for the following:
+
+· Exceptions:
+
+    ­ To answer polls
+    ­ To view lecture slides
+    ­ To take notes
+    ­ If we find you using your devices for any other purpose, we
+
+       may ask you to leave the room
+
+                                                                                                                                                            16
+           I'm handicapped
+
+· I'm physically handicapped
+· My back and neck are bent. I cannot raise my arms. On
+
+   some days I cannot walk. My breath runs out midway
+   through the lecture
+
+· Please do not mind my mannerisms
+
+    ­ During classroom lectures I may ask my TAs to clip on my mic
+
+          · I cannot do so myself
+
+    ­ I use strange devices to point, because they are light
+
+          · I cannot raise my arm enough to point
+
+                                                                                                                                                              17
+       A minute for questions...
+
+Caveat: Slide deck often have many "hidden" slides that will not be shown during
+the lecture, but will feature in your weekly quizzes
+
+                                                                                                                                                                  18
+            Today's lessons
+
+· A brief history of neural networks
+
+   ­ Connectionism
+
+         · Its relation to cognition and the brain
+         · Its contrast to conventional computer architecture
+
+   ­ Early models, and their limitations
+
+· Introducing modern neural networks
+
+· And what they can compute
+
+                                                                                                                                                            19
+Neural Networks are taking over!
+
+· Neural networks have become one of the main
+   approaches to AI
+
+· They have been successfully applied to various pattern
+   recognition, prediction, and analysis problems
+
+· In many problems they have established the state of
+   the art
+
+    ­ Often exceeding previous benchmarks by large margins
+    ­ Sometimes solving problems you couldn't solve using
+
+       earlier ML methods
+
+                                                                                                                                                            20
+Breakthroughs with neural networks
+                  (2016)
+
+                                                                                                                                                       21
+Breakthrough with neural networks
+                  (2016)
+
+                                                                                                                                                       22
+Breakthroughs with neural networks
+                  (2016)
+
+                                                                                                                                                         23
+Success with neural networks (2016)
+
+· Captions generated entirely by a neural
+
+network                                    24
+               And now...
+
+ChatGPT, tell me about this
+picture
+
+                                                                                                                                                            25
+ Successes with neural networks
+
+· And a variety of other problems:
+
+   ­ From art to astronomy to healthcare...
+   ­ Medicine and Chemistry...
+   ­ Physics...
+   ­ Biology...
+   ­ Business and management...
+   ­ Investment...
+   ­ and even proving mathematical theorems!
+
+                                                                                                                                                            26
+        So, what are neural networks??
+
+Voice   N.Net  Transcription Image  N.Net      Text caption
+signal
+
+               Game   N.Net         Next move
+               State
+
+· What's in these boxes?
+
+                                                                                                                                                            27
+  So, what are neural networks??
+
+· It begins with this..
+
+                                                                                                                                                            28
+  So, what are neural networks??
+
+                                                                                 "The Thinker!"
+                                                                                 by Augustin Rodin
+
+· Or even earlier.. with this..
+
+                                                                                                                                                            29
+The magical capacity of humans
+
+· Humans can                 Dante!
+
+    ­ Learn
+    ­ Solve problems
+    ­ Recognize patterns
+    ­ Create
+    ­ Cogitate
+    ­...
+
+· Worthy of emulation
+· But how do humans "work"?
+
+                                     30
+      Cognition and the brain..
+
+· "If the brain was simple enough to be
+  understood - we would be too simple to
+  understand it!"
+
+   ­ Marvin Minsky
+
+                                                                                                                                                            31
+Early Models of Human Cognition
+
+· Associationism
+
+    ­ Humans learn through association
+
+· 400BC-1900AD: Plato, David Hume, Ivan Pavlov..
+
+                                                                                                                                                            32
+      What are "Associations"
+
+· Lightning is generally followed by thunder
+
+    ­ Ergo ­ "hey here's a bolt of lightning, we're going to hear
+        thunder"
+
+    ­ Ergo ­ "We just heard thunder; did someone get hit by
+        lightning"?
+
+· Association!
+                                                                                                                                                            33
+  A little history : Associationism
+
+· Collection of ideas stating a basic philosophy:
+
+    ­ "Pairs of thoughts become associated based on the organism's
+        past experience"
+
+    ­ Learning is a mental process that forms associations between
+        temporally related phenomena
+
+· 360 BC: Aristotle
+
+    ­ "Hence, too, it is that we hunt through the mental train,
+        excogitating from the present or some other, and from similar or
+        contrary or coadjacent. Through this process reminiscence takes
+        place. For the movements are, in these cases, sometimes at the
+        same time, sometimes parts of the same whole, so that the
+        subsequent movement is already more than half accomplished."
+
+           · In English: we memorize and rationalize through association
+
+                                                                                                                                                            34
+   Aristotle and Associationism
+
+· Aristotle's four laws of association:
+
+    ­ The law of contiguity. Things or events that occur
+      close together in space or time get linked together
+
+    ­ The law of frequency. The more often two things or
+      events are linked, the more powerful that association.
+
+    ­ The law of similarity. If two things are similar, the
+      thought of one will trigger the thought of the other
+
+    ­ The law of contrast. Seeing or recalling something
+      may trigger the recollection of something opposite.
+
+                                                                                                                                                            35
+  A little history : Associationism
+
+· More recent associationists (upto 1800s): John
+  Locke, David Hume, David Hartley, James Mill,
+  John Stuart Mill, Alexander Bain, Ivan Pavlov
+
+    ­ Associationist theory of mental processes: there is
+      only one mental process: the ability to associate ideas
+
+    ­ Associationist theory of learning: cause and effect,
+      contiguity, resemblance
+
+    ­ Behaviorism (early 20th century) : Behavior is learned
+      from repeated associations of actions with feedback
+
+    ­ Etc.
+
+                                                                                                                                                            36
+· But where are the associations stored??
+· And how?
+
+                                                                                                                                                            37
+      But how do we store them?
+        Dawn of Connectionism
+
+David Hartley's Observations on man (1749)
+· We receive input through vibrations and those are transferred
+
+   to the brain
+· Memories could also be small vibrations (called vibratiuncles)
+
+   in the same regions
+· Our brain represents compound or connected ideas by
+
+   connecting our memories with our current senses
+· Current science did not know about neurons
+
+                                                                                                                                                            38
+       Observation: The Brain
+
+· Mid 1800s: The brain is a mass of
+  interconnected neurons
+
+                                                                                                                                                            39
+  Brain: Interconnected Neurons
+
+· Many neurons connect in to each neuron
+· Each neuron connects out to many neurons
+· The brain is a network of neurons
+
+                                                                                                                                                            40
+        Enter Connectionism
+
+· Alexander Bain, philosopher, psychologist,
+   mathematician, logician, linguist, professor
+
+· 1873: The information is in the connections
+
+    ­ Mind and body (1873)
+
+                                                                                                                                                            41
+  Bain's Idea 1: Neural Groupings
+
+· Neurons excite and stimulate each other
+· Different combinations of inputs can result in
+
+  different outputs
+
+                                                                                                                                                            42
+  Bain's Idea 1: Neural Groupings
+
+· Different intensities of
+  activation of A lead to
+  the differences in
+  when X and Y are
+  activated
+
+· Even proposed a
+  learning mechanism..
+
+                                                                                                                                                            43
+ Bain's Idea 2: Making Memories
+
+· "when two impressions concur, or closely
+  succeed one another, the nerve-currents find
+  some bridge or place of continuity, better or
+  worse, according to the abundance of nerve-
+  matter available for the transition."
+
+· Predicts "Hebbian" learning (three quarters of
+  a century before Hebb!)
+
+                                                                                                                                                            44
+             Bain's Doubts
+
+· "The fundamental cause of the trouble is that in the modern world
+   the stupid are cocksure while the intelligent are full of doubt."
+
+     ­ Bertrand Russell
+
+· In 1873, Bain postulated that there must be one million neurons and
+   5 billion connections relating to 200,000 "acquisitions"
+
+· In 1883, Bain was concerned that he hadn't taken into account the
+   number of "partially formed associations" and the number of neurons
+   responsible for recall/learning
+
+· By the end of his life (1903), recanted all his ideas!
+
+     ­ Too complex; the brain would need too many neurons and connections
+
+                                                                                                                                                              45
+      Connectionism lives on..
+
+· The human brain is a connectionist machine
+
+    ­ Bain, A. (1873). Mind and body. The theories of their
+       relation. London: Henry King.
+
+    ­ Ferrier, D. (1876). The Functions of the Brain. London:
+       Smith, Elder and Co
+
+· Neurons connect to other neurons.
+   The processing/capacity of the brain
+   is a function of these connections
+
+· Connectionist machines emulate this structure
+
+                                                                                                                                                            46
+      Connectionist Machines
+
+· Network of processing elements
+· All world knowledge is stored in the connections
+
+  between the elements
+
+                                                                                                                                                            47
+Connectionist Machines
+
+· Neural networks are connectionist machines
+
+    ­ As opposed to Von Neumann Machines
+
+Von Neumann/Princeton Machine  Neural Network
+
+PROCESSOR   PROGRAM            NETWORK
+               DATA
+
+Processing  Memory
+unit
+
+· The machine has many non-linear processing units
+
+    ­ The program is the connections between these units
+
+          · Connections may also define memory
+
+                                                                                                                                                            48
+                  Recap
+
+· Neural network based AI has taken over most AI tasks
+· Neural networks originally began as computational models
+
+   of the brain
+
+    ­ Or more generally, models of cognition
+
+· The earliest model of cognition was associationism
+· The more recent model of the brain is connectionist
+
+    ­ Neurons connect to neurons
+    ­ The workings of the brain are encoded in these connections
+
+· Current neural network models are connectionist machines
+
+                                                                                                                                                            49
+                 Poll 1
+
+1. Who is the first person that proposed connectionism? (Single Choice):
+ Aristotle
+ Alexander Bain
+ David Hartley
+ Alan Turing
+
+2. Roughly how many connections exist between neurons in the brain? (Single Choice):
+ 1 million
+ 5 billion
+ 80 billion
+ 100 trillion
+
+                                                                                                                                                        50
+                 Poll 1
+
+1. Who is the first person that proposed connectionism? (Single Choice):
+ Aristotle
+ Alexander Bain
+ David Hartley
+ Alan Turing
+
+2. Roughly how many connections exist between neurons in the brain? (Single Choice):
+ 1 million
+ 5 billion
+ 80 billion
+ 100 trillion
+
+                                                                                                                                                        51
+      Connectionist Machines
+
+· Network of processing elements
+· All world knowledge is stored in the connections between
+
+   the elements
+· Multiple connectionist paradigms proposed..
+
+                                                                                                                                                            52
+Turing's Connectionist Machines
+
+· Alan Turing's Connectionist model (1948): Learnable networks that could
+
+potentially be trained to model any Boolean function!
+
+· Basic model: A-type machines
+
+­ Random networks of NAND gates, with no learning mechanism
+
+        · "Unorganized machines"
+
+· Connectionist model: B-type machines (1948)
+
+­ Connection between two units has a "modifier"
+
+· Whose behaviour can be learned
+
+­ If the green line is on, the signal sails through
+
+­ If the red is on, the output is fixed to 1
+
+­ "Learning" ­ figuring out how to manipulate the coloured wires
+
+· Done by an A-type machine                                                53
+     Connectionist paradigms: PDP
+
+    Parallel Distributed Processing
+
+· Requirements for a PDP system
+   (Rumelhart, Hinton, McClelland, `86; quoted from Medler, `98)
+
+     ­ A set of processing units
+     ­ A state of activation
+     ­ An output function for each unit
+     ­ A pattern of connectivity among units
+     ­ A propagation rule for propagating patterns of activities through the
+
+        network of connectivities
+     ­ An activation rule for combining the inputs impinging on a unit with
+
+        the current state of that unit to produce a new level of activation for
+        the unit
+     ­ A learning rule whereby patterns of connectivity are modified by
+        experience
+     ­ An environment within which the system must operate
+
+                                                                                                                                                            54
+       Connectionist Systems
+
+· Requirements for a connectionist system
+  (Bechtel and Abrahamson, 91)
+
+   ­ The connectivity of units
+   ­ The activation function of units
+   ­ The nature of the learning procedure that
+
+      modifies the connections between units, and
+   ­ How the network is interpreted semantically
+
+                                                                                                                                                            55
+      Connectionist Machines
+
+· Network of processing elements
+
+    ­ All world knowledge is stored in the connections between
+       the elements
+
+· But what are the individual elements?
+
+                                                                                                                                                            56
+             Modelling the brain
+
+· What are the units?
+
+· A neuron:                 Soma
+
+          Dendrites
+
+                                                   Axon
+
+· Signals come in through the dendrites into the Soma
+
+· A signal goes out via the axon to other neurons
+
+­ Only one axon per neuron
+
+· Factoid that may only interest me: Neurons do not undergo cell
+
+division
+
+­ Neurogenesis occurs from neuronal stem cells, and is minimal after
+
+birth                                                                 57
+         McCulloch and Pitts
+
+· The Doctor and the Hobo..
+
+   ­ Warren McCulloch: Neurophysiologist
+   ­ Walter Pitts: Homeless wannabe logician who
+
+      arrived at his door
+
+                                                                                                                                                            58
+  The McCulloch and Pitts model
+
+                                                                                  A single neuron
+
+· A mathematical model of a neuron
+
+      ­ McCulloch, W.S. & Pitts, W.H. (1943). A Logical Calculus of the Ideas Immanent
+         in Nervous Activity, Bulletin of Mathematical Biophysics, 5:115-137, 1943
+
+              · Pitts was only 20 years old at this time
+
+· Modeled the neurons of the brain (and the brain itself) as performing
+    propositional logic, where each neuron evaluates the truth value of its
+    input (propositions)
+
+      ­ Effectively Boolean logic
+
+                                                                                                                                                            59
+            Synaptic Model
+
+· Excitatory synapse: Transmits weighted input to the neuron
+· Inhibitory synapse: Any signal from an inhibitory synapse prevents
+
+   neuron from firing
+
+     ­ The activity of any inhibitory synapse absolutely prevents excitation of
+        the neuron at that time.
+
+            · Regardless of other inputs
+
+                                                                                                                                                            60
+Simple "networks"
+
+Boolean Gates of neurons can perform
+
+Boolean operations
+
+                                                                                                                                                                     61
+    Complex Percepts & Inhibition in
+
+                     action
+
+They can even create
+illusions of "perception"
+
+Heat receptor
+
+               Heat sensation
+
+Cold receptor  Cold sensation
+
+                                                          62
+    McCulloch and Pitts Model
+
+· Could compute arbitrary Boolean
+   propositions
+
+    ­ Since any Boolean function can be
+        emulated, any Boolean function can
+        be composed
+
+· Models for memory
+
+    ­ Networks with loops can "remember"
+
+           · We'll see more of this later
+
+    ­ Lawrence Kubie (1930): Closed loops
+        in the central nervous system explain
+        memory
+
+                                                                                                                                                            63
+               Criticisms
+
+· They claimed that their nets
+
+    ­ Should be able to compute a small class of functions
+    ­ Also, if tape is provided their nets can compute a
+
+      richer class of functions.
+
+         · They will be equivalent to Turing machines
+         · Claim that they're Turing complete
+
+    ­ They didn't prove the results themselves
+
+· Didn't provide a learning mechanism..
+
+                                                                                                                                                            64
+Donald Hebb
+
+· "Organization of behavior", 1949  Novelist, farmer,
+· A learning mechanism:             hobo, schoolteacher
+                                    psychologist
+
+­ "When an axon of cell A is near enough to excite a
+  cell B and repeatedly or persistently takes part in
+  firing it, some growth process or metabolic change
+  takes place in one or both cells such that A's
+  efficiency, as one of the cells firing B, is increased."
+
+    · As A repeatedly excites B, its ability to excite B
+      improves
+
+­ Neurons that fire together wire together
+
+                                                         65
+          Hebbian Learning
+
+                                                                        Axonal connection from
+                                                                        neuron X
+
+                                                                        Dendrite of neuron Y
+
+· If neuron repeatedly triggers neuron , the synaptic knob
+   connecting to gets larger
+
+· In a mathematical model:
+
+     ­ Weight of the connection from input neuron to output neuron
+
+· This simple formula is actually the basis of many learning
+   algorithms in ML
+
+                                                                                                                                                           66
+Hebbian Learning
+
+· Fundamentally unstable
+
+      ­ Stronger connections will enforce themselves
+      ­ No notion of "competition"
+      ­ No reduction in weights
+      ­ Learning is unbounded
+
+· Number of later modifications, allowing for weight normalization,
+    forgetting etc.
+
+      ­ E.g. Generalized Hebbian learning, aka Sanger's rule
+
+      
+
+         
+
+      
+
+­ The contribution of an input is incrementally distributed over multiple
+   outputs..
+
+                                                                           67
+              Poll 2 : @72
+
+Hebbian learning is... (Single Choice)
+ Fundamentally stable since stronger connections will enforce themselves
+ Fundamentally unstable since there is no reduction in weights
+ Fundamentally stable since learning is unbounded
+ Fundamentally unstable since weights compete for adjustment
+
+                                                                                                                                                            68
+                  Poll 2
+
+Hebbian learning is... (Single Choice)
+ Fundamentally stable since stronger connections will enforce themselves
+ Fundamentally unstable since there is no reduction in weights
+ Fundamentally stable since learning is unbounded
+ Fundamentally unstable since weights compete for adjustment
+
+                                                                                                                                                            69
+            A better model
+
+· Frank Rosenblatt
+
+     ­ Psychologist, Logician
+     ­ Inventor of the solution to everything, aka the Perceptron (1958)
+
+                                                                                                                                                            70
+Rosenblatt's perceptron
+
+· Original perceptron model
+
+­ Groups of sensors (S) on retina combine onto cells in association
+   area A1
+
+­ Groups of A1 cells combine into Association cells A2
+
+­ Signals from A2 cells combine into response cells R
+
+­ All connections may be excitatory or inhibitory       71
+      Rosenblatt's perceptron
+
+· Even included feedback between A and R cells
+
+   ­ Ensures mutually exclusive outputs
+
+                                                                                                                                                            72
+Rosenblatt's perceptron
+
+· Simplified perceptron model
+
+­ Association units combine sensory input with fixed
+  weights
+
+­ Response units combine associative units with
+
+learnable weights                                     73
+   Perceptron: Simplified model
+
+· Number of inputs combine linearly
+
+    ­ Threshold logic: Fire if combined input exceeds threshold
+
+                                                                                                                                                            74
+Also provided a learning algorithm
+
+           Sequential Learning:
+                              is the desired output in response to input
+                              is the actual output in response to
+
+· Boolean tasks
+· Update the weights whenever the perceptron output is
+
+   wrong
+
+    ­ Update the weight by the product of the input and the
+       error between the desired and actual outputs
+
+· Proved convergence for linearly separable classes
+
+                                                                                                                                                            75
+   The Universal Model
+
+   · Originally assumed could represent any Boolean circuit and
+       perform any logic
+
+         ­ "the embryo of an electronic computer that [the Navy] expects
+            will be able to walk, talk, see, write, reproduce itself and be
+            conscious of its existence," New York Times (8 July) 1958
+
+         ­ "Frankenstein Monster Designed by Navy That Thinks," Tulsa,
+            Oklahoma Times 1958
+
+Holds vaguely true of
+the original model, but
+assumed true of even the
+simplified model.
+
+                                                                                                                                                                    76
+                  Perceptron
+
+X  1
+
+                                  X  -1
+
+               2                         0
+
+            1  X  1
+
+Y
+
+                               1
+                  1
+
+               Y     Values shown on edges are weights,
+
+                     numbers in the circles are thresholds
+
+· Easily shown to mimic any Boolean gate
+
+· But...
+
+                                                                                                                                                            77
+    Individual units
+
+No solution for XOR!
+
+X  ?
+
+                         ?
+            ?
+
+Y
+
+                            78
+   A single neuron is not enough
+
+· Individual elements are weak computational elements
+
+    ­ Marvin Minsky and Seymour Papert, 1969, Perceptrons:
+       An Introduction to Computational Geometry
+
+· Networked elements are required
+
+                                                                                                                                                            79
+Multi-layer Perceptron!
+
+X  1
+
+   -1  1                         1
+
+                                      2
+   1
+
+                            1
+
+   -1  -1
+
+Y
+
+                   Hidden Layer
+
+· XOR
+
+   ­ The first layer is a "hidden" layer
+
+                                                                                                                                                            80
+A more generic model
+
+                 21  1
+          1
+                           1
+    01                 11
+1 -1
+
+21     21               1     21
+                     -1 1 -1
+1   11 1
+
+                           11
+
+    X      Y         Z     A
+
+· A "multi-layer" perceptron
+
+· Can compose arbitrarily complicated Boolean functions!
+
+     ­ In cognitive terms: Can compute arbitrary Boolean functions over
+        sensory input
+
+     ­ More on this in the next class
+
+                                                                                                                                                            81
+              Story so far
+
+· Neural networks began as computational models of the brain
+· Neural network models are connectionist machines
+
+      ­ The comprise networks of neural units
+
+· McCullough and Pitt model: Neurons as Boolean threshold units
+
+      ­ Models the brain as performing propositional logic
+      ­ But no learning rule
+
+· Hebb's learning rule: Neurons that fire together wire together
+
+      ­ Unstable
+
+· Rosenblatt's perceptron : A variant of the McCulloch and Pitt neuron with
+    a provably convergent learning rule
+
+      ­ But individual units are limited in their capacity
+
+· Multi-layer perceptrons can model arbitrarily complex Boolean functions
+
+                                                                                                                                                            82
+    But our brain is not Boolean
+
+· We have real inputs
+· We make non-Boolean inferences/predictions
+
+                                                                                                                                                            83
+The perceptron with real inputs
+
+x1
+x2
+x3
+
+xN
+
+                             
+
+· x1...xN are real valued  
+
+· w1...wN are real valued
+
+· Unit "fires" if weighted input matches (or exceeds)
+
+a threshold
+
+                                 84
+The perceptron with real inputs
+
+   x1
+   x2
+   x3
+
+                                                    
+
+   xN                                             
+
+· Alternate view:
+
+­ A threshold "activation"  operates on the weighted sum of inputs
+   plus a bias
+
+   · An affine function of the inputs
+
+­  outputs a 1 if z is non-negative, 0 otherwise
+
+· Unit "fires" if weighted input matches or exceeds a threshold
+
+                                                                                                                                                            85
+The perceptron with real inputs
+
+   x1
+   x2
+   x3
+
+                                                    
+
+   xN                                             
+
+· Alternate view:
+
+­ A threshold "activation" operates on the weighted sum of inputs
+
+   plus a bias                         What is the difference between
+
+   · An affine function of the inputs  "linear" and "affine"?
+
+­  outputs a 1 if z is non-negative, 0 otherwise
+
+· Unit "fires" if weighted input matches or exceeds a threshold
+
+                                                                                                                                                            86
+  The perceptron with real inputs
+
+                     and a real output
+
+                   
+
+                                                
+                                         
+
+ ...                 +
+
+                
+
+
+· x1...xN are real valued
+· w1...wN are real valued
+· The output y can also be real valued
+
+· For now we will continue to assume threshold activations
+
+                                                                                                                                                            87
+A Perceptron on Reals
+
+x1                                       1         w1x1+w2x2=T
+x2                                 0 x2
+x3
+                                               x1
+xN
+
+                               
+                        
+
+· A perceptron operates on         x2
+  real-valued vectors                                x1
+
+    ­ This is a linear classifier                                   88
+     Boolean functions with a real
+                perceptron
+
+0,1  1,1     0,1  1,1     0,1       1,1
+
+x1           x1           x1
+
+0,0  x2 1,0  0,0  x2 1,0  0,0  x2 1,0
+
+· Boolean perceptrons are also linear classifiers
+
+    ­ Purple regions have output 1 in the figures
+    ­ What are these functions
+    ­ Why can we not compose an XOR?
+
+                                                                                                                                                            89
+Composing complicated "decision"
+              boundaries
+
+x2      Can now be composed into
+        "networks" to compute arbitrary
+
+        classification "boundaries"
+
+    x1
+
+· Build a network of units with a single output
+  that fires if the input is in the coloured area
+
+                                                                                                                                                            90
+Booleans over the reals
+
+x2
+
+    x1
+
+        x2                                      x1
+
+· The network must fire if the input is in the
+  coloured area
+
+                                                    91
+Booleans over the reals
+
+x2
+
+    x1
+
+        x2                                      x1
+
+· The network must fire if the input is in the
+  coloured area
+
+                                                    92
+Booleans over the reals
+
+x2
+
+    x1
+
+        x2                                      x1
+
+· The network must fire if the input is in the
+  coloured area
+
+                                                    93
+Booleans over the reals
+
+x2
+
+    x1
+
+        x2                                      x1
+
+· The network must fire if the input is in the
+  coloured area
+
+                                                    94
+Booleans over the reals
+
+x2
+
+    x1
+
+        x2                                      x1
+
+· The network must fire if the input is in the
+  coloured area
+
+                                                    95
+Booleans over the reals
+
+                3                   
+
+              4       x2                    
+3                                   
+
+      4                   4         AND
+
+                                                   3
+                          5
+
+                                                  y1 y2 y3 y4 y5
+
+                                         x1 4
+
+3                  4         3
+
+                                x2              x1
+
+· The network must fire if the input is in the
+  coloured area
+
+                                                    96
+More complex decision boundaries
+
+                              OR
+
+                     AND              AND
+
+x2
+
+    x1                    x1      x2
+
+· Network to fire if the input is in the yellow area
+
+­ "OR" two polygons
+
+­ A third layer is required
+                                                                                                                                                   97
+   Complex decision boundaries
+
+· Can compose very complex decision boundaries
+
+    ­ How complex exactly? More on this in the next class
+
+                                                                                                                                                            98
+Complex decision boundaries
+
+                2
+
+784 dimensions
+(MNIST)
+
+                784 dimensions
+
+· Classification problems: finding decision boundaries in high-dimensional space
+
+       ­ Can be performed by an MLP
+
+· MLPs can classify real-valued inputs
+
+· They are universal classifiers
+
+       ­ For any decision boundary, we can construct an MLP that captures it with arbitrary precision
+
+                                                                                                                                                            99
+              Story so far
+
+· MLPs are connectionist computational models
+
+      ­ Individual perceptrons are computational equivalent of neurons
+      ­ The MLP is a layered composition of many perceptrons
+
+· MLPs can model any Boolean function
+
+      ­ Individual perceptrons can act as Boolean gates
+      ­ Networks of perceptrons are Boolean functions
+      ­ MLPs are universal Boolean functions
+
+· MLPs are model any decision boundary
+
+      ­ Individual perceptrons capture linear boundaries
+      ­ Complex boundaries can be composed from the linear boundaries
+      ­ MLPs can represent arbitrary decision boundaries
+      ­ They can be used to classify data
+      ­ MLPs are universal classifiers
+
+                                                                                                                                                           100
+            Poll 3 : @73
+
+How many threshold activation perceptrons will we need in an MLP to
+model a hexagonal decision region (a decision region bounded by a six-
+sided polygon) over a two-dimensional input space? (Single Choice)
+6
+7
+ 12
+ 13
+
+                                                                                                                                                   101
+                Poll 3
+
+How many threshold activation perceptrons will we need in an MLP to
+model a hexagonal decision region (a decision region bounded by a six-
+sided polygon) over a two-dimensional input space? (Single Choice)
+6
+7
+ 12
+ 13
+
+                                                                                                                                                   102
+  But what about continuous valued
+                  outputs?
+
+· Inputs may be real-valued
+· Can outputs be continuous-valued too?
+
+                                                                                                                                                           103
+MLP as a continuous-valued regression
+
+         T1          f(x)
+   1 T1 1         T1 T2 x
+
+x             +
+
+   1  T2      -1
+
+          T2
+
+· A simple 3-unit MLP with a "summing" output unit can
+   generate a "square pulse" over an input
+
+    ­ Output is 1 only if the input lies between T1 and T2
+    ­ T1 and T2 can be arbitrarily specified
+
+                                                                                                                                                              104
+MLP as a continuous-valued regression
+
+                             
+
+                           
+
+         T1          f(x)           
+   1 T1 1         T1 T2 x
+                                        x
+
+x
+
+   1  T2      -1                 +
+
+                                    
+
+          T2                     
+
+· A simple 3-unit MLP can generate a "square pulse" over an input
+
+· An MLP with many units can model an arbitrary function over an input
+
+      ­ To arbitrary precision
+
+              · Simply make the individual pulses narrower
+
+· This generalizes to functions of any number of inputs (next class)
+
+                                                                                                                                                              105
+             Poll 4 : @74
+
+How many neurons will be required by a network of sinusoidal (y = sin(z))
+activation neurons to precisely model the scalar function y = cos(2x) (for
+scalar input x)? (Single Choice)
+3
+ floor(pi/2) or ceil(pi/2)
+ infinite
+ none of the above
+
+                                                                                                                                                        106
+                 Poll 4
+
+How many neurons will be required by a network of sinusoidal (y = sin(z))
+activation neurons to precisely model the scalar function y = cos(2x) (for
+scalar input x)? (Single Choice)
+3
+ floor(pi/2) or ceil(pi/2)
+ infinite
+ none of the above
+Explanation: you only need one
+
+                                                                                                                                                        107
+              Story so far
+
+· Multi-layer perceptrons are connectionist
+  computational models
+
+· MLPs are classification engines
+
+    ­ They can identify classes in the data
+    ­ Individual perceptrons detect individual boundaries
+    ­ The network will fire if the combination of the
+
+      outputs of the individual perceptrons falls within the
+      decision boundary for a desired class of input
+
+· MLP can also model continuous valued function10s8
+     Other things MLPs can do
+
+· Model memory
+
+      ­ Loopy networks can "remember" patterns
+
+              · Proposed by Lawrence Kubie in 1930, as a
+                  model for memory in the CNS
+
+· Represent probability distributions
+
+      ­ Over integer, real and complex-valued
+         domains
+
+      ­ MLPs can model both a posteriori and a
+         priori distributions of data
+
+              · A posteriori conditioned on other variables
+
+      ­ MLPs can generate data from complicated,
+         or even unknown distributions
+
+· They can rub their stomachs and pat their
+    heads at the same time..
+
+                                                                                                                                                           109
+              NNets in AI
+
+· The network is a function
+
+   ­ Given an input, it computes the function layer
+      wise to predict an output
+
+         · More generally, given one or more inputs, predicts one
+           or more outputs
+
+                                                                                                                                                           110
+        These tasks are functions
+
+Voice   N.Net  Transcription Image  N.Net      Text caption
+signal
+
+               Game   N.Net         Next move
+               State
+
+· Each of these boxes is actually a function
+
+   ­ E.g f: Image  Caption
+
+                                                                                                                                                           111
+        These tasks are functions
+
+Voice   Transcription Image             Text caption
+signal
+
+        Game                 Next move
+        State
+
+· Each box is actually a function
+
+   ­ E.g f: Image  Caption
+   ­ It can be approximated by a neural network
+
+                                                                                                                                                           112
+              Story so far
+
+· Multi-layer perceptrons are connectionist
+  computational models
+
+· MLPs are classification engines
+
+· MLP can also model continuous valued
+  functions
+
+· Interesting AI tasks are functions that can be
+  modelled by the network
+
+                                                                                                                                                           113
+            Today's lessons
+
+· A brief history of neural networks
+
+   ­ Connectionism
+
+         · Its relation to cognition and the brain
+         · Its contrast to conventional computer architecture
+
+   ­ Early models, and their limitations
+
+· Introducing modern neural networks
+
+· And what they can compute
+
+                                                                                                                                                           114
+                Next Up
+
+· More on neural networks as universal
+  approximators
+
+   ­ And the issue of depth in networks
+
+                                                                                                                                                           115
+

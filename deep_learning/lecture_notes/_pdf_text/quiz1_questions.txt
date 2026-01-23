@@ -1,0 +1,110 @@
+=== QUIZ 1 - Intro and Universal Approximators ===
+Covers: Lectures 1 and 2
+
+--- Question 1 (1 pt) ---
+Which of your quiz scores will be dropped?
+Hint: watch Lecture 0
+Options:
+- Lowest 3 quiz scores
+- No scores will be dropped
+- Lowest 2 quiz scores
+- Lowest 1 quiz scores
+
+--- Question 2 (1 pt) ---
+Is the following statement true or false? Hebbian learning allows reduction in weights and learning is bounded.
+Slide: lec 1, "Hebbian Learning" slide 66
+Options: True / False
+
+--- Question 3 (1 pt) ---
+Match the corresponding terms and definitions introduced in Lecture 1.
+Hint: Lecture 1: Slides on 31-81
+Terms to match:
+- The McCulloch and Pitts model
+- Alexander Bain
+- Lawrence Kubie
+- Hebbian Learning
+- Marvin Minsky and Seymour Papert
+- One of David Hartley's Observations
+- Frank Rosenblatt
+- Associationism Theory by Aristotle
+
+--- Question 4 (1 pt) ---
+How does the number of weights (note: not neurons) in an XOR network with threshold logic perceptrons with 1 hidden layer grow with the number of inputs to the network?
+Hint: Review Lec 2: Slides on "Caveat 2" (Slide 75)
+Options:
+- Between polynomial and exponential
+- Linear
+- Exponential or faster
+- Polynomial but faster than linear
+
+--- Question 5 (1 pt) ---
+How does the number of weights (note: not neurons) in an XOR network with threshold logic perceptrons with 1 hidden layer grow with the number of inputs to the network?
+See lec 2: Slides on "Optimal depth" and "Network size" 113-123
+Options:
+- Linear
+- Between polynomial and exponential
+- Exponential or faster
+- Polynomial but faster than linear
+
+--- Question 6 (1 pt) ---
+Suppose the data used in a classification task is 10-dimensional and positive in all dimensions. You have two neural networks. The first uses threshold activation functions for hidden layers, and the second uses softplus activation functions for hidden layers. In both networks, there are 2000 neurons in the first hidden layer, 8 neurons in the second hidden layer, and a huge number of neurons for all later layers. It turns out that the first network can never achieve perfect classification. What about the second network?
+Hint: A layer with 8 neurons effectively projects the data onto a 8-dimensional surface of the space. The input is 10-dimensional.
+Lec 2 slides 138-150
+Options:
+- It might fail for some data sets, since the 8 neurons in the second hidden layer could bottleneck the flow of information. In that case, the sizes of layers 3 and above don't matter.
+- Assuming that layers 3 and above are so expressive that they never bottleneck the flow of information, the second network will be able to achieve perfect classification.
+- It might fail for some data sets, not only because a bottleneck can occur, but also because the 2000 neurons in the first hidden layer could bottleneck the flow of information if the classification task is sufficiently complex.
+- It too is guaranteed to be unable to achieve perfect classification.
+
+--- Question 7 (1 pt) ---
+What is the fewest number of neurons needed (including any output layer neurons) for a network to implement the truth table shown by the following Karnaugh map? (numeric answer, int and float are both fine)
+
+Karnaugh Map:
+     YZ
+WX    00   01   11   10
+00         Y    Y
+01         Y    Y
+11    Y         Y
+10    Y         Y
+
+(Y = yellow/1, blank = 0)
+
+Hint: lec 2, "Reducing a Boolean Function". Slide 47 - 50
+
+--- Question 8 (1 pt) ---
+Under which conditions will the perceptron graph below fire? Note that ~ is NOT. (select all that apply)
+
+Perceptron: inputs x1-x8 with weights:
+x1: -1, x2: -1, x3: -1, x4: -1, x5: 0, x6: 0, x7: 0, x8: 0
+Threshold: 0
+
+Slide: lec 2, "Perceptron as a Boolean gate", slides 26-30
+Options:
+- fires only if x1, x2, x3, x4 are all 0, regardless of x5 .. x8
+- x1 & x2 & x3 & x4
+- ~x1 & ~x2 & ~x3 & ~x4
+- Never fires
+
+--- Question 9 (1 pt) ---
+Perceptron: inputs x1-x6 with weights:
+x1: 1, x2: 1, x3: 1, x4: -1, x5: -1, x6: -1
+Threshold: 3
+
+Under which condition(s) is the perceptron graph above guaranteed to fire? Note that ~ is NOT. (select all that apply)
+Slide: lec 2, "Perceptron as a Boolean gate" slides 26-30
+Options:
+- x1 & x2 & x3 & ~x4 & ~x5 & ~x6
+- ~x1 & ~x2 & ~x3 & x4 & x5 & x6
+- Never fires
+- x1 & ~x2 & x3 & ~x4 & x5 & ~x6
+
+--- Question 10 (1 pt) ---
+Neural network diagram with nodes 1-4 as yellow inputs, nodes 5-8 in first hidden layer, nodes 9-11 in second hidden layer, nodes 10,12,13 in output area (dark blue: 12, 13)
+
+If the yellow nodes are inputs (not neurons) and the dark blue nodes are outputs, which neurons are in layer 6?
+Hint: lec 2, slides 19-20 on "What is a layer"
+Options:
+- 10, 12
+- 10
+- 9, 10, 11
+- 10, 12, 13

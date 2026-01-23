@@ -1,0 +1,2374 @@
+        Neural Networks:
+What can a network represent
+
+         Deep Learning, Spring 2026
+
+                                                                                                                                                    1
+          Topics for the day
+
+· What can neural networks represent
+· And what are the restrictions
+
+   ­ In terms of "depth", "width" and "activations"
+
+                                                                                                                                                              2
+ Recap : Neural networks have taken
+                   over AI
+
+· Tasks that are made possible by NNs, aka deep learning
+
+     ­ Tasks that were once assumed to be purely in the human domain of
+        expertise
+
+                                                                                                                                                              3
+        So what are neural networks??
+
+Voice   N.Net  Transcription Image  N.Net      Text caption
+signal
+
+               Game   N.Net         Next move
+               State
+
+· What are these boxes?
+
+    ­ Functions that take an input and produce an output
+
+    ­ What are these functions?
+
+                                                                                                                                                              4
+        The human perspective
+
+Voice   N.Net  Transcription Image  N.Net      Text caption
+signal
+
+               Game   N.Net         Next move
+               State
+
+· In a human, those functions are computed by
+  the brain...
+
+                                                                                                                                                              5
+    Recap : NNets and the brain
+
+· In their basic form, NNets mimic the
+  networked structure in the brain
+
+                                                                                                                                                              6
+           Recap : The brain
+
+· The Brain is composed of networks of neurons
+
+                                                                                                                                                              7
+    Recap : Nnets and the brain
+
+· Neural nets are composed of networks of
+   computational models of neurons called perceptrons
+
+                                                                                                                                                              8
+    Recap: the perceptron
+
+x1
+x1
+x3
+
+xN
+
+· A threshold unit
+
+    ­ "Fires" if the weighted sum of inputs exceeds a
+
+    threshold
+
+    ­ Electrical engineers will call this a threshold gate
+
+    · A basic unit of Boolean circuits                      9
+            A better figure
+
+                                                                        Linear vs Affine?
+
+   ... +
+
+· A threshold unit
+
+    ­ "Fires" if the affine function of inputs is positive
+
+         · The bias is the negative of the threshold T in the previous
+            slide
+
+                                                                                                                                                            10
+The "soft" perceptron (logistic)
+
+... +
+
+· A "squashing" function instead of a threshold
+
+at the output
+
+­ The sigmoid "activation" replaces the threshold
+
+· Activation: The function that acts on the weighted
+
+combination of inputs (and bias)                      11
+Other "activations"
+
+                     x           
+
+                     x         
+
+                     x                        
+
+                        .....            +          
+
+                                                log(1 +  )
+                     x
+
+sigmoid                 tanh
+
+                1                tanh()
+         1 + exp(-)
+
+· Does not always have to be a squashing function
+
+     ­ We will hear more about activations later
+
+· We will continue to assume a "threshold" activation in this lecture
+
+                                                                                                                                                            12
+                  Poll 1
+
+· Mark all true statements
+
+   ­ 3x + 7y is a linear combination of x and y
+   ­ 3x + 7y + 4 is a linear combination of x and y
+   ­ 3x + 7y is an affine function of x and y
+   ­ 3x + 7y + 4 is an affine function of x and y
+
+                                                                                                                                                            13
+                  Poll 1
+
+· Mark all true statements
+
+   ­ 3x + 7y is a linear combination of x and y
+   ­ 3x + 7y + 4 is a linear combination of x and y
+   ­ 3x + 7y is an affine function of x and y
+   ­ 3x + 7y + 4 is an affine function of x and y
+
+                                                                                                                                                            14
+    The multi-layer perceptron
+
+· A network of perceptrons
+
+    ­ Perceptrons "feed" other
+      perceptrons
+
+    ­ We give you the "formal" definition of a layer shortly
+
+                                                                                                                                                            15
+           Defining "depth"
+
+· What is a "deep" network
+
+                                                                                                                                                            16
+           Deep Structures
+
+· In any directed graph with input source nodes and
+   output sink nodes, "depth" is the length of the longest
+   path from a source to a sink
+
+    ­ A "source" node in a directed graph is a node that has only
+       outgoing edges
+
+    ­ A "sink" node is a node that has only incoming edges
+
+· Left: Depth = 2. Right: Depth = 3
+
+                                                                                                                                                            17
+           Deep Structures
+
+· Deep structure
+
+     ­ The input is the "source",
+     ­ The output nodes are "sinks"
+
+· "Deep"  Depth of output neurons is greater than 2
+
+                                                                                                                                                            18
+           What is a layer?
+
+· A "layer" is the set of neurons that are all at the
+  same depth with respect to the input (source)
+
+    ­ "Depth" of a layer ­ the depth of the neurons in the
+      layer w.r.t. input
+
+                                                       Input: Black
+                                                       Layer 1: Red
+                                                       Layer 2: Green
+                                                       Layer 3: Yellow
+                                                       Layer 4: Blue
+
+· "Deep"  At least 3 layers
+
+­ Output layer depth is at least 3                                      19
+           What is a layer?
+
+· A "layer" is the set of neurons that are all at the
+  same depth with respect to the input (source)
+
+    ­ "Depth" of a layer ­ the depth of the neurons in the
+      layer w.r.t. input
+
+                                                       Input: Black
+                                                       Layer 1: Red
+                                                       Layer 2: Green
+                                                       Layer 3: Yellow
+                                                       Layer 4: Blue
+
+· "Deep"  At least 3 layers
+
+­ Output layer depth is at least 3                                      20
+    The multi-layer perceptron
+
+                                                                             N.Net
+
+· Inputs are real or Boolean stimuli
+· Outputs are real or Boolean values
+
+    ­ Can have multiple outputs for a single input
+
+· What can this network compute?
+
+    ­ What kinds of input/output relationships can it model?
+
+                                                                                                                                                            21
+       MLPs approximate functions
+
+                 21  1
+          1
+                           1
+    01                 11
+1 -1
+
+21     21               1     21                         x
+                     -1 1 -1
+1   11 1                                             22
+
+                           11
+
+    X      Y         Z     A
+
+· MLPs can compose Boolean functions
+· MLSs can compose category functions (classifiers)
+· MLPs can compose real-valued functions
+· What are the limitations?
+                  Today
+
+· Multi-layer Perceptrons as universal Boolean
+  functions
+
+   ­ The need for depth
+
+· MLPs as universal classifiers
+
+   ­ The need for depth
+
+· MLPs as universal approximators
+· A discussion of optimal depth and width
+
+                                                                                                                                                            23
+                  Today
+
+· Multi-layer Perceptrons as universal Boolean
+  functions
+
+   ­ The need for depth
+
+· MLPs as universal classifiers
+
+   ­ The need for depth
+
+· MLPs as universal approximators
+· A discussion of optimal depth and width
+
+                                                                                                                                                            24
+  The MLP as a Boolean function
+
+· How well do MLPs model Boolean functions?
+
+                                                                                                                                                            25
+The perceptron as a Boolean gate
+
+X  1
+
+                              X  -1
+
+               2                     0
+
+            1  X  1
+
+Y
+
+                           1  1
+
+               Y                       Values in the circles are thresholds
+                                       Values on edges are weights
+
+· A perceptron can model any simple binary
+  Boolean gate
+
+                                            26
+Perceptron as a Boolean gate
+
+1
+1
+
+1   L
+
+-1
+
+-1
+
+-1     Will fire only if X1 .. XL are all 1
+
+       and XL+1 .. XN are all 0
+
+· The universal AND gate
+
+   ­ AND any number of inputs
+
+         · Any subset of who may be negated
+                                                                                                                                                            27
+Perceptron as a Boolean gate
+
+1
+1
+
+1   L-N+1
+
+-1
+
+-1
+
+-1         Will fire only if any of X1 .. XL are 1
+
+           or any of XL+1 .. XN are 0
+
+· The universal OR gate
+
+   ­ OR any number of inputs
+
+         · Any subset of who may be negated
+                                                                                                                                                            28
+Perceptron as a Boolean Gate
+
+1
+
+1
+
+1     Will fire only if at least K inputs are 1
+
+1  K
+
+1
+
+1
+
+· Generalized majority gate
+
+   ­ Fire if at least K inputs are of the desired polarity
+
+                                                                                                                                                            29
+Perceptron as a Boolean Gate
+
+1
+
+1
+
+1   L-N+K  Will fire only if the total number of
+-1
+           of X1 .. XL that are 1 and XL+1 .. XN that
+
+           are 0 is at least K
+
+-1
+
+-1
+
+· Generalized majority gate
+
+   ­ Fire if at least K inputs are of the desired polarity
+
+                                                                                                                                                            30
+The perceptron is not enough
+
+X  ?
+
+                         ?
+            ?
+
+Y
+
+· Cannot compute an XOR
+
+                              31
+Multi-layer perceptron
+
+X  1
+
+   -1  1                         1
+
+                                      2
+   1
+
+                            1
+
+   -1  -1
+
+Y
+
+                   Hidden Layer
+
+· MLPs can compute the XOR
+
+                                         32
+Multi-layer perceptron XOR
+
+X                 1
+
+            1        -2
+            1
+               2         1
+
+                  1      Thanks to Gerald Friedland
+
+Y
+
+· With 2 neurons
+
+   ­ 5 weights and two thresholds
+
+                                                                                                                                                            33
+Multi-layer perceptron
+
+                 21  1
+          1
+                           1
+    01                 11
+1 -1
+
+21     21               1     21
+                     -1 1 -1
+1   11 1
+
+                           11
+
+    X      Y         Z     A
+
+· MLPs can compute more complex Boolean functions
+
+· MLPs can compute any Boolean function
+
+    ­ Since they can emulate individual gates
+
+· MLPs are universal Boolean functions
+
+                                                   34
+       MLP as Boolean Functions
+
+                 21  1
+          1
+                           1
+    01                 11
+1 -1
+
+21     21               1     21
+                     -1 1 -1
+1   11 1
+
+                           11
+
+    X      Y         Z     A
+
+· MLPs are universal Boolean functions
+
+     ­ Any function over any number of inputs and any number of outputs
+
+· But how many "layers" will they need?
+
+                                                                                                                                                            35
+How many layers for a Boolean MLP?
+
+        Truth Table  Truth table shows all input combinations
+X1 X2 X3 X4 X5 Y     for which output is 1
+001101
+010111
+011001
+100011
+101111
+110011
+
+· A Boolean function is just a truth table
+
+                                                               36
+How many layers for a Boolean MLP?
+
+        Truth Table  Truth table shows all input combinations
+X1 X2 X3 X4 X5 Y     for which output is 1
+001101
+010111
+011001
+100011
+101111
+110011
+
+· Expressed in disjunctive normal form
+
+                                                               37
+How many layers for a Boolean MLP?
+
+        Truth Table  Truth table shows all input combinations
+X1 X2 X3 X4 X5 Y     for which output is 1
+001101
+010111                X1 X2 X3 X4 X5
+011001
+100011
+101111
+110011
+
+· Expressed in disjunctive normal form
+
+                                                               38
+How many layers for a Boolean MLP?
+
+        Truth Table  Truth table shows all input combinations
+X1 X2 X3 X4 X5 Y     for which output is 1
+001101
+010111                X1 X2 X3 X4 X5
+011001
+100011
+101111
+110011
+
+· Expressed in disjunctive normal form
+
+                                                               39
+How many layers for a Boolean MLP?
+
+        Truth Table  Truth table shows all input combinations
+X1 X2 X3 X4 X5 Y     for which output is 1
+001101
+010111                X1 X2 X3 X4 X5
+011001
+100011
+101111
+110011
+
+· Expressed in disjunctive normal form
+
+                                                               40
+How many layers for a Boolean MLP?
+
+        Truth Table  Truth table shows all input combinations
+X1 X2 X3 X4 X5 Y     for which output is 1
+001101
+010111                X1 X2 X3 X4 X5
+011001
+100011
+101111
+110011
+
+· Expressed in disjunctive normal form
+
+                                                               41
+How many layers for a Boolean MLP?
+
+        Truth Table  Truth table shows all input combinations
+X1 X2 X3 X4 X5 Y     for which output is 1
+001101
+010111                X1 X2 X3 X4 X5
+011001
+100011
+101111
+110011
+
+· Expressed in disjunctive normal form
+
+                                                               42
+How many layers for a Boolean MLP?
+
+        Truth Table  Truth table shows all input combinations
+X1 X2 X3 X4 X5 Y     for which output is 1
+001101
+010111                X1 X2 X3 X4 X5
+011001
+100011
+101111
+110011
+
+· Expressed in disjunctive normal form
+
+                                                               43
+How many layers for a Boolean MLP?
+
+        Truth Table  Truth table shows all input combinations
+X1 X2 X3 X4 X5 Y     for which output is 1
+001101
+010111                X1 X2 X3 X4 X5
+011001
+100011
+101111
+110011
+
+· Expressed in disjunctive normal form
+
+                                                               44
+How many layers for a Boolean MLP?
+
+Truth Table       Truth table shows all input combinations
+                  for which output is 1
+
+X1 X2 X3 X4 X5 Y
+001101
+
+010111
+
+011001
+
+100011
+
+101111
+
+110011            X1  X2  X3  X4                    X5
+
+· Any truth table can be expressed in this manner!
+
+· A one-hidden-layer MLP is a Universal Boolean Function
+
+                                                            45
+How many layers for a Boolean MLP?
+
+Truth Table       Truth table shows all input combinations
+                  for which output is 1
+
+X1 X2 X3 X4 X5 Y
+001101
+
+010111
+
+011001
+
+100011
+
+101111
+
+110011            X1  X2  X3                           X4      X5
+
+· Any truth table can be expressed in this manner!
+
+· A one-hidden-layer MLP is a Universal Boolean Function
+
+But what is the largest number of perceptrons required in the
+
+single hidden layer for an N-input-variable function?              46
+Reducing a Boolean Function
+
+     YZ         This is a "Karnaugh Map"
+WX 00 01 11 10
+                It represents a truth table as a grid
+     00         Filled boxes represent input combinations
+     01         for which output is 1; blank boxes have
+     11         output 0
+     10
+                Adjacent boxes can be "grouped" to
+                reduce the complexity of the DNF formula
+                for the table
+
+· DNF form:
+
+   ­ Find groups
+   ­ Express as reduced DNF
+
+                                                                                                                                                            47
+     Reducing a Boolean Function
+
+     YZ
+WX 00 01 11 10
+
+00  Basic DNF formula will require 7 terms
+
+01
+11
+
+10
+
+                                  48
+     Reducing a Boolean Function
+
+     YZ
+WX 00 01 11 10
+
+     00
+
+     01
+     11
+
+     10
+
+  · Reduced DNF form:
+
+      ­ Find groups
+      ­ Express as reduced DNF
+
+                                                                                                                                                                    49
+     Reducing a Boolean Function
+
+     YZ
+WX 00 01 11 10
+
+     00
+
+01
+11
+
+10
+
+· Reduced DNF form:       WX Y Z
+
+­ Find groups
+
+­ Express as reduced DNF
+
+­ Boolean network for this function needs only 3 hidden units
+
+    · Reduction of the DNF reduces the size of the one-hidden-layer network 50
+      Largest irreducible DNF?
+
+            YZ
+       WX 00 01 11 10
+
+              00
+
+              01
+              11
+
+              10
+
+· What arrangement of ones and zeros simply
+  cannot be reduced further?
+
+                                                                                                                                                            51
+Largest irreducible DNF?
+
+     YZ         Red=0, white=1
+WX 00 01 11 10
+
+     00
+     01
+     11
+     10
+
+· What arrangement of ones and zeros simply
+  cannot be reduced further?
+
+                                             52
+Largest irreducible DNF?
+
+     YZ  01  11 10  How many neurons
+WX 00
+
+00                  in a DNF (one-
+
+01                  hidden-layer) MLP
+
+11                  for this Boolean
+
+                    function?
+
+10
+
+· What arrangement of ones and zeros simply
+  cannot be reduced further?
+
+                                             53
+Width of a one-hidden-layer Boolean MLP
+
+     YZ                   Red=0, white=1
+WX
+
+     00
+
+01
+
+11
+
+               11     10
+            01
+10
+
+UV 00 01 11 10 00 YZ
+· How many neurons in a DNF (one-hidden-
+
+layer) MLP for this Boolean function of 6
+
+variables?                                 54
+Width of a one-hidden-layer Boolean MLP
+
+     YZ
+WX
+
+         00
+
+Can be generalized: Will require 2N-1
+
+perce0p1trons in hidden layer
+
+Expon1e1 ntial in N
+
+                        11     10
+                     01
+10
+
+UV 00 01 11 10 00 YZ
+
+· How many neurons in a DNF (one-hidden-
+
+layer) MLP for this Boolean function
+
+                                                                                                                                                     55
+                  Poll 2
+
+How many neurons will be required in the hidden layer of a one-hidden-layer
+network that models a Boolean function over 10 inputs, where the output for
+two input bit patterns that differ in only one bit is always different? (I.e. the
+checkerboard Karnaugh map)
+
+      20
+      256
+      512
+      1024
+
+                                                                                                                                                            56
+                  Poll 2
+
+How many neurons will be required in the hidden layer of a one-hidden-layer
+network that models a Boolean function over 10 inputs, where the output for
+two input bit patterns that differ in only one bit is always different? (I.e. the
+checkerboard Karnaugh map)
+
+      20
+      256
+      512
+      1024
+
+                                                                                                                                                            57
+Width of a one-hidden-layer Boolean MLP
+
+     YZ
+WX
+
+         00
+
+Can be generalized: Will require 2N-1
+perce0p1trons in hidden layer
+
+Expon11ential in N         10
+
+10                     11
+                    01
+
+UV 00 01 11 10 00 YZ
+
+Ho·wHomwanmyanuynnitesuriofnswien ausDeNFm(uolnteip-hleiddheidn-den
+
+layelaryse?r) MLP for this Boolean function
+
+                                                                     58
+        Size of a deep MLP
+
+    YZ
+
+WX      00 01 11 10
+
+    00                      YZ
+                     WX
+
+                           00
+
+    01               01
+    11
+                     11
+
+                                           10
+
+                     10             11
+                                01
+    10
+                     UV 00 01 11 10 00 YZ
+
+                                               59
+Multi-layer perceptron XOR
+
+X  1
+
+   -1  1                         1
+
+                                      2
+   1
+
+                            1
+
+   -1  -1
+
+Y
+
+                   Hidden Layer
+
+· An XOR takes three perceptrons
+
+                                                                                                                                                            60
+        Size of a deep MLP
+
+    YZ
+
+WX      00 01 11 10
+
+    00
+
+    01
+
+                                                                               9 perceptrons
+
+    11
+
+    10
+
+                     W  X  YZ
+
+· An XOR needs 3 perceptrons
+· This network will require 3x3 = 9 perceptrons
+
+                                                                                                                                                            61
+Size of a deep MLP
+
+                   YZ
+            WX
+
+                  00
+
+            01
+
+            11
+
+                                    10
+
+            10                  11
+                            01
+
+            UV 00 01 11 10 00 YZ
+
+U V WX Y Z  15 perceptrons
+
+· An XOR needs 3 perceptrons
+· This network will require 3x5 = 15 perceptrons
+
+                                                                                                                                                            62
+Size of a deep MLP
+
+                   YZ
+            WX
+
+                  00
+
+                              01
+
+                              11
+
+                                                    10
+
+                              10      11
+                                  01
+
+                              UV 00 01 11 10 00 YZ
+
+U V WX Y Z  More generally, the XOR of N
+            variables will require 3(N-1)
+            perceptrons!!
+
+· An XOR needs 3 perceptrons
+
+· This network will require 3x5 = 15 perceptrons
+
+                                                                                                                                                            63
+One-hidden layer vs deep Boolean MLP
+
+     YZ
+WX
+
+           00
+
+Single hidden layer: Will require 2N-1+1
+
+percep01trons in all (including output unit)
+
+Expon1e1ntial in N         10
+
+10                     11
+                    01
+
+Will requiUrVe030 (N01-1)11pe1r0ce0p0trYoZns in a deep
+ne·twHoorwkmany neurons in a DNF (one-hidden-
+LCiannelaabyreeri)naMrNrLaP!!n!fgoer dthiisnBoonollyea2nlfougn2c(tNio)n layers
+        A better representation
+
+· Only  layers
+
+­ By pairing terms
+
+­ 2 layers per XOR                   ...
+
+                                 65
+         A better representation
+
+XOR
+XOR
+XOR
+XOR
+
+· Only  layers
+
+­ By pairing terms
+
+­ 2 layers per XOR                    ...
+
+                                  66
+          The challenge of depth
+
+                     ......
+
+XOR
+
+ · Using only K hidden layers will require O(2CN) neurons in the Kth layer, where
+
+                     ( )/
+
+        ­ Because the output is the XOR of all the N/2K-1/2 values output by the K-1th hidden layer
+        ­ I.e. reducing the number of layers below the minimum will result in an exponentially sized network
+
+             to express the function fully
+        ­ A network with fewer than the minimum required number of neurons cannot model the function
+
+                                                                                                                                                                    67
+The actual number of parameters in a
+                  network
+
+                      X1 X2 X3 X4 X5
+
+· The actual number of parameters in a network is the number of
+   connections
+
+     ­ In this example there are 30
+
+· This is the number that really matters in software or hardware
+   implementations
+
+· Networks that require an exponential number of neurons will
+   require an exponential number of weights..
+
+                                                                                                                                                            68
+     Recap: The need for depth
+
+· Deep Boolean MLPs that scale linearly with
+  the number of inputs ...
+
+· ... can become exponentially large if recast
+  using only one hidden layer
+
+                                                                                                                                                            69
+           The need for depth
+
+The XORs could
+occur anywhere!
+
+                         a bc def
+
+                       X1 X2 X3 X4 X5
+
+    · An MLP for any function that can eventually be expressed as the XOR of a number
+        of intermediate variables will require depth.
+
+            ­ The XOR structure could occur in any layer
+            ­ If you have a fixed depth from that point on, the network can grow exponentially in size.
+
+    · Having a few extra layers can greatly reduce network size
+
+                                                                                                                                                                  70
+ Depth vs Size in Boolean Circuits
+
+· The XOR is really a parity problem
+
+· Any Boolean parity circuit of depth using
+  AND,OR and NOT gates with unbounded fan-in
+  must have size
+
+    ­ Parity, Circuits, and the Polynomial-Time Hierarchy,
+      M. Furst, J. B. Saxe, and M. Sipser, Mathematical
+      Systems Theory 1984
+
+    ­ Alternately stated:
+
+         · Set of constant-depth polynomial size circuits of unbounded
+            fan-in elements
+
+                                                                                                                                                            71
+Caveat 1: Not all Boolean functions..
+
+· Not all Boolean circuits have such clear depth-vs-size
+   tradeoff
+
+· Shannon's theorem: For  , there is a Boolean function
+
+of variables that requires at least Boolean gates
+
+­ More correctly, for large , almost all n-input Boolean functions
+
+need more than Boolean gates
+
+· Regardless of depth
+
+· Note: If all Boolean functions over inputs could be
+   computed using a circuit of size that is polynomial in ,
+   P = NP!
+
+                                                             72
+       Network size: summary
+
+· An MLP is a universal Boolean function
+
+· But can represent a given function only if
+
+    ­ It is sufficiently wide
+    ­ It is sufficiently deep
+    ­ Depth can be traded off for (sometimes) exponential growth of
+
+        the width of the network
+
+· Optimal width and depth depend on the number of
+   variables and the complexity of the Boolean function
+
+    ­ Complexity: minimal number of terms in DNF formula to
+        represent it
+
+                                                                                                                                                            73
+               Story so far
+
+· Multi-layer perceptrons are Universal Boolean Machines
+
+· Even a network with a single hidden layer is a universal
+   Boolean machine
+
+    ­ But a single-layer network may require an exponentially
+       large number of perceptrons
+
+· Deeper networks may require far fewer neurons than
+   shallower networks to express the same function
+
+    ­ Could be exponentially smaller
+
+                                                                                                                                                               74
+Caveat 2
+
+· Used a simple "Boolean circuit" analogy for explanation
+
+· We actually have threshold circuit (TC) not, just a Boolean circuit (AC)
+
+­ Specifically composed of threshold gates
+
+· More versatile than Boolean gates (can compute majority function)
+
+       ­ E.g. "at least K inputs are 1" is a single TC gate, but an exponential size AC
+       ­ For fixed depth,      (strict subset)
+
+­ A depth-2 TC parity circuit can be composed with      weights
+
+· But a network of depth  requires only weights
+
+­ But more generally, for large , for most Boolean functions, a threshold
+   circuit that is polynomial in at optimal depth may become
+   exponentially large at
+
+· Other formal analyses typically view neural networks as arithmetic
+   circuits
+
+     ­ Circuits which compute polynomials over any field
+
+· So, let's consider functions over the field of reals                                   75
+                  Today
+
+· Multi-layer Perceptrons as universal Boolean
+  functions
+
+   ­ The need for depth
+
+· MLPs as universal classifiers
+
+   ­ The need for depth
+
+· MLPs as universal approximators
+· A discussion of optimal depth and width
+
+                                                                                                                                                            76
+Recap: The MLP as a classifier
+
+784 dimensions      2
+(MNIST)
+                784 dimensions
+
+· MLP as a function over real inputs
+· MLP as a function that finds a complex "decision
+
+  boundary" over a space of reals
+
+                                                                                                                                                            77
+    A Perceptron on Reals
+
+x1                                       1
+x2
+
+x3                                 0 x2      w1x1+w2x2=T
+
+xN
+
+                                         x1
+
+· A perceptron operates on               x2
+  real-valued vectors                                      x1
+
+    ­ This is a linear classifier                                         78
+     Boolean functions with a real
+                perceptron
+
+0,1  1,1    0,1  1,1    0,1         1,1
+
+X           Y           X
+
+0,0  Y 1,0  0,0  X 1,0  0,0  Y 1,0
+
+· Boolean perceptrons are also linear classifiers
+
+   ­ Purple regions are 1
+
+                                                                                                                                                            79
+                  Poll 3
+
+· An XOR network needs two hidden neurons
+  and one output neuron, because we need one
+  hidden neuron for each of the two boundaries
+  of the XOR region, and an output neuron to
+  AND them. True or false?
+
+   ­ True
+   ­ False
+
+                                                                                                                                                            80
+                  Poll 3
+
+· An XOR network needs two hidden neurons
+  and one output neuron, because we need one
+  hidden neuron for each of the two boundaries
+  of the XOR region, and an output neuron to
+  AND them. True or false?
+
+   ­ True
+   ­ False
+
+                                                                                                                                                            81
+Composing complicated "decision"
+              boundaries
+
+x2      Can now be composed into
+        "networks" to compute arbitrary
+
+        classification "boundaries"
+
+    x1
+
+· Build a network of units with a single output
+  that fires if the input is in the coloured area
+
+                                                                                                                                                            82
+Booleans over the reals
+
+x2
+
+    x1
+
+        x2                                      x1
+
+· The network must fire if the input is in the
+  coloured area
+
+                                                    83
+Booleans over the reals
+
+x2
+
+    x1
+
+        x2                                      x1
+
+· The network must fire if the input is in the
+  coloured area
+
+                                                    84
+Booleans over the reals
+
+x2
+
+    x1
+
+        x2                                      x1
+
+· The network must fire if the input is in the
+  coloured area
+
+                                                    85
+Booleans over the reals
+
+x2
+
+    x1
+
+        x2                                      x1
+
+· The network must fire if the input is in the
+  coloured area
+
+                                                    86
+Booleans over the reals
+
+x2
+
+    x1
+
+        x2                                      x1
+
+· The network must fire if the input is in the
+  coloured area
+
+                                                    87
+Booleans over the reals
+
+                3     x2    4            AND
+              4          5
+3                                 3
+      4            4
+                                           y1 y2 y3 y4 y5
+                3
+                               x1 4
+
+                               3
+
+                                     x2       x1
+
+· The network must fire if the input is in the coloured area
+
+    ­ The AND compares the sum of the hidden outputs to 5
+
+          · NB: What would the pattern be if it compared it to 4?
+
+                                                                                                                                                            88
+More complex decision boundaries
+
+                              OR
+
+                     AND              AND
+
+x2
+
+    x1                    x1      x2
+
+· Network to fire if the input is in the yellow area
+
+­ "OR" two polygons
+
+­ A third layer is required
+                                                                                                                                                   89
+   Complex decision boundaries
+
+· Can compose arbitrarily complex decision
+  boundaries
+
+                                                                                                                                                            90
+Complex decision boundaries
+
+                                                        OR
+                 AND
+
+            x1  x2
+
+· Can compose arbitrarily complex decision
+
+boundaries
+
+                                                            91
+Complex decision boundaries
+
+                                                        OR
+                 AND
+
+                               x1  x2
+
+· Can compose arbitrarily complex decision boundaries
+
+­ With only one hidden layer!
+
+­ How?
+
+                                                            92
+    Exercise: compose this with one
+               hidden layer
+
+x2
+
+    x1  x1  x2
+
+· How would you compose the decision
+  boundary to the left with only one hidden
+  layer?
+
+                                                                                                                                                            93
+Composing a Square decision
+            boundary
+
+               2
+
+2  4               2
+
+   2
+
+· The polygon net                              y  4?
+                      y1 y2 y3 y4
+
+                      x2  x1                          94
+   Composing a pentagon
+
+   2                                           2
+
+            3
+
+         4                            4
+
+   3                                           3
+
+      4     5                            4
+
+2           4                                     2
+
+      3                                     3
+
+                                                                  y  5?
+
+                                   2                 y1 y2 y3 y4      y5
+
+· The polygon net                                    x2           x1
+
+                                                                          95
+         Composing a hexagon
+
+         3
+
+3        4             3
+              5
+
+      5          5
+
+   4     6          4
+
+      5          5
+
+3        45 4          3
+
+         3
+
+                                               y  6?
+
+· The polygon net         y1 y2 y3 y4      y5  y6
+
+                          x2           x1
+
+                                                      96
+       How about a heptagon
+
+· What are the sums in the different regions?
+
+   ­ A pattern emerges as we consider N > 6..
+
+         · N is the number of sides of the polygon
+
+                                                                                                                                                            97
+                16 sides
+
+· What are the sums in the different regions?
+
+   ­ A pattern emerges as we consider N > 6..
+
+                                                                                                                                                            98
+                64 sides
+
+· What are the sums in the different regions?
+
+   ­ A pattern emerges as we consider N > 6..
+
+                                                                                                                                                            99
+               1000 sides
+
+· What are the sums in the different regions?
+
+   ­ A pattern emerges as we consider N > 6..
+
+                                                                                                                                                           100
+Polygon net               y  ?
+
+             y1 y2 y3 y4      y5
+
+             x2           x1
+
+· Increasing the number of sides reduces the area outside the
+   polygon that have
+
+                                                                                                                                                           101
+     In the limit                     y  ?
+
+N                        y1 y2 y3 y4      y5
+                    N/2
+                         x2           x1
+
+·
+
+                                                                  
+
+       ­ Value of the sum at the output unit, as a function of distance from center, as N increases
+
+· For small radius, it's a near perfect cylinder
+
+       ­ N in the cylinder, N/2 outside
+
+                                                                                                                                                           102
+   Composing a circle
+
+N                      y  ?
+
+                                          N/2
+
+· The circle net
+
+    ­ Very large number of neurons
+    ­ Sum is N inside the circle, N/2 outside almost everywhere
+    ­ Circle can be at any location
+
+                                                                                                                                                           103
+     Composing a circle
+
+N/2                       
+
+                                   
+                              -   ?
+
+                          
+
+                                                                         1
+     0
+
+· The circle net
+
+    ­ Very large number of neurons
+    ­ Sum is N/2 inside the circle, 0 outside almost everywhere
+    ­ Circle can be at any location
+
+                                                                                                                                                           104
+             Adding circles
+
+                                                                                                                             
+
+                                                                                                     
+                                                                                                -   ?
+
+                                                                                                                             
+
+· The "sum" of two circles sub nets is exactly N/2 inside
+   either circle, and 0 almost everywhere outside
+
+                                                                                                                                                           105
+   Composing an arbitrary figure
+
+                             
+
+                               
+                          -   ?
+
+                              
+
+· Just fit in an arbitrary number of circles
+
+    ­ More accurate approximation with greater number of
+      smaller circles
+
+    ­ Can achieve arbitrary precision
+                                                                                                                                                           106
+MLP: Universal classifier
+
+
+
+          
+     -   ?
+
+ 
+
+· MLPs can capture any classification boundary
+
+· A one-hidden-layer MLP can model any
+
+classification boundary
+
+· MLPs are universal classifiers                107
+Depth and the universal classifier
+
+x2             x1 x2
+           x1
+
+· Deeper networks can require far fewer neurons
+
+    ­ 12 vs. ~infinite hidden neurons in this example
+
+                                                                                                                                                           108
+           Optimal depth..
+
+· Formal analyses typically view these as category of
+   arithmetic circuits
+
+    ­ Compute polynomials over any field
+
+          · Valiant et. al: A polynomial of degree n requires a network of
+             depth
+
+                   ­ Cannot be computed with shallower networks
+                   ­ The majority of functions are very high (possibly ) order polynomials
+
+          · Bengio et. al: Shows a similar result for sum-product networks
+
+                   ­ But only considers two-input units
+                   ­ Generalized by Mhaskar et al. to all functions that can be expressed as a
+
+                      binary tree
+
+    ­ Depth/Size analyses of arithmetic circuits still a research
+       problem
+
+                                                                                                                                                           109
+  Special case: Sum-product nets
+
+· "Shallow vs deep sum-product networks," Oliver
+   Dellaleau and Yoshua Bengio
+
+    ­ For networks where layers alternately perform either sums
+       or products, a deep network may require an exponentially
+       fewer number of layers than a shallow one
+
+                                                                                                                                                           110
+Depth in sum-product networks
+
+                                                                                                                                                    111
+   Optimal depth in generic nets
+
+· We look at a different pattern:
+
+   ­ "worst case" decision boundaries
+
+· For threshold-activation networks
+
+   ­ Generalizes to other nets
+
+                                                                                                                                                           112
+            Optimal depth
+
+                             
+
+                               
+                          -  > ?
+
+                              
+
+· A naïve one-hidden-layer neural network will
+  require infinite hidden neurons
+
+                                                                                                                                                           113
+            Optimal depth
+
+· Two hidden-layer network: 56 hidden neurons
+
+                                                                                                                                                           114
+            Optimal depth
+
+· Two-hidden-layer network: 56 hidden neurons
+
+   ­ 16 neurons in hidden layer 1
+
+                                                                                                                                                           115
+            Optimal depth
+
+· Two-hidden-layer network: 56 hidden neurons
+
+    ­ 16 in hidden layer 1
+    ­ 40 in hidden layer 2
+    ­ 57 total neurons, including output neuron
+
+                                                                                                                                                           116
+             Optimal depth
+
+· But this is just
+
+                                                                                                                                                           117
+            Optimal depth
+
+· But this is just
+
+   ­ The XOR net will require 16 + 15x3 = 61 neurons
+
+         · 46 neurons if we use a two-neuron XOR model
+
+                                                                                                                                                           118
+            Optimal depth
+
+· Grid formed from 64 lines
+
+    ­ Network must output 1 for inputs in the yellow regions
+
+                                                                                                                                                           119
+          Actual linear units
+
+        ....
+
+· 64 basic linear feature detectors
+
+                                                                                                                                                           120
+            Optimal depth
+
+        ....
+        ....
+
+· Two hidden layers: 608 hidden neurons
+
+    ­ 64 in layer 1
+    ­ 544 in layer 2
+
+· 609 total neurons (including output neuron)
+
+                                                                                                                                                           121
+             Optimal depth
+
+         ........................
+
+· XOR network (12 hidden layers): 253 neurons
+
+      ­ 190 neurons with 2-gate XOR
+
+· The difference in size between the deeper optimal (XOR) net and shallower
+    nets increases with increasing pattern complexity and input dimension
+
+                                                                                                                                                               122
+                   Network size?
+
+· In this problem the 2-layer net
+    was quadratic in the number of
+    lines
+
+­             neurons in 2nd hidden layer
+
+­ Not exponential
+
+­ Even though the pattern is an XOR
+
+­ Why?
+
+· The data are two-dimensional!
+
+­ Only two fully independent features
+
+­ The pattern is exponential in the dimension of the input (two)!
+
+· For general case of mutually intersecting hyperplanes in dimensions,
+
+we will need  ( )!  weights (assuming          ).
+
+­ Increasing input dimensions can increase the worst-case size of the shallower
+
+   network exponentially, but not the XOR net
+
+   · The size of the XOR net depends only on the number of first-level linear detectors ()
+
+                                                                                            123
+           Depth: Summary
+
+· The number of neurons required in a shallow
+  network is potentially exponential in the
+  dimensionality of the input
+
+   ­ (this is the worst case)
+   ­ Alternately, exponential in the number of
+
+      statistically independent features
+
+                                                                                                                                                           124
+               Story so far
+
+· Multi-layer perceptrons are Universal Boolean Machines
+
+     ­ Even a network with a single hidden layer is a universal Boolean machine
+
+· Multi-layer perceptrons are Universal Classification Functions
+
+     ­ Even a network with a single hidden layer is a universal classifier
+
+· But a single-layer network may require an exponentially large number
+   of perceptrons than a deep one
+
+· Deeper networks may require far fewer neurons than shallower
+   networks to express the same function
+
+     ­ Could be exponentially smaller
+     ­ Deeper networks are more expressive
+
+                                                                                                                                                              125
+                  Today
+
+· Multi-layer Perceptrons as universal Boolean
+  functions
+
+   ­ The need for depth
+
+· MLPs as universal classifiers
+
+   ­ The need for depth
+
+· MLPs as universal approximators
+· A discussion of optimal depth and width
+
+                                                                                                                                                           126
+MLP as a continuous-valued regression
+
+         T1          f(x)
+   1 T1 1         T1 T2 x
+
+x             +
+
+   1  T2      -1
+
+          T2
+
+· A simple 3-unit MLP with a "summing" output unit can
+   generate a "square pulse" over an input
+
+    ­ Output is 1 only if the input lies between T1 and T2
+    ­ T1 and T2 can be arbitrarily specified
+
+                                                                                                                                                              127
+MLP as a continuous-valued regression
+
+         T1          f(x)               x
+   1 T1 1         T1 T2 x
+                           +
+x
+
+   1  T2      -1
+
+          T2
+
+· A simple 3-unit MLP can generate a "square pulse" over an input
+
+· An MLP with many units can model an arbitrary function over an input
+
+      ­ To arbitrary precision
+
+              · Simply make the individual pulses narrower
+
+· A one-hidden-layer MLP can model an arbitrary function of a single input
+
+                                                                                                                                                              128
+          For higher dimensions
+
+     N/2  +
+0
+                                        -N/2
+
+                                           1
+
+· An MLP can compose a cylinder
+
+   ­ in the circle, 0 outside
+
+                                                                                                                                                           129
+MLP as a continuous-valued function
+
+           +
+
+· MLPs can actually compose arbitrary functions in any number of
+    dimensions!
+
+      ­ Even with only one hidden layer
+
+              · As sums of scaled and shifted cylinders
+
+      ­ To arbitrary precision
+
+              · By making the cylinders thinner
+
+      ­ The MLP is a universal approximator!
+
+                                                                                                                                                           130
+                 Poll 4
+
+Any real valued function can be modelled
+exactly by a one-hidden layer network with
+infinite neurons in the hidden layer, true or
+false?
+
+   ­ False
+   ­ True
+
+                                                                                                                                                      131
+                 Poll 4
+
+Any real valued function can be modelled
+exactly by a one-hidden layer network with
+infinite neurons in the hidden layer, true or
+false?
+
+   ­ False
+   ­ True
+
+Explanation: (it can only be approximated)
+
+                                                                                                                                                      132
+ Caution: MLPs with additive output
+  units are universal approximators
+
+                                                        ,
+                                                                    ()
+
+           +,
+
+· MLPs can actually compose arbitrary functions
+· But explanation so far only holds if the output
+
+  unit only performs summation
+
+    ­ i.e. does not have an additional "activation"
+
+                                                                                                                                                           133
+"Proper" networks: Outputs with
+
+         activations
+
+         x1
+         x2
+         x3
+
+         xN
+
+sigmoid  tanh
+
+· Output neuron may have actual "activation"
+
+   ­ Threshold, sigmoid, tanh, softplus, rectifier, etc.
+
+· What is the property of such networks?
+
+                                                                                                                                                           134
+     The network as a function
+
+· Output unit with activation function
+
+       ­ Threshold or Sigmoid, or any other
+
+· The network is actually a universal map from the entire domain of input values to
+    the entire range of the output activation
+
+       ­ All values the activation function of the output neuron
+
+                                                                                                                                                           135
+     The network as a function
+
+The MLP is a Universal Approximator for the entire class of functions (maps)
+
+it·  represents!    with  activation  function
+       Output unit
+
+     ­ Threshold or Sigmoid, or any other
+
+· The network is actually a universal map from the entire domain of input values to
+
+     the entire range of the output activation
+
+     ­ All values the activation function of the output neuron
+
+                                                                136
+                  Today
+
+· Multi-layer Perceptrons as universal Boolean
+  functions
+
+   ­ The need for depth
+
+· MLPs as universal classifiers
+
+   ­ The need for depth
+
+· MLPs as universal approximators
+· A discussion of sufficient depth and width
+
+                                                                                                                                                           137
+          The issue of depth
+
+· Previous discussion showed that a single-hidden-layer
+   MLP is a universal function approximator
+
+    ­ Can approximate any function to arbitrary precision
+    ­ But may require infinite neurons in the layer
+
+· More generally, deeper networks will require far fewer
+   neurons for the same approximation error
+
+    ­ True for Boolean functions, classifiers, and real-valued
+       functions
+
+· But there are limitations...
+
+                                                                                                                                                           138
+       Sufficiency of architecture
+
+.....  A network with 16 or more
+       neurons in the first layer is
+       capable of representing the
+       figure to the right perfectly
+
+· A neural network can represent any function provided
+   it has sufficient capacity
+
+    ­ I.e. sufficiently broad and deep to represent the function
+
+· Not all architectures can represent any function
+
+                                                                                                                                                           139
+       Sufficiency of architecture
+
+.....  A network with 16 or more
+       neurons in the first layer is
+       capable of representing the
+       figure to the right perfectly
+
+       A network with less than       Why?
+       16 threshold-activation
+       neurons in the first layer
+       cannot represent this
+       pattern exactly
+
+· A neural network can represent any function provided
+   it has sufficient capacity
+
+    ­ I.e. sufficiently broad and deep to represent the function
+
+· Not all architectures can represent any function
+
+                                                                                                                                                           140
+       Sufficiency of architecture
+
+.....  A threshold-gate network with
+       16 or more neurons in the first
+       layer is capable of representing
+       the figure to the right perfectly
+
+       A network with less than           Why?
+       16 threshold-activation
+       neurons in the first layer
+       cannot represent this
+       pattern exactly
+
+· A network with only 8 threshold neurons in the first
+   layer may capture these 8 boundaries
+
+· That can only give you information about which of
+   these strips the input is in, but not where in the strip
+
+                                                                                                                                                           141
+       Sufficiency of architecture
+
+.....  A threshold-gate network with
+       16 or more neurons in the first
+       layer is capable of representing
+       the figure to the right perfectly
+
+                             A network with less than
+                             16 threshold-activation
+                             neurons in the first layer
+                             cannot represent this
+                             pattern exactly
+
+· A network with only 8 threshold neurons in the first
+
+   layer may capture these 8 boundaries
+
+· That can only give you information about which of
+
+   these strips the input is in, but not where in the strip
+
+                                                                                                                                                           142
+       Sufficiency of architecture
+
+.....  A threshold-gate network with
+       16 or more neurons in the first
+       layer is capable of representing
+       the figure to the right perfectly
+
+                             A network with less than
+                             16 threshold-activation
+                             neurons in the first layer
+                             cannot represent this
+                             pattern exactly
+
+· Even if the 8 first-layer neurons capture these
+  boundaries...
+
+· ... they can only place you in one of these 25 cells,
+  but cannot inform you of where in the cell
+
+                                                                                                                                                           143
+       Sufficiency of architecture
+
+.....  A threshold-gate network with
+       16 or more neurons in the first
+       layer is capable of representing
+       the figure to the right perfectly
+
+                             A network with less than
+                             16 threshold-activation
+                             neurons in the first layer
+                             cannot represent this
+                             pattern exactly
+
+· Even if the 8 first-layer neurons capture these
+  boundaries...
+
+· ... they can only place you in one of these 25 cells,
+  but cannot inform you of where in the cell
+
+                                                                                                                                                           144
+       Sufficiency of architecture
+
+.....  A network with 16 or more
+       neurons in the first layer is
+       capable of representing the
+       figure to the right perfectly
+
+       A network with less than       A 2-layer network with 16
+       16 threshold-activation        neurons in the first layer
+       neurons in the first layer     cannot represent the
+       cannot represent this          pattern with less than 40
+       pattern exactly                neurons in the second layer
+
+· Similar restrictions apply to higher layers
+· Regardless of depth, every layer must be sufficiently wide in order
+
+   to capture the function
+
+· Not all architectures can represent any function
+
+                                                                                                                                                           145
+Sufficiency of architecture
+
+         This effect is because we
+         use the threshold activation
+         It gates information in
+         the input from later layers
+
+                                             The pattern of outputs within
+                                             any colored region is identical
+                                             Subsequent layers do not obtain enough
+                                             information to partition them
+
+                                                                                                                                       146
+Sufficiency of architecture
+
+         This effect is because we
+         use the threshold activation
+         It gates information in
+         the input from later layers
+
+             Continuous activation functions result in graded output at the layer
+             The gradation provides information to subsequent layers, to capture
+             information "missed" by the lower layer (i.e. it "passes" information
+             to subsequent layers).
+
+                                                                                                                                       147
+Sufficiency of architecture
+
+         This effect is because we
+         use the threshold activation
+
+         It gates information in
+         the input from later layers
+
+             Continuous activation functions result in graded output at the layer
+             The gradation provides information to subsequent layers, to capture
+             information "missed" by the lower layer (i.e. it "passes" information
+             to subsequent layers).
+             Activations with more gradation (e.g. RELU) pass more information
+
+                                                                                                                                       148
+  Width vs. Activations vs. Depth
+
+· Narrow layers can still pass information to
+  subsequent layers if the activation function is
+  sufficiently graded
+
+· But will require greater depth, to permit later
+  layers to capture patterns
+
+                                                                                                                                                           149
+             Lessons so far
+
+· MLPs are universal function approximators
+
+    ­ Can model any Boolean function, classification function, or
+       regression
+
+· Deeper MLPs can achieve the same precision with far
+   fewer neurons, but must still have sufficient capacity
+
+    ­ The activations must pass information through
+    ­ Each layer must still be sufficiently wide to convey all
+
+       relevant information to subsequent layers
+
+                                                                                                                                                           150
+             Poll 5 : @106
+
+Mark all true statements
+
+      ­ A network with an upper bound on layer width (no. of neurons in a layer) can
+         nevertheless model any function by making it sufficiently deep.
+
+      ­ Networks with "graded" activation functions are more able to compensate for
+         insufficient width through depth, than those with threshold or saturating
+         activations.
+
+      ­ We can always compensate for limits in the width and depth of the network
+         by using more graded activations.
+
+      ­ For a given accuracy of modelling a function, networks with more graded
+         activations will generally be smaller than those with less graded (i.e saturating
+         or thresholding) activations.
+
+                                                                                                                                                           151
+                  Poll 5
+
+Mark all true statements
+
+      ­ A network with an upper bound on layer width (no. of neurons in a layer) can
+         nevertheless model any function by making it sufficiently deep.
+
+      ­ Networks with "graded" activation functions are more able to compensate
+         for insufficient width through depth, than those with threshold or saturating
+         activations.
+
+      ­ We can always compensate for limits in the width and depth of the network
+         by using more graded activations.
+
+      ­ For a given accuracy of modelling a function, networks with more graded
+         activations will generally be smaller than those with less graded (i.e
+         saturating or thresholding) activations.
+
+                                                                                                                                                           152
+     Sufficiency of architecture
+
+· The capacity of a network has various definitions
+
+       ­ Information or Storage capacity: how many patterns can it remember
+       ­ VC dimension
+
+                · bounded by the square of the number of weights in the network
+
+       ­ From our perspective: largest number of disconnected convex regions it can represent
+
+· A network with insufficient capacity cannot exactly model a function that requires
+    a greater minimal number of convex hulls than the capacity of the network
+
+       ­ But can approximate it with error
+
+                                                                                                                                                           153
+The "capacity" of a network
+
+· VC dimension
+
+· A separate lecture
+
+­ Koiran and Sontag (1998): For "linear" or threshold units, VC
+
+dimension is proportional to the number of weights
+
+· For units with piecewise linear activation it is proportional to the
+
+square of the number of weights
+
+­ Batlett, Harvey, Liaw, Mehrabian "Nearly-tight VC-dimension
+
+bounds for piecewise linear neural networks" (2017):
+
+· For any , s.t.      , there exisits a RELU network with
+
+layers, weights with VC dimension
+
+­ Friedland, Krell, "A Capacity Scaling Law for Artificial Neural
+
+Networks" (2017):
+
+· VC dimension of a linear/threshold net is  , is the overall
+
+number of hidden neurons, is the weights per neuron
+
+                                                                        154
+             Lessons today
+
+· MLPs are universal Boolean function
+· MLPs are universal classifiers
+· MLPs are universal function approximators
+
+· A single-layer MLP can approximate anything to arbitrary precision
+
+     ­ But could be exponentially or even infinitely wide in its inputs size
+
+· Deeper MLPs can achieve the same precision with far fewer
+   neurons
+
+     ­ Deeper networks are more expressive
+     ­ More graded activation functions result in more expressive networks
+
+                                                                                                                                                           155
+                Next up
+
+· We know MLPs can emulate any function
+· But how do we make them emulate a specific
+
+  desired function
+
+    ­ E.g. a function that takes an image as input and
+      outputs the labels of all objects in it
+
+    ­ E.g. a function that takes speech input and outputs
+      the labels of all phonemes in it
+
+    ­ Etc...
+
+· Training an MLP
+
+                                                                                                                                                           156
+

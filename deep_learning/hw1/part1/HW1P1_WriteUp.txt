@@ -1,0 +1,1957 @@
+                             Homework 1 Part 1
+
+                         An Introduction to Neural Networks
+
+                 11-785: Introduction to Deep Learning (Spring 2026)
+
+                                 Release Date: January 14, 2026, 06:00 P.M., E.S.T.
+                      Early Submission Bonus Date: January 23, 2026, 11:59 P.M., E.S.T.
+
+                               Final Due Date: February 6, 2026, 11:59 P.M., E.S.T.
+
+Start Here
+
+    · Collaboration policy:
+          ­ You are expected to comply with the University Policy on Academic Integrity and Plagiarism.
+          ­ You are allowed to help your friends debug
+          ­ You are allowed to look at your friend's code
+          ­ You are allowed to copy math equations from any source that are not in code form
+          ­ You are not allowed to type code for your friend
+          ­ You are not allowed to look at your friend's code while typing your solution
+          ­ You are not allowed to copy and paste solutions off the internet
+          ­ You are not allowed to import pre-built or pre-trained models
+          ­ You can share ideas but not code, you must submit your own code. All code submitted will be
+              compared with all code submitted this semester and in previous semesters using MOSS.
+
+       We encourage you to meet regularly with your study group to discuss and work on your homework.
+       You will not only learn more, but you will also be more efficient that way. However, as noted above,
+       the actual code used to obtain the final submission must be entirely your own.
+
+    · Directions:
+          ­ You are required to do this assignment in the Python (version 3) programming language. Do not
+              use auto-differentiation toolboxes (PyTorch, TensorFlow, Keras, etc.) - you are only permitted
+              and recommended to vectorize your computation using the Numpy library. You can use standard
+              libraries like Numpy, Scipy, Math, etc.
+          ­ We recommend looking at all the problems before solving the first one. However, we recommend
+              that you complete the problems in order as the difficulty increases, and questions often rely on
+              the completion of previous questions.
+
+    · Early submission bonus:
+          ­ If you complete this assignment successfully with FULL MARKS on Autolab before January 23,
+              2026, 11:59 P.M., E.S.T., you will receive 5 bonus points for this assignment.
+
+                                                                      1
+                                 Homework Objectives
+
+In this homework, you will learn how to implement and train an entire MLP from scratch, on your own.
+You will learn
+
+    · to write code for all the components that comprise a simple MLP;
+    · to chain these components up to compose a complete MLP of any depth;
+    · to implement losses to train the network parameters;
+    · how to backpropagate the derivatives of those losses through the network, to compute loss derivatives
+
+       with respect to all network parameters;
+    · how to incorporate those derivatives into stochastic gradient descent (SGD) to update network param-
+
+       eters;
+    · how to implement at least one common regularization method, like batch normalization, to improve
+
+       training.
+This homework comes with an optional, separately posted bonus part, in which you will also learn to
+implement other optimizers, including ADAM, and another key regularization technique, Dropout.
+
+                                                                      2
+Checklist
+
+Here is a checklist page that you can use to keep track of your progress as you go through the write-up
+and implement the corresponding sections in your starter notebook. As you complete each function in the
+notebook, you can check the corresponding boxes aligned with each section.
+
+   1. Getting Started
+                  Watch the recitation 0 lectures (like Python, PyTorch, Debugging, HW Workflows), if required
+                  Download code handout and extract the file
+                  Setup new environment and Install required python libraries
+                  Read the whole assignment write-up for an overview
+                  Once read the write-up, you can find all the formulas in the Appendix section for easy access
+                  Watch the 10-min video Backpropagation by 3B1B to understand the backward methods 1.
+
+   2. Complete the Components of a Multilayer Perceptron Model
+                  Revisit lecture 2 about linear classifier, activation function, and perceptron
+                  Complete the linear layer class
+                  Complete the 4 activation functions
+
+   3. Complete 3 Multilayer Perceptron Models using Components Built
+                  Revisit lecture 2 about MLP
+                  Write a MLP model with 0 hidden layers
+                  Write a MLP model with 1 hidden layers
+                  Write a MLP model with 4 layers
+
+   4. Implement the Criterion Functions to evaluate a machine-learning model
+                  Revisit lecture 3 about Loss
+                  Implement Mean Squared Error (MSE) Loss for regression models
+                  Implement Cross-Entropy Loss for classification models
+
+   5. Implement an Optimizer to train a machine learning model
+                  Revisit lecture 6 about momentum, and lecture 7 about SGD
+                  Implement SGD optimizer
+
+   6. Implement a Regularization method: Batch Normalization
+                  Revisit lecture 8 about Batch normalization
+                  Translate the element-wise equations to matrix equations
+                  Write the code based on the matrix equations you wrote
+
+   7. Hand-in
+                  Set all flags to True in hw1p1 autograder flags.py
+                  Make sure you pass all test cases in the local autograder
+                  Make the handin.tar file and submit to autolab
+
+    1Lecture 4-5 will cover backpropagation in more details. (If needed, you can visit last semester's lectures)
+
+                                                                      3
+Contents
+
+1 Introduction to MyTorch series             6
+
+2 Setup and Submission                       6
+
+3 Notation                                   9
+
+4 The Big Picture                            10
+
+4.1 Understanding the shapes . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 11
+
+5 Neural Network Layers [15 Points]          12
+
+5.1 Linear Layer [mytorch.nn.Linear] . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+
+5.1.1 Linear Layer Forward Equation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+
+5.1.2 Linear Layer Backward Equation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 13
+
+6 Activation Functions [10 points]           14
+
+6.1 Sigmoid [ mytorch.nn.Sigmoid ] . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+
+6.1.1 Sigmoid Forward Equation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+
+6.1.2 Sigmoid Backward Equation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+
+6.2 Tanh [ mytorch.nn.Tanh ] . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+
+6.2.1 Tanh Forward Equation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+
+6.2.2 Tanh Backward Equation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+
+6.3 ReLU [mytorch.nn.ReLU] . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+
+6.3.1 ReLU Forward Equation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+
+6.3.2 ReLU Backward Equation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+
+6.4 GELU [mytorch.nn.GELU] . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+
+6.4.1 GELU Forward Equation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+
+6.4.2 GELU Backward Equation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+
+6.5 Swish . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+
+6.5.1 Swish Forward Equation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18
+
+6.5.2 Swish Backward Equation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+
+6.6 Softmax [mytorch.nn.Softmax] . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+
+6.6.1 Softmax Forward Equation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 19
+
+6.6.2 Softmax Backward Equation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+
+7 Neural Network Models [35 points]          21
+
+7.1 MLP (Hidden Layers = 0) [mytorch.models.MLP0] [10 points] . . . . . . . . . . . . . . . . . 22
+
+7.1.1 MLP Forward Pseudocode (Hidden Layers = 0) . . . . . . . . . . . . . . . . . . . . . 22
+
+7.1.2 MLP Backward Pseudocode (Hidden Layers = 0) . . . . . . . . . . . . . . . . . . . . 22
+
+7.2 MLP (Hidden Layers = 1) [mytorch.models.MLP1] [10 points] . . . . . . . . . . . . . . . . . 23
+
+7.2.1 MLP Forward Method Description (Hidden Layers = 1) . . . . . . . . . . . . . . . . 23
+
+7.2.2 MLP Backward Method Descriptions (Hidden Layers = 1) . . . . . . . . . . . . . . . 24
+
+7.3 MLP (Hidden Layers = 4) [mytorch.models.MLP4] [15 points] . . . . . . . . . . . . . . . . . 24
+
+7.3.1 MLP Forward Equations (Hidden Layers = 4) . . . . . . . . . . . . . . . . . . . . . . 24
+
+7.3.2 MLP Backward Equations (Hidden Layers = 4) . . . . . . . . . . . . . . . . . . . . . 24
+
+8 Criterion - Loss Functions [10 points]     26
+
+8.1 MSE Loss [ mytorch.nn.MSELoss ] . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 26
+
+8.1.1 MSE Loss Forward Equation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
+
+8.1.2 MSE Loss Backward Equation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
+
+8.2 Cross-Entropy Loss [mytorch.nn.CrossEntropyLoss] . . . . . . . . . . . . . . . . . . . . . . 28
+
+8.2.1 Cross-Entropy Loss Forward Equation . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+
+8.2.2 Cross-Entropy Loss Backward Equation . . . . . . . . . . . . . . . . . . . . . . . . . . 29
+
+                                          4
+9 Optimizers [10 points]          30
+
+9.1 Stochastic Gradient Descent (SGD) [ mytorch.optim.SGD ] . . . . . . . . . . . . . . . . . . . 30
+
+9.1.1 SGD Equation (Without Momentum) . . . . . . . . . . . . . . . . . . . . . . . . . . . 30
+
+9.1.2 SGD Equations (With Momentum) . . . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+
+10 Regularization [20 points]     32
+
+10.1 Batch Normalization [mytorch.nn.BatchNorm1d] . . . . . . . . . . . . . . . . . . . . . . . . 32
+
+10.1.1 Batch Normalization Forward Training Equations (When eval = False) . . . . . . . 33
+
+10.1.2 Batch Normalization Forward Inference Equations (When eval = True) . . . . . . . 35
+
+10.1.3 Batch Normalization Backward Equations . . . . . . . . . . . . . . . . . . . . . . . . 35
+
+11 Appendix                       37
+
+11.1 Summary of Formulas . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 37
+
+11.2 Anaconda Installation and Setup Instructions . . . . . . . . . . . . . . . . . . . . . . . . . . . 43
+
+                               5
+1 Introduction to MyTorch series
+
+In this series of homework assignments, you will implement your own deep-learning library from scratch.
+Inspired by PyTorch, your library ­ MyTorch ­ will be used to create everything from multilayer percep-
+trons (MLP), convolutional neural networks (CNN), to recurrent neural networks with gated recurrent units
+(GRU), and long-short term memory (LSTM) structures. This is an ambitious undertaking, and we are here
+to help you through the entire process. At the end of this work, you will understand forward propagation,
+loss calculation, backward propagation, and gradient descent.
+The culmination of all of the Homework Part 1's will be your own custom deep learning library MyTorch©,
+along with detailed examples. It is structured similarly to popular deep library learning libraries like PyTorch
+and TensorFlow, and you can easily import and reuse code modules for subsequent homework.
+
+In this assignment, we will start by creating the core components of multilayer perceptrons: linear layers,
+activation functions, and batch normalization. Then, you will implement loss functions and stochastic
+gradient decent optimizer in MyTorch. The auto-grader tests will compare the outputs of your MyTorch
+methods and class attributes with a reference PyTorch solution. We have made the necessary components
+of these classes and class functions as explicit as possible. Your job is to understand how all the components
+are related and implement the mathematics into code.
+
+In looking at the mathematics, you will be coding the equations needed to build a simple Neural Network
+Layer. This includes forward and backward propagation for the activations, loss functions, linear layers, and
+batch normalization. If you have challenges going from math to code, consider the shapes involved and do
+what you can to make the operations possible.
+
+2 Setup and Submission
+
+    · Extract the downloaded handout HW1P1 S26 handout.tar by running the following command in the
+       same directory2
+
+                    tar -xvf HW1P1_S26_handout.tar
+
+       This will create a directory called HW1P1 S26 handout with the following file structure.
+
+   hw1p1 handout
+        mytorch
+            nn
+                linear.py
+                activation.py
+                loss.py
+                batchnorm.py
+            optim
+                sgd.py
+        models
+            mlp.py
+        autograder
+            hw1p1 autograder.py
+            hw1p1 autograder flags.py
+        create tarball.sh
+        requirements.txt
+
+Apart from the above major files, there are files named __init__.py that don't have to be edited. You may
+also see other files like .DS_STORE or __pycache__ folders that you should not be concerned about.
+
+    2The handout might have an extension like handout.tar.112. In such a case, you will first have to rename the downloaded
+file as handout.tar by removing the .112 extension and then untar the file.
+
+                                                                      6
+· Install Anaconda and Setup Environment
+   Please REFER to the Appendix section for detailed instructions on setting up the Anaconda environment
+   on different operating systems (Windows, macOS, and Linux).
+   Note: It is HIGHLY recommended to set up a new local conda environment and install GIVEN specified
+   library dependencies versions for the homework to avoid version compatibility problems!
+
+· Follow the writeup and edit code files
+   The sections of the writeup are ordered to help you build the MyTorch library incrementally. Each section
+   has a corresponding Python file that contains code for classes implementing the theory in that section.
+   For instance, the section on activation functions corresponds to activation.py, the neural network models
+   section to mlp.py, etc. You need to edit these files according to the writeup.
+   Another thing to note is the file structure. The mytorch folder contains code for individual components like
+   linear layers, optimizer, losses, etc. These components are independent of each other. The models folder
+   on the other hand has code for an entire neural network that uses some of these independent componenets.
+   You can follow a similar structure if you try to write the entire code from scratch.
+   Lastly, testing the code is not performed by these files. There is a separate hw1p1 autograder.py for that.
+   It runs some local tests as a preliminary check of code correctness. Instructions to use it are given below.
+
+· Autograde your code by
+              ­ Step 1: Open your preferred IDE or code editor, locate and open the desired .py file, make the
+                 necessary edits, and save the changes. Ideally, the homework does not require GPU usage.
+              ­ Step 2: (IMPORTANT): Setting the flags in hw1p1 autograder flags.py to True to test any
+                 individual component on your local autograder. For example, if you only implement the sigmoid
+                 activation functions, set DEBUG AND GRADE SIGMOID flag = True and everything else to False.
+              ­ Step 3: Running local autograder by: Confirm that you are the top-level directory and execute
+                 the following in anaconda prompt or terminal:
+
+                             (/hw1p1_handout/) $ python3 autograder/hw1p1_autograder.py
+
+   It is recommended to set up a new local environment and install the library dependencies versions for the
+   homework to avoid version compatibility problems.
+
+   Please remember that the local autograder only has a few tests as a preliminary check. The entire suite of
+   tests is run on Autolab after you hand-in your code as described below.
+· Hand-in your code by running the following command from the top level directory, then SUBMIT the
+   created handin.tar file to autolab3 (please let the team know if you face an issue in the TARing step):
+
+                       (/hw1p1_handout/) $ tar -cvf handin.tar models mytorch
+
+   Note: After the Tar operation, to ensure your Tar process is done correctly. You can Untar the Tar file, and
+   your Untar folder must contain the models and mytorch subfolders.
+· DO
+
+              ­ Make sure you understand the concept of each function, we don't want you to "translate" math
+                 equations to codes without understanding them.
+
+              ­ Go through the examples we provide to have a better visualization of the matrix calculations. If
+                 you ask TAs for help, we will ask you to explain the example to us before giving you more hints.
+
+        3If you use Windows, navigate to the hw1p1 handout directory and run create tarball.sh in the terminal (we recommend
+   using WSL or Git Bash).
+
+                                                                         7
+· DO NOT
+              ­ Import external libraries other than numpy in your code, as packages that do not exist in autolab
+                 will cause submission failures.4 Libraries like PyTorch, TensorFlow, Keras are not allowed.
+              ­ Add, move, or remove any files or change any filenames.
+
+· Scoring: The homework comprises several sections. You get points for each section. Within any individual
+   section, however, you are expected to pass ALL tests within the section to get the score for it. Sections do
+   not have partial credit.
+   The local autograder provided to you is very detailed. You can isolate and verify individual components
+   of the sections on it. This can help you identify any issues or bugs in your code that must be addressed.
+   Ensure you get full points on the local autograder for any section, before submitting it to autolab.
+   Important Note: Please ensure your local autograder score matches your autolab score. On Autolab,
+   the obtained score would be considered your FINAL score.
+
+        4You can use os, sys, matplotlib, and other functions needed to get familiar with your environment and what is going on.
+   However, AutoLab expects only numpy, math and scipy. Please remove other libraries when making the submission.
+
+                                                                         8
+3 Notation
+
+**Numpy Tips:
+    · Use A * B for element-wise multiplication A  B.
+    · Use A @ B for matrix multiplication A · B.
+    · Use A / B for element-wise division A  B.
+
+Linear Algebra Operations
+
+AT          Transpose of A
+
+AB          Element-wise (Hadamard) Product of A and B (i.e. every element of A is multiplied by
+            the corresponding element of B. A and B must have identical size and shape)
+
+A·B         Matrix multiplication of A and B
+
+AB          Element-wise division of A by B (i.e. every element of A is divided by the corresponding
+            element of B. A and B must have identical size and shape)
+
+Set Theory
+
+S           A set
+
+R           The set of real numbers
+RN ×C       The set of N × C matrices containing real numbers
+
+Functions and Operations
+
+f :AB       The function f with domain A and range B
+
+log(x)      Natural logarithm of x
+
+ (x)                           1
+            Sigmoid, (1 + exp-x)
+tanh(x)
+                                       ex - e-x
+maxS f      Hyperbolic tangent, ex + e-x
+arg maxS f
+            The operator maxaS f (a) returns the highest value f (a) for all elements in the set S
+(x)
+            The operator arg maxaS f (a) returns the element of the set S that maximizes f (a)
+Calculus
+dy          Softmax function,  : RK  (0, 1)K and (x)i =        exi        for i = 1, ..., K
+dx
+y                                                              K     exj
+x                                                              j=1
+f (Z)
+            Derivative of scalar y with respect to scalar x
+  Z         Partial derivative of scalar y with respect to scalar x
+            Jacobian matrix J  RN×M of f : RM  RN
+
+                                                 9
+4 The Big Picture
+
+We can think of a neural network (NN) as a mathematical function which takes an input data x and computes
+an output y:
+
+                                                               y = fNN (x)
+For example, a model trained to identify spam emails takes in an email as input data x, and output 0 or 1
+indicating whether the email is spam.
+The function fNN has a particular form: it's a nested function. In lecture, we learnt the concepts of network
+layers. So, for a 3-layer neural network that returns a scaler, fNN looks like this:
+
+                                                     y = fNN (x) = f3(f2(f1(x)))
+In the above equation, f1 and f2 are vector functions of the following form:
+
+                                                        fl(z) = gl(Wl · z + bl)
+where l is called the layer index. The function gl is called an activation function (e.g. ReLU, Sigmoid).
+The parameters Wl (weight matrix) and bl (bias vector) for each layer are learnt using gradient descent
+by optimizing a particular loss function5 depending on the task.
+Here, Figure A shows an abstraction of an end-to-end topology. N indicates the batch-wise application of a
+shared per-neuron bias, not the bias parameter shape.
+
+                                    Figure A: An abstraction of an end-to-end topology.
+
+    5The terms cost function and loss function are analogous.
+
+                                                                     10
+  Thinking Note
+  Prompt Engineering with AI ­ Change one word:
+
+       · "How do the weights change during backpropagation?"
+       · "How do the parameters of this layer change during backpropagation?"
+  The two framings emphasize different objects.
+
+4.1 Understanding the shapes
+
+   1. A0 (inputs): Instead of passing each training data ( input features of dimension Cin) we consider a
+       batch of them at once because we are doing the same computation for each of the input features hence
+       (N × Cin, where N is batch number)
+
+   2. W0 (weight matrix): From lectures, we know the value of each neuron is the affine combination of the
+       input, weight and bias (W · A + b for this multiplication to be compatible, the second dimension of W
+       must match the first dimension of A. However this is for a single neuron, for multiple neurons, the first
+       dimension of W should be equal to the number of output neurons Cout hence the shape Cout × Cin
+
+   3. B0 (Biases): From the previous explanation about the weights, we can infer that the bias for a single
+       input feature should be 1 × 1, however, since we are considering a batch of N inputs at once, the biases
+       shape become N × 1.
+
+   4. Z0: Z0 is the output is the affine combination of input, weights and biases and we require it to be of
+       shape N × Cout so that each of the inputs in the batch have their outputs for the number of neurons
+       in Cout. To see how this works, check example below.
+
+   5. f: The activation is a linear function and does not change the shape of the input
+   6. A1: This is the output of the activation function and hence same shape as Z0
+   7. Y: After the activation of the hidden layer, the network can be made deeper by adding several layers.
+
+       However, the output of the final layer should match your desired output shape, in this case, Cout of
+       the final layer is same as the Cout of the weight which is equal to the number of neurons because we
+       have just one layer. Cout will be the equal to number of neurons in your final layer.
+In this assignment, we will create one architecture of neural networks called multilayer perceptron
+(MLP). Refer to Figure A.
+
+                                                                     11
+5 Neural Network Layers [15 Points]
+
+5.1 Linear Layer [mytorch.nn.Linear]
+
+Linear layers, also known as fully-connected layers, connect every input neuron to every output neuron
+and are commonly used in neural networks. Refer to Figure A for the visual representation of a linear layer.
+In this section, your task is to implement the Linear class in file linear.py (Additionally, to enhance
+clarity, we've marked the equations requiring conversion into code with a distinctive blue color for all the
+sections):
+
+    · Class attributes:
+
+          ­ Learnable model parameters weight W, bias b.
+
+          ­ Variables stored during forward-propagation to compute derivatives during back-propagation:
+              layer input A, batch size N 6.
+
+          ­ Variables stored during backward-propagation to train model parameters dLdW, dLdb.
+
+    · Class methods:
+
+          ­ init : Two parameters define a linear layer: in feature (Cin) and out feature (Cout). Zero
+              initialize weight W and bias b based on the inputs. Refer to Table 5.1 to see how the shapes of
+              W and b are related to the inputs (Hint: - Check the shapes of the in feature and out feature
+              and create a numpy array with zeros based on the required shape of W and b given in Table 5.1).
+
+          ­ forward: forward method takes in a batch of data A of shape N × Cin (representing N samples
+              where each sample has Cin features), and computes output Z of shape N × Cout ­ each data
+              sample is now represented by Cout features.
+
+          ­ backward: backward method takes in input dLdZ, how changes in its output Z affect loss L. It
+              calculates and stores dLdW, dLdb ­ how changes in the layer weights and bias affect
+              loss, which are used to improve the model. It returns dLdA, how changes in the layer inputs affect
+              loss to enable downstream computation.
+
+                    Table 1: Linear Layer Components
+
+Code Name     Math  Type Shape          Meaning
+N             N
+in features   Cin   scalar -            batch size
+out features  Cout
+A             A     scalar -            number of input features
+Z             Z
+W             W     scalar -            number of output features
+b             b
+dLdZ          L/Z   matrix  N × Cin     batch of N inputs each represented by Cin features
+dLdA          L/A   matrix  N × Cout    batch of N outputs each represented by Cout features
+dLdW          L/W   matrix  Cout × Cin  weight parameters
+dLdb          L/b   matrix  Cout × 1    bias parameters
+                    matrix  N × Cout    how changes in outputs affect loss
+                    matrix  N × Cin     how changes in inputs affect loss
+                    matrix  Cout × Cin  how changes in weights affect loss
+                    matrix  Cout × 1    how changes in bias affect loss
+
+5.1.1 Linear Layer Forward Equation
+
+During forward propagation, we apply a linear transformation to the incoming data A to obtain output data
+Z using a weight matrix W and a bias vector b. N is a column vector of size N which contain all 1s,
+
+    6Important: We will introduce the concept of "batch" in lecture 7, for now, think of batch size as number of input samples
+
+                                        12
+and is used for broadcasting7 the bias.                RN ×Cout   (1)
+                                Z = A · W T + N · bT
+
+         Figure B: Linear Layer Forward Example
+
+5.1.2 Linear Layer Backward Equation
+
+As mentioned earlier, the objective of backward propagation is to calculate the derivative of the loss with
+respect to the weight matrix, bias, and input to the linear layer, i.e., dLdW, dLdb, and dLdA respectively.
+
+Given L/Z as an input to the backward function, we can apply chain rule to obtain how changes in A,
+W , b affect loss L:
+
+ L       L  ·     Z T                                  RN ×Cin    (2)
+      =
+         Z A
+ A
+L        L T Z                                         RCout×Cin
+               ·                                                  (3)
+      =  Z        W
+W
+ L       L T Z                                         RCout×1    (4)
+               ·
+      =  Z        b
+ b
+
+In the above equations, dZdA, dZdW, and dZdb represent how the input, weights matrix, and bias respectively
+affect the output of the linear layer.
+
+Now, Z, A, and W are all two-dimensional matrices (see Table 1 above). dZdA would have derivative terms
+corresponding to each term of Z with respect to each term of A, and hence would be a 4-dimensional tensor.
+Similarly, dZdW would be 4-dimensional and dZdb would be 3-dimensional (since b is 1-dimensional). These
+high-dimensional matrices would be sparse (many terms would be 0) as only some pairs of terms have a
+dependence. So, to make things simpler and avoid dealing with high-dimensional intermediate tensors, the
+derivative equations given above are simplified to the below form:
+
+ L       L                                             RN ×Cin    (5)
+      =         ·W
+                                                       RCout×Cin  (6)
+ A       Z
+L        L T                                           RCout×1    (7)
+
+      =           ·A
+W        Z
+ L       L T
+         Z · N
+      =
+ b
+
+    7Read numpy documentation if you have never seen the word broadcasting before. We will refer to this term frequently in
+future homework.
+
+                                                                     13
+6 Activation Functions [10 points]
+
+Congratulations for finishing the first section! Here, we will introduce to you a few popular activation
+functions and how to implement them!
+As a machine learning engineer, you can theoretically choose any differentiable function as the activation
+function. The primary purpose of having nonlinear components in the neural network (fNN ) is to allow it to
+approximate nonlinear functions. Without activation functions, fNN will always be linear, no matter
+how deep it is. The reason is that A · W + b is a linear function, and a linear function of a linear function is
+also linear.
+
+Activation functions can either take scalar or vector arguments. Scalar activations apply a function to
+a single number. Thus, when they are applied to a vector, they operate element-wise. This one-to-one
+dependence between the input and output makes calculating derivatives easier. Popular choices of scalar
+activation functions are Sigmoid, ReLU, Tanh, and GELU, as shown in Table 2. More details about
+these functions are provided in their respective subsections.
+
+Sigmoid    ReLU     Tanh                    GELU          Swish
+         max(0, z)
+      1             ez -e-z         1  Z    1 + erf  Z         z
+  1+e-z             ez +e-z         2                  2  1+e-z
+
+                                    Table 2: Equation and graph of activation functions
+
+  Thinking Note
+
+  Prompt Engineering with AI ­ Change one word:
+       · "What is the derivative of the softmax activation?"
+       · "What is the Jacobian of the softmax function?"
+
+  Only one framing matches how softmax is defined here.
+
+In the case of vector activations, however, each output element depends on each of the input elements. This
+makes calculating derivatives tricky. A popular vector activation is the Softmax which you will be imple-
+menting in addition to the scalar activations mentioned above.
+
+In this section, your task is to implement the Activation class in file activation.py:
+    · Class attributes:
+          ­ Activation functions have no trainable parameters.
+          ­ Variables stored during forward-propagation to compute derivatives during back-propagation:
+              layer output A.
+    · Class methods:
+          ­ forward: forward method takes in a batch of data Z of shape N × C (representing N samples
+              where each sample has C features), and applies the activation function to Z to compute output
+              A of shape N × C.
+          ­ backward: backward method takes in dLdA, a measure of how the post-activations (output) affect
+              the loss. Using this and the derivative of the activation function itself, the method calculates and
+
+                                                                     14
+returns dLdZ, how changes in pre-activation features (input) Z affect the loss L. In the case of
+scalar activations, dLdZ is computed as:
+
+                                   dLdZ = dLdA                 A                                              (8)
+
+                                                               Z
+
+Here,  A   is  the  element  wise  derivative  of  A  with  respect  to  the  corresponding  element  of  Z.  In
+       Z
+
+other words, for one input of size 1 × C, it represents the diagonal of the Jacobian matrix in a
+
+vector of size 1 × C (recall from the lecture that the Jacobian of a scalar activation function is a
+
+diagonal matrix).   For a batch of size N , the size of     A  is N × C.      A  is calculated differently for
+                                                            Z                 Z
+
+different scalar activation functions as you'll see in the respective subsections.
+
+The Jacobian of a vector activation function is not a diagonal matrix. For each input vector
+Z(i) (1 × C) and corresponding output vector A(i) (also 1 × C) in the batch, you would calculate
+the Jacobian matrix J(i) separately. This would be of size C × C. Then, dLdZ(i) is given by:
+
+                                   dLdZ(i) = dLdA(i) · J(i)                                                   (9)
+
+After calculating each of the 1 × C dLdZ(i) vectors, you can stack them vertically to get the final
+N × C dLdZ matrix to return.
+
+                    Table 3: Activation Function Components
+
+Code Name  Math     Type Shape Meaning
+N          N
+C          C        scalar -                   batch size
+Z          Z
+A          A        scalar -                   number of features
+dLdA       L/A
+                    matrix N × C batch of N inputs each represented by C features
+dLdZ       L/Z
+                    matrix N × C batch of N outputs each represented by C features
+
+                    matrix N × C how changes in post-activation features
+
+                                               affect loss
+
+                    matrix N × C how changes in pre-activation features
+
+                                               affect loss
+
+The activation function topology is visualized in Figure C, revisit Figure A to see where it is in the bigger
+picture.
+Note: By convention in this class, Z is the output of a linear layer, and A is the input of a linear layer. Here,
+Z is the output from the previous linear layer and A is the input to the next linear layer, i.e. let fl be the
+activation function of layer l, Al+1 = fl(Zl).
+
+                    Figure C: Activation Function Topology
+
+                                               15
+6.1 Sigmoid [ mytorch.nn.Sigmoid ]
+
+6.1.1 Sigmoid Forward Equation
+
+During forward propagation, pre-activation features Z are passed to the activation function Sigmoid to
+calculate their post-activation values A.
+
+                                A = sigmoid.forward(Z)                         (10)
+
+                                    = (Z)                                      (11)
+
+                                        1                                      (12)
+                                    = 1 + e-Z
+
+Figure D: Sigmoid Activation Forward Example
+
+6.1.2 Sigmoid Backward Equation
+
+Backward propagation helps us understand how changes in pre-activation features Z affect the loss, given
+how changes in post-activation values A affect the loss.
+
+                              dL
+                              dZ = sigmoid.backward(dLdA)                      (13)
+
+                                  = dLdA   A                                   (14)
+
+                                           Z
+
+                                  = dLdA  ((Z) - 2(Z))                         (15)
+
+                                  = dLdA  (A - A  A)                           (16)
+
+6.2 Tanh [ mytorch.nn.Tanh ]
+
+6.2.1 Tanh Forward Equation
+
+For this homework, DO NOT use tanh implementation given in the NumPy library.
+
+                                  A = Tanh.forward(Z)                          (17)
+
+                                    = tanh(Z)                                  (18)
+
+                                       eZ - e-Z                                (19)
+                                    = eZ + e-Z
+
+6.2.2 Tanh Backward Equation
+
+Fill in the blank in the equation below. Represent the final result in terms of A and dLdA, similar to Sigmoid
+backward equation in the previous section.
+
+                                dL                                             (20)
+                                dZ = tanh.backward(dLdA)
+
+                                    =?                                         (21)
+
+                                           16
+Figure E: Tanh Activation Forward Example
+
+Hint: tanh(x) = 1 - tanh2(x).
+
+6.3 ReLU [mytorch.nn.ReLU]
+
+6.3.1 ReLU Forward Equation
+Recall the equation of ReLU and fill in the blank below:
+
+                               A = relu.forward(Z)                  (22)
+
+                                   =?                               (23)
+
+Hint: You might find the graph of ReLU in Table 2 helpful.
+Hint: For coding, search and read the docs on np.amax, np.maximum.
+
+Figure F: ReLU Activation Forward Example
+
+6.3.2 ReLU Backward Equation
+
+Complete the piece-wise function for relu.backward:
+
+                               dL
+                               dZ = relu.backward(dLdA)             (24)
+
+                                   =  ?, A>0                        (25)
+
+                                      ?, A0
+
+Hint: For coding, search and read the docs on np.where.
+
+                                       17
+6.4 GELU [mytorch.nn.GELU]
+
+6.4.1 GELU Forward Equation
+
+The GELU (Gaussian Error Linear Unit) activation function is defined in terms of the cumulative distribution
+function of the standard Gaussian distribution (Z) = P(X  Z) where X  N (0, 1):
+
+                                             A = gelu.forward(Z)                                                                (26)
+
+                                                = Z(Z)                                                                          (27)
+
+                                                      Z1                      x2
+                                                =Z          exp - dx                                                            (28)
+                                                      - 2                      2
+
+                                                   1                    Z                                                       (29)
+                                                = Z  1 + erf
+                                                   2                       2
+
+Here, erf refers to the error function which is frequently seen in probability and statistics. It can also take
+complex arguments but will take real ones here. Hint: Search the docs of the math and scipy libraries for
+help with implementation.
+
+6.4.2 GELU Backward Equation
+
+For  the  gelu.backward      part  where  we  calculate  A    ,  the    GELU      equation  given  above  needs  to  be  differenti-
+                                                         Z
+
+ated with respect to Z:
+
+                                   dA d                                                                                         (30)
+                                       = Z(Z)
+                                   dZ dZ
+
+                                       = (Z) + Z(Z)                                                                             (31)
+
+                                       = (Z) + ZP(X = Z)                                                                        (32)
+
+                                          1                Z            Z                   Z2
+                                       = 1 + erf  +   exp -                                                                     (33)
+                                          2                2            2                   2
+
+This gives us the final expression to implement the backward function:
+
+                             L  = gelu.backward(dLdA)                                                                           (34)
+
+                             Z
+
+                                = dLdA       A                                                                                  (35)
+
+                                             Z
+
+                                                1                Z             Z                Z2
+                                = dLdA  1 + erf  +   exp -                                                                      (36)
+                                                2                2                2             2
+
+Feel free to save any other variables from gelu.forward that you might need for gelu.backward.
+
+6.5 Swish
+
+6.5.1 Swish Forward Equation
+
+The Swish activation function is a smooth, non-monotonic function with a learnable parameter  that allows
+for greater flexibility in learning. It is defined as:
+
+                                                A = swish.forward(Z, )                                                          (37)
+
+                                                   = Z  (Z)                                                                     (38)
+
+                                                                 1                                                              (39)
+                                                   = Z  1 + e-Z
+
+Here,  (x)  refers  to  the  logistic  sigmoid  function,  (x)       =      1  .  The  parameter      is  a  learnable  scalar  that
+                                                                        1+e-x
+
+allows the function to adapt its shape, ranging from a linear function (for small ) to a ReLU-like function
+
+(for large ). This function reduces to [mytorch.nn.SiLU] when  is fixed at 1.
+
+                                                                 18
+6.5.2 Swish Backward Equation
+
+For  the  swish.backward     part     where  we  calculate    A  ,  the  Swish  equation  given  above  needs  to  be  differen-
+                                                              Z
+
+tiated with respect to Z:
+
+                             dA d
+                                      = (Z  (Z))                                                                       (40)
+                             dZ dZ
+
+                                                     d                 d
+                                      = (Z)  (Z) + Z  ((Z))                                                            (41)
+                                                     dZ              dZ
+
+                                      = (Z)  1 + Z  (Z)  (1 - (Z))                                                     (42)
+
+                                             1                      1                 1
+                                      = 1 + e-Z + Z  1 + e-Z  1 - 1 + e-Z                                              (43)
+
+This gives us the final expression to implement the backward function for the input Z:
+
+                        L
+                        Z = swish.backward(dLdA, Z, )                                                                  (44)
+
+                             = dLdA      A                                                                             (45)
+
+                                         Z
+
+                                                  1                       1                  1                         (46)
+                             = dLdA  1 + e-Z + Z  1 + e-Z  1 - 1 + e-Z
+
+Additionally, since  is a learnable scalar parameter, its gradient with respect to the loss L will also be
+needed for optimization and would be a scalar. The partial derivative of A with respect to  is:
+
+                                      dA d
+                                         = (Z(Z))                                                                      (47)
+                                      d d
+
+                                                     d
+                                         = Z  ((Z))                                                                    (48)
+                                                     d
+
+                                         = Z  Z  (Z)  (1 - (Z))                                                        (49)
+
+                                                            1                   1
+                                         = Z  Z  1 + e-Z  1 - 1 + e-Z                                                  (50)
+
+And  the  gradient  of  the  loss  with  respect  to      would  be    L  =     dLdA      A  .
+                                                                                          
+
+                             L     =     dLdA         A                                                                (51)
+
+                                                      
+
+                                   =                                 1                    1                            (52)
+                                         dLdA  Z  Z  1 + e-Z  1 - 1 + e-Z
+
+6.6 Softmax [mytorch.nn.Softmax]
+
+The Softmax activation function is a vector activation function that is mostly applied at the end of neural
+network to convert a vector or raw outputs to a probability distribution in which the output elements sum
+up to 1. However, it can also be applied in the middle of a neural network like other activation functions
+discussed before this.
+
+6.6.1 Softmax Forward Equation
+
+Given a C-dimensional input vector Z, whose m-th element is denoted by zm, softmax.forward(Z) will
+give a vector A whose m-th element am is given by:
+
+                                                     am =      exp(zm)                                                 (53)
+
+                                                               C     exp(zk  )
+                                                               k=1
+
+                                                               19
+Here Z was a single vector. Similar calculations can be done for a batch of N vectors. Hint: You must
+calculate the softmax probabilities along each row.
+
+Important Note: Through this task, we want to introduce a new concept. In many deep learning tasks, like
+when using the Softmax activation function, we need to handle large input values without causing overflow.
+A common technique, known as Numerical Stability, ensures that our computation remains well-defined by
+subtracting the maximum value within each row before exponentiation (zm). By performing this row-wise
+subtraction, we keep all exponentiated values within a safer range, preventing them from becoming too large
+and causing arithmetic overflow. This approach is widely adopted in libraries and helps guarantee that the
+Softmax outputs sum to one without overflowing or underflowing. When you implement Softmax, remember
+to subtract the maximum value of the row maximum to ensure stable computations.
+
+6.6.2 Softmax Backward Equation
+
+As discussed in the description of the backward method for vector activations earlier in the section, the first
+step in backpropagating the derivatives is to calculate the Jacobian for each vector in the batch. Let's take
+the example of an input vector Z (a row of the input data matrix) and corresponding output vector A (a
+row of the output matrix calculated by softmax.forward). The Jacobian J is a C × C matrix. Its element
+at the m-th row and n-th column is given by:
+
+Jmn =  am(1 - am)  if   m=n                                                            (54)
+         -aman     if   m = n
+
+where am refers to the m-th element of the vector A.
+
+Now the derivative of the loss with respect to this input vector, i.e., dLdZ is 1 × C single input vector and is
+calculated as:
+
+       dLdZ = dLdA · J                                                                 (55)
+
+Similar derivative calculation can be done for all the N vectors in the batch and the resulting vectors can
+be stacked up vertically to give the final N × C derivatives matrix.
+
+Some code hints for Softmax are given in the handout to help you with implementation.
+
+       20
+7 Neural Network Models [35 points]
+
+In this section, you will bring together the different components you have made so far ­ linear layers and
+activation functions ­ and create your own Model Class in file models/mlp.py!
+
+    · Class attributes:
+
+          ­ layers: a list storing all linear and activation layers in the correct order.
+
+    · Class methods:
+
+          ­ forward: forward method takes input data A0 and applies transformations corresponding to the
+              layers (linear and activation) sequentially as self.layers[i].forward for i = 0, ..., l - 18 where
+              l is the total number of layers, to compute output Al.
+
+          ­ backward: backward method takes in dLdAl, how changes in loss L affect model output Al, and
+              performs back-propagation from the last layer to the first layer by calling self.layers[i].backward
+              for i = l - 1, ..., 0. It does not return anything. Note that activation and linear layers don't need
+              to be treated differently as both take in the derivative of the loss with respect to the layer's output
+              and give back the derivative of the loss with respect to the layer's input.
+
+Please consider the following class structure:
+
+      class Model:
+            def __init__(self):
+                   self.layers = # TODO
+
+            def forward(self, A):
+                   l = len(self.layers)
+                   for i in range(l):
+                         A = # TODO - keep modifying A by passing it through a layer
+                   return A
+
+            def backward(self, dLdA):
+                   l = len(self.layers)
+                   for i in reversed(range(l)):
+                         dLdA = # TODO - keep modifying dLdA by passing it backwards through a layer
+                   return dLdA
+
+Note that the A mentioned in the for loop in the forward pseudo code above is written so to maintain the
+same name of the variable containing the current output. In case of linear layers, it is the same as the output
+that was written as Z in the linear layer section. The case with dLdA mentioned in the backward pseudo
+code is similar. In the case of activation functions, it will be the same as what was mentioned as dLdZ in
+the activation functions section after the current dLdA is passed through the activation layer's backward
+function.
+
+We will start by building a shallow network with 0 hidden layer in subsection 7.1, and then a slightly deeper
+network with 1 hidden layer in subsection 7.2. Finally, we will build a deep neural network with 4 hidden
+layers in subsection 7.3. Note: all models have one additional layer for the output mapping, i.e. the total
+number of layers l for a model with 1 hidden layer is actually 2.
+We do not provide a reference table here. Using what you have learned so far, we encourage you to make a
+reference table yourself. Though it takes time, it will aid the debugging process and help make clear your
+understanding of the relevant components. If you ask for help, we will likely ask to see the reference table
+you have created before attempting to diagnose your issue.
+
+    8python lists are 0-indexed
+
+                                                                     21
+7.1 MLP (Hidden Layers = 0) [mytorch.models.MLP0] [10 points]
+
+In this subsection, your task is to implement the forward and backward attribute functions of the MLP0
+class.
+
+The MLP0 topology is visualized in Figure G. The network is displayed vertically to fit on the page. To
+facilitate understanding, you can try labelling the graph to show which parts are linear layers and which
+parts are activation functions9. The layers class attribute with contain a linear layer (layer0) followed the
+activation layer f0.
+
+Figure G: MLP 0 Example Topology (Hidden Layers = 0)
+
+7.1.1 MLP Forward Pseudocode (Hidden Layers = 0)
+
+Z0 = layer0.forward(A0)                                                RN×C1  (56)
+A1 = f0.forward(Z0)                                                    RN×C1  (57)
+
+7.1.2 MLP Backward Pseudocode (Hidden Layers = 0)
+
+L   = f0.backward  L                                                   RN×C1  (58)
+                                                                       RN×C0  (59)
+Z0                 A1
+
+L   = layer0.backward  L
+
+A0                     Z0
+
+9Refer to Fig A for solution
+
+                                                                  22
+7.2 MLP (Hidden Layers = 1) [mytorch.models.MLP1] [10 points]
+
+In this section, your task is to implement the forward and backward attribute functions of the MLP1
+class.
+The MLP1 topology is visualized in Figure H. You must use the diagram to deduce what the model specifi-
+cation is for the linear layers. To facilitate understanding, you should try labelling the graph to show which
+parts correspond to which linear layers and activation functions.
+
+                                Figure H: MLP 1 Example Topology (Hidden Layers = 1)
+7.2.1 MLP Forward Method Description (Hidden Layers = 1)
+The code for MLP1.forward() is highly similar to MLP0.forward(), you are doing the same thing, except for
+two more layers (one linear and the corresponding activation). Hence, we won't provide you the pseudocode,
+but only a high level description with reference to Fig H:
+
+    · forward method takes input data A0 and applies the linear transformation self.layers[0].forward
+       to get Z0.
+
+    · It then applies activation function self.layers[1].forward on Z0 to compute layer output A1.
+                                                                     23
+    · A1 is passed to the next linear layer, and we apply self.layers[2].forward to obtain Z1.
+    · Finally, we apply activation function self.layers[3].forward on Z1 to compute model output A2.
+
+7.2.2 MLP Backward Method Descriptions (Hidden Layers = 1)
+backward: backward method takes in dLdA2, how changes in loss L affect model output A2, and per-
+forms back-propagation from the last layer to the first layer by calling self.layers[i].backward for
+i = 3, 2, 1, 0.
+
+7.3 MLP (Hidden Layers = 4) [mytorch.models.MLP4] [15 points]
+
+In this section, your task is to initialize the MLP4 class and implement the forward and backward attribute
+functions.
+The MLP4 topology is visualized in Figure I. You must use the diagram to deduce what the model speci-
+fication is for the linear layers. To facilitate understanding, you can try labelling the graph to show which
+parts correspond to which linear layers and activation functions.
+
+7.3.1 MLP Forward Equations (Hidden Layers = 4)
+
+Given the math equations, can you figure out which class methods of Linear class and Activation class
+perform the calculation of which equation?
+
+   Zi = Ai · WiT + N · biT                         RN ×Ci+1  (60)
+Ai+1 = fi(Zi)                                      RN ×Ci+1  (61)
+
+7.3.2 MLP Backward Equations (Hidden Layers = 4)
+
+Given the math equations, can you figure out which class methods of Linear class and Activation class
+perform the calculations?
+
+Ai+1  =                                            RN ×Ci+1  (62)
+ Zi      Zi fi(Zi)                                 RN ×Ci+1  (63)
+                                                   RN×Ci     (64)
+L        L   Ai+1
+     =
+Zi Ai+1 Zi
+
+L L         Zi      T
+     =·
+Ai Zi Ai
+
+                            24
+Figure I: MLP 4 Example Topology (Hidden Layers = 4)
+                                    25
+8 Criterion - Loss Functions [10 points]
+
+Much as you did for activation functions you will now program some simple loss functions. Different loss
+functions may become useful depending on the type of neural network and type of data you are using. Here
+we will program Mean Squared Error Loss MSE and Cross Entropy Loss. It is important to know how
+these are calculated, and how they will be used to update your network. As before we will provide the
+formulas, and know that each of these functions can be done in less than 10 lines of code, so if your code
+begins to get more complex than that you may be overthinking the problem.
+
+In this section, your task is to implement the forward and backward attribute functions of the Loss class
+in file loss.py:
+
+    · Class attributes:
+
+          ­ Stores model prediction A to compute back-propagation.
+
+          ­ Stores desired output Y stored to compute back-propagation.
+
+    · Class methods:
+
+          ­ forward: forward method takes in model prediction A and desired output Y of the same shape
+              to calculate and return a loss value L. The loss value is a scalar quantity used to quantify the
+              mismatch between the network output and the desired output.
+
+          ­ backward: backward method calculates and returns dLdA, how changes in model outputs A affect
+              loss L. It is used to enable downstream computation, as seen in previous sections.
+
+              Table 4: Loss Function Components
+
+Code Name  Math Type Shape Meaning
+N
+C          N  scalar -  batch size
+A
+Y          C  scalar -  number of classes
+L
+dLdA       A  matrix N × C model outputs
+
+           Y  matrix N × C ground-truth values
+
+           L  scalar -  loss value
+
+           L/A matrix N × C how changes in model outputs affect loss
+
+The loss function topology is visualized in Figure J, whose reference persists throughout this document.
+
+                                                Figure J: Loss Function Topology
+
+8.1 MSE Loss [ mytorch.nn.MSELoss ]
+
+MSE stands for Mean Squared Error, and is often used to quantify the prediction error for regression
+problems. Regression is a problem of predicting a real-valued label given an unlabeled example. Estimating
+house price based on features such as area, location, the number of bedrooms and so on is a classic regression
+problem.
+
+                                                                     26
+8.1.1 MSE Loss Forward Equation
+We first calculate the squared error SE between the model outputs A and the ground-truth values Y:
+
+SE(A, Y ) = (A - Y )  (A - Y )                                                                      (65)
+
+Then we calculate the sum of the squared error SSE, where N, C are column vectors of size N and C which
+contain all 1s:
+
+SSE(A, Y ) = NT · SE(A, Y ) · C                                                                     (66)
+
+Here, we are calculating the sum of all elements of the N × C matrix SE(A, Y ). The first pre multiplication
+with TN sums across rows. Then, the post multiplication of this product with C sums the row sums across
+columns to give the final sum as a single number.
+
+Lastly, we calculate the per-component Mean Squared Error MSE loss:
+
+M SELoss(A, Y ) =                     SSE(A, Y )                                                    (67)
+
+                                      N ·C
+
+8.1.2 MSE Loss Backward Equation
+
+                                      A-Y                                                           (68)
+MSELoss.backward() = 2 · N · C
+
+                                  27
+8.2 Cross-Entropy Loss [mytorch.nn.CrossEntropyLoss]
+
+Cross-entropy loss if one of the most commonly used loss function for probability-based classification prob-
+lems. In this course, most of the part 2 homework problems involve classification problems, hence you will
+use this loss function very often.
+
+8.2.1 Cross-Entropy Loss Forward Equation
+
+Firstly, we use softmax function to transform the raw model outputs A into a probability distribution
+consisting of C classes proportional to the exponentials of the input numbers.
+N, C are column vectors of size N and C which contain all 1s. 10
+
+               softmax(A) = (A)                                    (69)
+
+               =  exp(A)                                           (70)
+
+                  C              exp(Aij  )
+                  j=1
+
+Now, each row of A represents the model's prediction of the probability distribution while each row of Y
+represents target distribution of an input in the batch.
+Then, we calculate the cross-entropy H(A, Y) of the distribution Ai relative to the target distribution Yi
+for i = 1, ..., N :
+
+               crossentropy = H(A, Y )                             (71)
+
+               = (-Y  log((A))) · C                                (72)
+
+Remember that the output of a loss function is a scalar, but now we have a column matrix of size N. To
+transform it into a scalar, we can either use the sum or mean of all cross-entropy.
+
+Thinking Note
+
+Prompt Engineering with AI ­ Shift the unit of analysis:
+
+    · "Why do we take the gradient of the loss?"
+    · "Why do we take the gradient of the batch-aggregated loss?"
+
+The explanations differ in how they treat data points.
+
+Here, we choose to use the mean cross-entropy as the cross-entropy loss as that is the default for PyTorch
+as well:
+
+               sum crossentropy loss := NT · H(A, Y )              (73)
+
+                                 = SCE(A, Y )                      (74)
+
+               mean crossentropy loss :=  SCE(A, Y )               (75)
+
+                                          N
+
+  10The matrix division in Equation 156 is element-wise (the formal symbol for the element-wise division operator of two
+matrices is , but we use the simpler A over B notation here).
+
+                                                                     28
+Figure K: Cross Entropy Loss Example
+
+8.2.2 Cross-Entropy Loss Backward Equation
+
+xent.backward() =                           (A) - Y  (76)
+
+                                            N
+
+29
+9 Optimizers [10 points]
+
+In deep learning, optimizers are used to adjust the parameters of a model. The purpose of an optimizer is
+to adjust model weights to minimize a loss function.
+
+Brief recap: we have built our own MLP models in Section 7 using the linear class from Section 5 and
+activation classes from Section 6. We have also seen how to perform forward and backward propagation.
+Forward propagation is used for estimation, and backward propagation informs us on how parameter changes
+affect loss. Section 8 focused on loss functions, also called criterion, which we use to evaluate the quality
+of our model's estimates. The next step is to improve our model by updating its parameters based on the
+information we learned from the loss. This is where optimizers come in.
+
+9.1 Stochastic Gradient Descent (SGD) [ mytorch.optim.SGD ]
+
+In this section, we will implement Minibatch stochastic gradient descent with momentum, which we
+will refer to as SGD in this homework. Minibatch SGD is a version of the SGD algorithm that speeds
+up the computation by approximating the gradient using smaller batches of the training data. Momentum
+helps accelerate SGD by incorporating the velocity from previous updates to reduce oscillations for faster
+convergence. The sgd function in PyTorch implements Minibatch SGD with momentum.
+
+Your task is to implement the step attribute function of the SGD class in file sgd.py:
+    · Class attributes:
+
+          ­ l: list of model layers (for our hw1 scope, we will have linear layers)
+
+          ­ L: number of model layers
+
+          ­ lr: learning rate, tunable hyperparameter scaling the size of an update.
+
+          ­ mu: momentum rate µ, tunable hyperparameter controlling how much the previous updates affect
+              the direction of current update. µ = 0 means no momentum.
+
+          ­ v W: list of weight velocity for each layer
+
+          ­ v b: list of bias velocity for each layer
+    · Class methods:
+
+          ­ step: Updates W and b of each of the model layers:
+
+                ­ Gradients with respect to each parameter tell us the direction that makes the model worse,
+                   so we move opposite to the direction of the gradient to update parameters.
+
+                ­ A non-zero momentum updates velocities v W and v b, which are changes in the gradient to
+                   get to the global minima. The velocity of the previous update is scaled by hyperparameter
+                   µ, refer to lecture slides for more details.
+
+9.1.1 SGD Equation (Without Momentum)
+
+W := W -                                   L  (77)
+
+                                           W
+
+b := b -                                   L  (78)
+
+                                           b
+
+                                       30
+9.1.2 SGD Equations (With Momentum)
+
+                                                 L          (79)
+                         vW := µvW + W
+
+                                         L                  (80)
+                         vb := µvb + b
+
+                         W := W - vW                        (81)
+
+                                    b := b - vb             (82)
+
+                         Table 5: SGD Optimizer Components
+
+Code Name  Math  Type    Shape      Meaning
+model      -     object  -          model with layers attribute
+l          -     object  -          layers attribute selected from the model
+L          L     scalar  -          number of layers in the model
+lr               scalar  -          learning rate hyperparameter to scale affect of new gradients
+momentum   µ     scalar  -          momentum hyperparameter to scale affect of prior gradients
+vW         -     list    L          list of velocity weight parameters, one for each layer
+vb         -     list    L          list of velocity bias parameters, one for each layer
+v W[i]     vWi   matrix  Ci+1 × Ci  velocity for layer i weight
+v b[i]     vbi   matrix  Ci+1 × 1   velocity for layer i bias
+l[i].W     Wi    matrix  Ci+1 × Ci  weight parameter for a layer
+l[i].b     bi    matrix  Ci+1 × 1   bias parameter for a layer
+
+                                     31
+10 Regularization [20 points]
+
+Regularization is a set of techniques that can prevent overfitting in deep learning models and thus improve
+their accuracy when dealing with new data from a particular domain.
+
+10.1 Batch Normalization [mytorch.nn.BatchNorm1d]
+
+Z-score normalization is the procedure during which the feature values are rescaled to have the properties
+of a normal distribution. Let µ be the mean (the average value of the feature, averaged over all examples
+in the dataset) and  be the standard deviation from the mean.
+Standard scores (or z-scores) of features are calculated as follows:
+
+x^ =  x-µ                                          (83)
+
+          
+
+Batch normalization is a method used to make training of artificial neural networks faster and more
+stable through normalization of the layers' inputs by re-centering and re-scaling. We encourage you to read
+Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift, for a better
+understanding. You can refer to the pseudocode in the paper if you are stuck!
+
+In this section, your task is to implement the forward and backward attribute functions of the BatchNorm1d
+class in batchnorm.py.
+
+    · Class attributes:
+
+          ­ alpha: a hyperparameter used for the running mean and running var computation.
+
+          ­ eps: a value added to the denominator for numerical stability.
+
+          ­ BW: learnable parameter of a BN (batch norm) layer to scale features.
+
+          ­ Bb: learnable parameter of a BN (batch norm) layer to shift features.
+
+          ­ dLdBW: how changes in  affect loss
+
+          ­ dLdBb: how changes in  affect loss
+
+          ­ running M: learnable parameter, the estimated mean of the training data
+
+          ­ running V: learnable parameter, the estimated variance of the training data
+
+    · Class methods:
+          ­ forward: It takes in a batch of data Z computes the batch normalized data Z^, and returns the
+              scaled and shifted data Z~. In addition:
+
+                ­ During training, forward calculates the mean and standard-deviation of each feature over
+                   the mini-batches and uses them to update the running M (E[Z]) and running V (V ar[Z]),
+                   which are learnable parameter vectors trained during forward propagation. By default, the
+                   elements of E[Z] are initialized with 0 and the elements of V ar[Z] are initialized with 1.
+
+                ­ During inference, the learnt mean running M E[Z] and variance running V V ar[Z] over the
+                   entire training dataset are used to normalize Z.
+
+          ­ backward: takes input dLdBZ, how changes in BN layer output affects loss, computes and stores
+              the necessary gradients dLdBW , dLdBb to train learnable parameters BW and Bb. Returns
+              dLdZ, how the changes in BN layer input Z affect loss L for downstream computation.
+
+The batchnorm topology is visualized in Figure L, whose reference persists throughout this document. In
+the image, V0, M0 correspond to V, M during training, and correspond to running V and running M during
+inference.
+
+      32
+                       Table 6: Batch Normalization Components
+
+Code Name     Math     Type    Shape  Meaning
+N                      scalar  -      batch size
+num features  N        scalar  -      number of features (same for input and output)
+alpha         C        scalar  -      the coefficient used for running M and running V computations
+eps                    scalar  -      a value added to the denominator for numerical stability.
+Z                      matrix  N ×C   data input to the BN layer
+NZ                     matrix  N ×C
+BZ            Z        matrix  N ×C   normalized input data
+M             Z^       matrix  1×C
+V             Z~       matrix  1×C    data output from the BN layer
+running M              matrix  1×C    Mini-batch per feature mean
+running V     µ        matrix  1×C    Mini-batch per feature variance
+BW            2        matrix  1×C    Running average of per feature mean
+Bb            E [Z ]   matrix  1×C    Running average of per feature variance
+dLdBW         V ar[Z]  matrix  1×C    Scaling parameters
+dLdBb                  matrix  1×C    Shifting parameters
+dLdZ                   matrix  N ×C   how changes in  affect loss
+dLdNZ                  matrix  N ×C   how changes in  affect loss
+dLdBZ                  matrix  N ×C   how changes in inputs affect loss
+dLdV          L/       matrix  1×C    how changes in Z^ affect loss
+dLdM          L/       matrix  1×C    how changes in Z~ affect loss
+              L/Z                     how changes in (2) affect loss
+              L/Z^                    how changes in µ affect loss
+              L/Z~
+              L/(2)
+              L/µ
+
+                                                  Figure L: Batchnorm Topology
+
+Note: In the following sections, we are providing you with element-wise equations instead of matrix equa-
+tions. As a deep learning ninja, please don't use for loops to implement them ­ that will be extremely
+slow!
+Your task is first to come up with a matrix equation for each element-wise equation we provide, then im-
+plement them as code. If you ask TAs for help in this section, we will ask you to provide your matrix
+equations.
+
+10.1.1 Batch Normalization Forward Training Equations (When eval = False)
+First, we calculate the mini-batch mean µ and variance 2 of the current batch of data Z. µj and j2
+represents the mean and variance of the jth feature. Zij refers to the element at the ith row and jth column
+of Z and represents the value of the jth feature in ith sample in the batch.
+
+                                                                     33
+Hint: check the documentation for np.sum and apply it along the correct axis.
+
+         1N      Zij                                                              (84)
+µj = N                                           j = 1, ..., C
+
+            i=1
+
+j2  =    1  N                                    j = 1, ..., C                    (85)
+         N
+               (Zij - µj )2
+
+            i=1
+
+Using the mean and variance, we normalize the input Z to get the normalized data Z^. Note: we add  in
+denominator for numerical stability and to prevent division by 0 error .
+
+    Z^i  =  Zi - µ                               i = 1, ..., N                    (86)
+              2 + 
+
+Here, we give you an example for the above equation to facilitate understanding:
+
+    Figure M: Batchnorm Forward Equation 1 Example
+
+Scale the normalized data by  and shift it by :
+
+Z~i =   Z^i +                                    i = 1, ..., N                    (87)
+
+Hint: In your matrix equation, first broadcast  and  to make them have the same shape N × C as Z^.
+
+    Figure N: Batchnorm Forward Equation 2 Example
+                                    34
+During training (and only during training), your forward method should be maintaining a running average
+of the mini-batch mean and variance. These running averages should be used during inference. Hyperpa-
+rameter  is used to compute weighted running averages.
+
+                              E[Z] =   E[Z] + (1 - )  µ                                                     R1×C                          (88)
+                           V ar[Z] =   V ar[Z] + (1 - )  2                                                  R1×C                          (89)
+
+10.1.2 Batch Normalization Forward Inference Equations (When eval = True)
+
+Once the network has been trained, we use the running average for the mean and variance of the training
+data E[Z] and V ar[Z] to calculate the normalized data Z^.
+
+                                  Z^i = Zi - E[Z]                                                  i = 1, ..., N                          (90)
+                                            V ar[Z] + 
+
+Scale the normalized data by  and shift it by :
+
+                                  Z~i =   Z^i +                                                    i = 1, ..., N                          (91)
+
+10.1.3 Batch Normalization Backward Equations
+
+We can now derive the analytic partial derivatives of the BatchNorm transformation. Let L be the train-
+
+ing  loss  over  the   batch      and     L   the    derivative      of  the    loss  with    respect  to  the    output  of   the  BatchNorm
+                                          Z~
+transformation for Z.
+
+           L           N   L Z~                    N        L
+                                                            Z~ ij
+                 =         Z~                 =                                                                    j = 1, ..., C (92)
+            j i=1                                                                                                  j = 1, ..., C (93)
+                                            ij i=1
+                                                                                                                                         (94)
+           L           N   L Z~                    N        L                                                      j = 1, ..., C (95)
+                                                            Z~
+                 =         Z~                 =                   Z^                                                                     (96)
+            j i=1                                                                                                  i = 1, ..., N (97)
+                                            ij i=1                       ij
+                                                                                                                                         (98)
+              L L Z~ L                                                                                                                   (99)
+              Z^ = Z~ Z^ = Z~  
+
+           L           N   L Z^
+                           Z^ 2
+     2             =
+                                            ij
+                 j i=1
+
+                      1N          L           (Z   -  µ)       (2   +  )-  3
+                 =-               Z^                                       2
+
+                      2                                                          ij
+
+                             i=1
+
+           Z^i =           (Zi    -  µ)(2       +  )-    1
+           µ µ                                           2
+
+                      -(2  +      )-   1  -   1       -  µ)      2 +         -  3     2N           (Zk - µ)
+                 =                     2      2 (Zi                             2     -
+                                                                                        N
+                                                                                              k=1
+
+              L  =     N   L           Z^i
+              µ       i=1  Z^i         µ
+
+Now  for   the  grand  finale,    let's   compute     L     .  For  clarity,  we     present  the  derivation for  L      for  one  data  sample
+                                                      Z                                                            Zi
+
+Zi.
+
+                       L L Z^ L                                  (2  +   )-   1         L     2                       1 L                 (100)
+                       Zi = Z^i Zi = Z^i                                      2      + 2      N (Zi - µ)          +
+
+                                                                                                                     N µ
+
+                                                                         35
+In figure O, we present the illustration of batchnorm in a 0-hidden layer MLP model. Since the variables
+are color coded, it should be very clear how each variable is used in equations 85 ­ 101. This would help you
+apply the chain rule and understand where the backward equations come from.
+
+                                         Figure O: Batchnorm Example (big picture)
+                                                                     36
+11 Appendix
+
+11.1 Summary of Formulas
+
+1 Neural Network Layers (Section 5)
+
+1.1 Linear Layer [mytorch.nn.Linear]
+
+Linear Layer Forward Equation
+
+Z = A · W T + N · bT                                             RN ×Cout  (101)
+
+Linear Layer Backward Equation                                  RN ×Cin    (102)
+                                                                RCout×Cin  (103)
+ L                              L                               RCout×1    (104)
+      =                                ·W
+                                                                           (105)
+ A                              Z                                          (106)
+L                               L T                                        (107)
+
+      =                                  ·A                                (108)
+W                               Z                                          (109)
+ L                              L T                                        (110)
+                                Z · N
+      =                                                                    (111)
+ b                                                                         (112)
+
+2 Activation Functions (Section 6)                                         (113)
+                                                                           (114)
+2.1 Sigmoid [mytorch.nn.Sigmoid]
+
+Sigmoid Forward Equation           A = sigmoid.forward(Z)
+Sigmoid Backward Equation             = (Z)
+2.2 Tanh [mytorch.nn.Tanh]                    1
+                                      = 1 + e-Z
+
+                                dL
+                                    = sigmoid.backward(dLdA)
+
+                                dZ
+                                                  A
+
+                                    = dLdA 
+                                                  Z
+
+                                    = dLdA  (A - A  A)
+
+Tanh Forward Equation                  A = Tanh.forward(Z)
+Tanh Backward Equation                        eZ - e-Z
+Hint: tanh(x) = 1 - tanh2(x)
+                                          = eZ + e-Z
+
+                                    dL
+                                        = tanh.backward(dLdA)
+
+                                    dZ
+                                        =?
+
+                                             37
+2.3 ReLU [mytorch.nn.ReLU]
+
+ReLU Forward Equation
+
+                                          A = relu.forward(Z)                 (115)
+                                             =?                               (116)
+
+ReLU Backward Equation                                                        (117)
+                                                                              (118)
+                                 dL
+                                 dZ = relu.backward(dLdA)                     (119)
+                                                                              (120)
+                                            ?, A>0                            (121)
+                                     =
+                                                                              (122)
+                                            ?, A0                             (123)
+                                                                              (124)
+2.4 GELU [mytorch.nn.GELU]
+                                                                              (125)
+GELU Forward Equation                                                         (126)
+                                                                              (127)
+                                 A = gelu.forward(Z)
+                                                                              (128)
+                                             Z1                 x2            (129)
+                                 =Z           exp - dx                        (130)
+                                             - 2                2
+
+                                          1               Z
+                                 = Z  1 + erf 
+                                          2                  2
+
+GELU Backward Equation
+
+                        dA d
+                             = Z(Z)
+
+                        dZ dZ
+                             = (Z) + Z(Z)
+
+                                 1           Z            Z           Z2
+                              = 1 + erf                   +   exp -
+                              2                    2      2           2
+
+L
+Z = gelu.backward(dLdA)
+
+                                     A
+                        = dLdA  Z
+
+                                       1              Z         Z         Z2
+                        = dLdA            1 + erf         +   exp -
+                                 2                    2            2      2
+
+2.5 Swish [mytorch.nn.Swish]
+Swish Forward Equation
+
+                                 A = swish.forward(Z, )
+                                    = Z  (Z)
+                                                  1
+                                    = Z  1 + e-Z
+
+                                                      38
+Swish Backward Equation
+
+                         dA d                                                               (131)
+                              = (Z  (Z))                                                    (132)
+                                                                                            (133)
+                         dZ dZ                                                              (134)
+
+                                     d                d                                     (135)
+                           = (Z)  (Z) + Z  ((Z))                                            (136)
+                                     dZ            dZ                                       (137)
+
+                           = (Z)  1 + Z  (Z)  (1 - (Z))                                     (138)
+                                                                                            (139)
+                           1                       1                                  1     (140)
+                           = 1 + e-Z + Z  1 + e-Z  1 - 1 + e-Z                              (141)
+
+L                                                                                           (142)
+     = swish.backward(dLdA, Z, )                                                            (143)
+
+Z                                                                                           (144)
+
+             A                                                                              (145)
+= dLdA                                                                                      (146)
+
+             Z
+
+                                  1                      1                               1
+= dLdA  1 + e-Z + Z  1 + e-Z                                                   1 - 1 + e-Z
+
+                           dA d
+                                = (Z(Z))
+
+                           d d
+                                          d
+
+                                = Z  ((Z))
+                                         d
+
+                           = Z  Z  (Z)  (1 - (Z))
+
+                                           1                                   1
+                           = Z  Z  1 + e-Z  1 - 1 + e-Z
+
+L                                     A                                                  1
+     =                     dLdA                                                1 - 1 + e-Z
+
+                                      
+     =                                                1
+
+                           dLdA  Z  Z  1 + e-Z 
+
+2.6 Softmax [mytorch.nn.Softmax]
+
+Softmax Forward Equation             am =     exp(zm)
+Softmax Backward Equation
+                                              C    exp(zk                   )
+                                              k=1
+
+                           Jmn =         am(1 - am)      if                    m=n
+                                           -aman         if                    m = n
+
+                                                           dLdZ = dLdA · J
+3 Neural Network Models (Section 7)
+3.1 MLP (Hidden Layers = 0) [mytorch.models.MLP0]
+
+                                              39
+MLP Forward Pseudocode (Hidden Layers = 0)
+
+Z0 = layer0.forward(A0)                                                     RN×C1     (147)
+A1 = f0.forward(Z0)                                                         RN×C1     (148)
+
+MLP Backward Pseudocode (Hidden Layers = 0)                                    RN×C1  (149)
+                                                                               RN×C0  (150)
+L   = f0.backward                     L
+                                                                                      (151)
+Z0                                    A1                                              (152)
+                                                                                      (153)
+L   = layer0.backward                        L                                        (154)
+
+A0                                          Z0                                        (155)
+                                                                                      (156)
+4 Criterion - Loss Functions (Section 8)                                              (157)
+                                                                                      (158)
+4.1 MSE Loss [mytorch.nn.MSELoss]                                                     (159)
+                                                                                      (160)
+MSE Loss Forward Equation                                                             (161)
+
+                            SE(A, Y ) = (A - Y )  (A - Y )                            (162)
+
+                            SSE(A, Y ) = NT · SE(A, Y ) · C
+
+                                                      SSE(A, Y )
+                            M SELoss(A, Y ) =
+
+                                                          N ·C
+
+MSE Loss Backward Equation
+
+                                                               A-Y
+                            MSELoss.backward() = 2 · N · C
+
+4.2 Cross-Entropy Loss [mytorch.nn.CrossEntropyLoss]
+
+Cross-Entropy Loss Forward Equation
+
+                                     softmax(A) = (A)
+
+                                             =   exp(A)
+
+                                                 C     exp(Aij  )
+                                                 j=1
+
+                            crossentropy = H(A, Y )
+                                               = (-Y  log((A))) · C
+
+                            sum crossentropy loss := NT · H(A, Y )
+                                                             = SCE(A, Y )
+
+                            mean crossentropy loss :=  SCE(A, Y )
+
+                                                         N
+
+Cross-Entropy Loss Backward Equation
+
+                                                                (A) - Y
+                                     xent.backward() =
+
+                                                                     N
+
+5 Optimizers (Section 9)
+
+                                             40
+5.1 Stochastic Gradient Descent (SGD) [mytorch.optim.SGD]
+
+SGD Equation (Without Momentum)                       L                            (163)
+SGD Equations (With Momentum)       W := W -                                       (164)
+
+                                                      W                            (165)
+                                                    L                              (166)
+                                      b := b -                                     (167)
+                                                    b                              (168)
+
+                                                       L                           (169)
+                                    vW := µvW + W                                  (170)
+                                                                                   (171)
+                                                     L                             (172)
+                                     vb := µvb + b                                 (173)
+                                                                                   (174)
+                                    W := W - vW
+                                     b := b - vb                                   (175)
+                                                                                   (176)
+6 Regularization (Section 10)
+
+6.1 Batch Normalization [mytorch.nn.BatchNorm1d]
+
+Batch Normalization Forward Training Equations (When eval = False)
+
+         1N                    Zij                                  j = 1, ..., C
+µj = N                                                              j = 1, ..., C
+            i=1
+
+j2  =    1                     N
+         N
+                                  (Zij - µj )2
+
+            i=1
+
+    Z^i  =  Zi - µ                                        i = 1, ..., N
+              2 + 
+
+Z~i =   Z^i +                                              i = 1, ..., N
+
+   E[Z] =   E[Z] + (1 - )  µ                                         R1×C
+V ar[Z] =   V ar[Z] + (1 - )  2                                      R1×C
+
+Batch Normalization Forward Inference Equations (When eval = True)
+
+Z^i = Zi - E[Z]                                            i = 1, ..., N
+          V ar[Z] + 
+
+Z~i =   Z^i +                                              i = 1, ..., N
+
+                                                41
+Batch Normalization Backward Equations
+
+L        N    L Z~                    N      L
+                                             Z~ ij
+      =       Z~                 =                                                       j = 1, ..., C  (177)
+ j i=1                                                                                   j = 1, ..., C  (178)
+                               ij i=1                                                    j = 1, ..., C  (179)
+                                                                                                        (180)
+L        N    L Z~                    N      L                                           i = 1, ..., N  (181)
+                                             Z~                                                         (182)
+      =       Z~                 =                 Z^                                                   (183)
+ j i=1                                                                                                  (184)
+                               ij i=1                    ij
+                                                                                                        (185)
+   L L Z~ L
+   Z^ = Z~ Z^ = Z~  
+
+L        N L Z^
+     =
+2             Z^ 2
+   j i=1
+                               ij
+
+           1N          L         (Z   -  µ)    (2  +  )-  3
+      =-               Z^                                 2
+
+           2                                                    ij
+
+                  i=1
+
+Z^i =         (Zi      -  µ)(2     +  )-  1
+µ µ                                       2
+
+      =  -(2  +        )-  1  -  1       - µ)    2 +         -  3    2N        (Zk - µ)
+                           2     2 (Zi                          2    -
+                                                                       N
+                                                                          k=1
+
+   L  =   N   L           Z^i
+   µ     i=1  Z^i         µ
+
+         L L Z^ L                                (2   +  )-  1         L  2                  1 L
+         Zi = Z^i Zi = Z^i                                   2      + 2   N (Zi - µ)     +
+
+                                                                                            N µ
+
+                                                          42
+11.2 Anaconda Installation and Setup Instructions
+
+   1. Download the Anaconda installer specific to your operating system 11:
+       · Windows Installer
+       · macOS Installer
+       · Linux Installer
+
+   2. Once the installation is complete, open Anaconda Prompt in Windows or the terminal in Linux/macOS.
+       · Windows: Click Start, search for Anaconda Prompt, and click to open.
+       · MacOS: Open the Terminal. Go to "Applications" > "Utilities" > "Terminal".
+       · Linux: Open the Dash by clicking the Ubuntu icon, then type "Terminal".
+
+   3. In the Anaconda Prompt, use the cd command to navigate to the directory where you have the
+       "HW1P1" directory. For example:
+             cd /path/to/HW1P1
+
+   4. Create a new Anaconda environment named "idls26" with Python version 3.13 by running the following
+       command:
+             conda create -n idls26 python=3.13 -y
+       You may be prompted to answer "y" for a couple of prompts. Respond accordingly.
+
+   5. Activate the newly created "idls26" environment using the following command:
+             conda activate idls26
+
+   6. Install the required packages listed in the "requirements.txt" file:
+             pip install -r requirements.txt
+
+  11If you are using a non-linux system and have issue installing the exact same version of the packages, it is fine to install a
+slightly newer/older version that is compatible with your OS. In case your codes give you fulls on your local machine and raises
+an issue on autolab, read autolab's feedback to figure out which functions are not supported by autolab and replace them.
+
+                                                                     43
+

@@ -1,0 +1,630 @@
+Introduction to Deep Learning
+
+                     0. Logistics
+                    Spring 2026
+
+                   Presented By:
+                     Massa Baali
+                 Shadow Instructor
+                 Outline
+
+· Introduction
+· The Instructor, TAs, Course Topics, and You
+· The Chickens Challenge of the Course
+· Components of the Course
+· "Go the extra mile"
+· Components of the Grade
+· Common Sense and Integrity
+                 Outline
+
+· Introduction
+· The Instructor, TAs, Course Topics, and You
+· The Chickens Challenge of the Course
+· Components of the Course
+· "Go the extra mile"
+· Components of the Grade
+· Common Sense and Integrity
+Neural Networks
+are taking over!
+Neural Networks are taking over!
+Breakthroughs
+Breakthroughs
+Breakthroughs
+                 Outline
+
+· Introduction
+· The Instructor, TAs, Course Topics, and You
+· The Chickens Challenge of the Course
+· Components of the Course
+· "Go the extra mile"
+· Components of the Grade
+· Common Sense and Integrity
+           Instructor and TAs
+
+· Instructor:
+      ­ Bhiksha Raj
+      ­ Rita Singh
+
+· TAs:
+     ­ List of TAs, with email ids on
+        course page
+     ­ We have TAs from the Pittsburgh,
+        Kigali, and Silicon Valley Campuses
+     ­ Remote and in-person office
+        hours are provided
+
+· Office hours: see course webpage
+   https://deeplearning.cs.cmu.edu
+  Who is the course designed for?
+
+· Required Classes
+
+     - Fundamental of Programming (or equivalent) -
+     - Python, PyTorch
+
+· Highly Recommended Classes:
+
+     - Calculus and Linear Algebra
+
+· Nice to have:
+
+     - Vector Calculus and Software Engineering
+         General Course Topics
+
+· Introductory Network Structures
+     ­ Multilayer Perceptrons
+     ­ Convolutional Neural Networks
+     ­ Recurrent Neural Networks
+     ­ Boltzmann Machines
+
+· Beyond the Basics
+     ­ Generative models: VAEs
+     ­ Adversarial models: GANs
+     ­ Graph Neural Networks
+     ­ Transformers
+
+· Practical Focus Areas:
+     ­ Computer vision: recognizing images
+     ­ Text processing: modelling and generating language
+     ­ Machine translation: Sequence to sequence modelling
+     ­ Modelling distributions and generating data
+     ­ Speech recognition
+  Who is the course designed for?
+
+· This course is implementation heavy
+
+    ­ There is a lot of coding
+    ­ There is a lot of experimenting
+    ­ You will work with some large datasets
+
+· Course Language of choice: Python
+· Course Toolkit of choice: PyTorch
+
+    ­ You are welcome to use other languages/toolkits, but the
+        TAs will not be able to help with coding/homework
+                 Outline
+
+· Introduction
+· The Instructor, TAs, Course Topics, and You
+· The Chickens Challenge of the Course
+· Components of the Course
+· "Go the extra mile"
+· Components of the Grade
+· Common Sense and Integrity
+         This course is not easy
+
+· A lot of work!
+         This course is not easy
+
+· A lot of work!
+· A lot of work!!
+         This course is not easy
+
+· A lot of work!
+· A lot of work!!
+· A lot of work!!!
+This course is not easy
+
+· A lot of work!     Not for chickens!
+· A lot of work!!
+· A lot of work!!!
+· A LOT OF WORK!!!!
+         This course is not easy
+
+· A lot of work!
+· A lot of work!!
+· A lot of work!!!
+· A LOT OF WORK!!!!
+
+· But a lot of fun :)
+         This course is not easy
+
+· Mastery-based evaluation
+
+    ­ Quizzes to test your understanding
+       of topics covered in the lectures
+
+    ­ HWs to teach you to implement
+       complex networks and optimize
+       them to high degree
+
+    ­ For non-485 students, projects to
+       expose you to real world DL
+       problems
+
+    ­ FYI: Anyone who gets an "A" in the
+       course is technically ready for a
+       deep learning job
+                 Outline
+
+· Introduction
+· The Instructor, TAs, Course Topics, and You
+· The Chickens Challenge of the Course
+· Components of the Course
+· "Go the extra mile"
+· Components of the Grade
+· Common Sense and Integrity
+                 Lectures
+
+· In-class lectures
+
+    · Live streaming for remote sections
+    · Lectures will also be recorded and uploaded to
+
+       the course website
+
+· Importance of viewing lectures
+
+    · Even if you think you know the topic
+    · Quizzes: your marks depend on viewing
+
+       lectures
+    · We monitor attendance (more on this later)
+
+*some lectures may be conducted entirely over zoom.
+            Weekly Quizzes
+
+· Questions are related to topics covered that week
+
+    ­ In lecture slides
+    ­ Released Fridays @ 11:59PM EST
+    ­ Closed Sundays @ 11:59PM EST
+    ­ (this may occasionally shift, don't panic!)
+
+· 14 total quizzes
+
+    ­ We accept the best 12 (you may skip 2)
+          · This is expected to account for any
+             circumstance-based inability to work on quizzes
+
+· Each has 10 multiple-choice questions
+
+     ­ We accept the best of 3 attempts per quiz
+Recitations, Hackathons, and Bootcamps
+
+We strongly recommend you attend all recitations,
+hackathons, and bootcamps.
+
+· Recitations
+
+      ­ 14 recitations, held on Fridays in the lecture room
+      ­ It is hands-on and will cover implementation specifics while you
+
+          follow along
+
+· Hackathons
+
+      ­ 14 hackathons, held on Saturdays
+      ­ In-person in Pittsburgh and Kigali (room TBD)
+      ­ It is a giant office hour session with pizza
+
+· Bootcamps
+
+      ­ 4 bootcamps, one for each HW (+1 for Guided Project)
+      ­ Held on Saturdays before hackathon
+      ­ It will cover HW implementation specifics while you follow along
+               Assignments
+
+· There will be four main HWs, bonus HWs, and an
+  autograd bonus
+
+· Main HWs all have two parts:
+
+    ­ Part 1: Autograded problems with deterministic solutions
+          · You must upload them to autolab and CHECK YOUR SCORE
+
+    ­ Part 2: Open problems posted on Kaggle
+
+· HW Bonus and Autograd Bonus:
+
+     ­ There will be bonus homeworks associated with some (or all)
+         of the homeworks; there will also be a separate autograd
+         bonus homework.
+
+     ­ These marks will not contribute to final grading curves and
+         give you the chance to make up for marks missed elsewhere
+              Study Groups
+
+· Everyone must join a study group
+· Each study group will be assigned a TA mentor
+
+   for help throughout the course
+· We recommend study groups of 3-4 people
+· If you do not have a study group, we will form
+
+   one for you
+
+    ­ Please register via forms we post on Piazza
+             Course Project
+
+· If you're taking 11-785, you will do an original project
+· If you're taking 11-685, you will do a project "Guided
+
+   Project"
+· If you're taking 11-485 this slide does not apply to you
+
+· Projects are intended to exercise your ability to
+   comprehend and implement ideas beyond those
+   covered by the HWs
+
+· Projects can range from
+
+      · Implementation and evaluation of cutting-edge ideas from recent
+          papers
+
+      · Problem-solving that might lead to publication, if completed well
+      · New models/learning algorithms/techniques, with proper evaluation
+      · Verification of results from "hot" published work
+                 Outline
+
+· Introduction
+· The Instructor, TAs, Course Topics, and You
+· The Chickens Challenge of the Course
+· Components of the Course
+· "Go the extra mile"
+· Components of the Grade
+· Common Sense and Integrity
+          Lecture Attendance
+
+· You get marks for attendance (i.e. class participation)
+
+      · Our performance metrics over the semesters show a
+         distinct correlation between attendance and course scores
+
+      · We also note a distinct inverse correlation between attendance
+         and the amount of help you require on piazza and during office hours
+
+      · To encourage attendance, we assign 1 mark for attendance
+           · 1% of your total grade for 11685 and 11785
+           · 1.3333% of your total grade for 11485
+           · This can be the difference between a B and an A
+
+· We will track lecture attendance through Polls
+         Recitation 0 & HW1p1
+
+· If you have any doubts about your preparations for
+  this course, please, please, please, please go through
+  the videos for Recitation-0 and complete the
+  notebook exercises
+
+    ­ Gain comfort with the coding required in the homeworks,
+        early on
+
+    ­ Info on Compute Infrastructure:
+               Amazon tokens (AWS) will be provided
+               Google Cloud Platform (GCP)
+               Kaggle
+
+· HW1 Part 1 has components intended to help you
+  later in the course
+           Course Communication
+
+      Lecture and Attendance Polls
+      Questions and Answers
+      Announcements and Reminders
+      Student Collaboration
+      Instructor Notes
+
+https://piazza.com/
+           Reading Materials
+
+· Free resource: 'Dive Into Deep Learning'
+  (interactive Jupyter notebooks).
+
+· Recommended: François Chollet's 'Deep
+  Learning with Python' (Second Edition)
+
+· Additional reading material will also appear
+  on the course pages
+               Study groups
+
+· What study groups may do:
+
+     ­ Discuss homework problems and solutions
+     ­ Discuss papers
+     ­ Discuss class work
+     ­ Discuss quizzes
+
+· We encourage you to meet regularly to
+   discuss IDL work
+
+· Study groups may also go on to form project
+   teams
+       Study Group Mentors
+
+· Every study group will be assigned a TA mentor
+
+     ­ We will track your progress and reach out to you if you appear to
+          be in trouble
+
+· If in trouble, first reach out to your TA mentor
+
+     ­ If you feel you're falling behind, reach out to your mentor
+     ­ If you feel you are struggling, reach out to your mentor
+     ­ If you feel pressured/unable to cope, reach out to your mentor
+     ­ We will try our best to help you
+
+· We aim to make this a successful course for all of you
+
+     ­ In our intro to deep learning, ID(ea)L world, everyone performs well
+          enough to get an A without lowered standards
+                ­ i.e. we would like to bring you all up to where we believe you
+                deserve an A
+
+     ­ Everything about this course is geared to this objective
+       Project Group Mentors
+
+· Every project group will be assigned at least one
+   TA mentor
+
+     ­ We will track your progress and be in touch about your
+         project status throughout the semester
+
+· You are allowed to seek a "external" mentor who
+   has more expertise in your topic of interest
+
+     ­ If you need more guidance and expertise
+                 Outline
+
+· Introduction
+· The Instructor, TAs, Course Topics, and You
+· The Chickens Challenge of the Course
+· Components of the Course
+· "Go the extra mile"
+· Components of the Grade
+· Common Sense and Integrity
+               Evaluation
+
+· Scores are evaluated based on 3 types of tests:
+
+    · Attendance
+    · Weekly Quizzes
+    · HW Assignments
+    · Team Project or Guided Project (not for 11-485
+
+       students)
+      Lecture Attendance: Rules
+
+· You must either attend the lectures in person, or watch via zoom
+
+      ­ With some exceptions: see below
+      ­ We get attendance stats from your participation during in-class polls
+      ­ Polls will be conducted via Piazza for in-person lectures. It is recommended to use
+
+           the Piazza app available both on Android and iOS.
+      ­ Lectures conducted over zoom will use zoom polls
+      ­ Use of electronic devices during in-person lectures is not permitted except during
+
+           polls
+
+· Students in SV, and in other time zones where your local time is before
+   8am or after 5pm for the class, may alternately watch recorded lectures on
+   mediatech instead
+
+      ­ Mediatech records who watched and for how long. Entire lectures must be viewed.
+      ­ If viewed on mediatech, the lectures of each week must be viewed before 8AM of
+
+           the Monday following the following week
+             ­ Otherwise, it doesn't count
+
+· The precise mechanism for computing the class participation score from
+   attendance will be decided at the end of the semester. Our advice to you:
+   just attend
+            Weekly Quizzes
+
+· Slides often contain a lot more information than
+
+  what is presented in class
+
+· Quizzes will contain questions from topics that are on the
+
+  slides, but not presented in class
+
+· Will also include topics covered in class, but not on online
+
+  slides!
+
+· Sometimes there will be questions based on
+
+  latest research papers in the quiz ­ the links to
+  the papers will be provided
+           Homework: Part 1
+
+· HW Part-1s evaluate your ability to code neural nets on your own
+   from scratch
+     ­ If you implement all mandatory and bonus questions of part 1 of all
+        homeworks, you will, hopefully, have all components necessary to
+        construct a little neural network toolkit of your own
+           · "mytorch"
+
+· The homeworks are autograded
+     ­ Be careful about following instructions carefully
+           · The autograder is setup on a computer with specific versions of
+             various packages
+           · Your code must conform to their restrictions, if not the
+             autograder will often fail and give you errors or 0 marks, even if
+             your code is functional on your own computer
+     ­ Note: you get some bonus points if you submit the homework early
+           Homework: Part 2
+
+· HW Part-2s test your ability to solve complex problems on
+ real-world data sets
+    · Unlike part-1s, initial early submissions are required and
+      worth 10/100 points (to show you have gotten started)
+    · The remaining 90/100 points are determined by your
+      final score relative to the cutoffs
+               Homework: Part 2
+
+· The standard cutoffs are (After 10 pts ESD)
+
+· High cutoff    : 90 pts
+
+· Medium cutoff : 70 pts
+
+· Low cutoff     : 50 pts
+
+· Very Low       : 30 pts
+
+cutoff           : 0 pts
+
+· No submission
+
+· Your score is linearly interpolated between cutoffs. Ex, if an 85%
+
+accuracy model is for the high cutoff and 75% model is for the
+
+medium, a model with 80% accuracy will get 82.5/90 pts
+
+· There is a 5th bonus cutoff for extra credits (10 pts) determined by
+
+  the highest scoring student
+
+     · Ex. If the highest accuracy is 92%, the scoring student will get
+       110/100 and anyone between 85% to 92% will get 100+/100
+       (assuming they have 10 bonus points from early submission)
+             Course Project
+
+· Teams: think about forming project teams as soon as
+  possible (we may help, too)
+
+      · 11-785 teams are of 3-4 students maximum
+      · 11-685 teams are of 2-3 students maximum
+
+· Project requirements:
+
+      · Report:
+
+               · Submit a project proposal by the proposal deadline listed on the website
+               · Submit an initial report 3/4 way through the semester
+               · Submit an updated report draft 3 days before the presentation due date
+               · Submit a final report during finals week, at the end of the semester
+
+      · Video:
+
+               · Make a 5 min video presentation of the project at the end of the semester
+               · The video can be presented by one, some, or all team members
+               · Video should explain the problem, proposed solution, and evaluation
+               · Defend your project by answering questions about your video, on Piazza
+
+· The project is often the most enjoyable portion of the
+  course
+                 Grading
+
+* Note: There is 1 mark for attendance
+         Homework Deadlines
+
+· There are separate deadlines for Part-1s and Part-2s
+
+· HW Part-2s have multiple deadlines
+
+      · Early Submission Deadline: worth 10% of Part-2 and affirms you have
+         started the assignment
+
+      · On-time Submission Deadline: determines your eligibility for full cutoff marks
+      · Late/Slack Deadline: everyone gets up to 10 total slack days (does not
+
+         apply to initial submissions, all bonus points, nor HW Part-1s) -- you
+         can distribute them as you want across your HWs, and once you use up
+         your slack days, all subsequent late submissions will accrue a 10%
+         penalty (on top of any other penalties)
+
+· Note: Kaggle: Kaggle leaderboards stop showing updates on
+
+  full-submission deadline
+
+      · We will continue to accept submissions until you run out of slack days (the
+         drop-dead deadline)
+
+· Please refer to the course webpage for a complete set of
+  policies
+                 Outline
+
+· Introduction
+· The Instructor, TAs, Course Topics, and You
+· The Chickens Challenge of the Course
+· Components of the Course
+· "Go the extra mile"
+· Components of the Grade
+· Common Sense and Integrity
+    Common Sense Piazza Posts
+
+· Feel free to post on piazza for any clarification or doubts
+· We strive to respond to student queries immediately
+· With Regards to Code-Related Questions on
+
+  Piazza..
+
+     ­ Make a good title to your question, on the post.
+     ­ Describe the problem concisely and clearly.
+     ­ Include relevant, short code blocks if necessary... do not
+
+          paste entire notebooks or python files, please!
+     ­ Explain your debugging process:
+
+            What you tried, initially (prior to error)
+            The results you got
+            The errors and expanded stack traces
+            What you tried, subsequently (after the error)
+            What roadblock are you stuck at now / what do you
+
+               need help understanding?
+   Personal and Academic Integrity
+
+· You are here to learn DL yourself, not to demonstrate
+   how well you can pretend to learn
+
+· You are at CMU ­ which means you are among the
+   brightest and best students in the world
+
+     ­ You probably were among the top students in your peer
+         group all your life, before you came here
+
+     ­ It will be an insult to yourself, to lower your integrity
+
+· Try your best, honestly. If you are unsure about
+   something, reach out to us
+      Integrity and Study Groups
+
+· Every student must solve their quizzes by themselves
+
+     ­ You may discuss the questions with your study groups/friends,
+         but when you solve the quiz, isolate yourself and do it alone
+
+· Every student must solve every homework by themselves
+
+     ­ You may discuss the homeworks with your friends, and even
+         help them debug their code, but when you finally solve it, every
+          line of your code (except libraries that have been okayed by
+         course staff) must be written by you
+
+     ­ Your solution must be yours
+
+· Plagiarizing code from the web or your friends constitutes an
+   academic integrity violation
+
+     ­ Submitting any solutions not obtained by you constitutes an AIV
+Thank you for deciding to take this
+journey of Deep Learning with us
+
+         - Prof. Bhiksha and TAs
+
