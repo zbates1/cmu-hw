@@ -1,0 +1,2789 @@
+       Neural Networks
+Learning the network: Part 3
+
+            11-785, Spring 2026
+                  Lecture 5
+
+                                                                                                                                                1
+Training neural nets through Empirical
+   Risk Minimization: Problem Setup
+
+· Given a training set of input-output pairs
+
+· The divergence on the ith instance is
+
+    ­
+
+· The loss (empirical risk)
+
+· Minimize w.r.t  using gradient descent
+
+                                                                               2
+                          Notation
+
+                          ()      ()  ()
+
+                      ()      ()  ()  ()
+
+()                        ()      ()  ()
+
+· The input layer is the 0th layer
+· We will represent the output of the i-th perceptron of the kth layer as ( )
+
+­ Input to network: ( )
+
+­ Output of network:      ()
+
+· We will represent the weight of the connection between the i-th unit of
+    the k-1th layer and the jth unit of the k-th layer as ( )
+
+­ The bias to the jth unit of the k-th layer is ( )
+
+                                                                                                                                                     3
+Recap: Gradient Descent Algorithm
+
+· Initialize:  To minimize any function Loss(W) w.r.t W
+
+   ­
+   ­
+
+· do
+
+   ­
+   ­
+
+· while
+
+               11-755/18-797       4
+Recap: Gradient Descent Algorithm
+
+· In order to minimize                 w.r.t.
+
+· Initialize:
+
+­
+
+­
+
+· do
+
+    ­ For every component
+
+   ·                       Explicitly stating it by component
+
+­
+
+· while
+
+                        11-755/18-797                          5
+Training Neural Nets through Gradient
+
+                          Descent
+
+Total training Loss:
+
+· Gradient descent algorithm:        Assuming the bias is also
+· Initialize all weights and biases  represented as a weight
+
+     ­ Using the extended notation: the bias is also a weight
+
+· Do:
+
+    ­ For every layer for all update:
+
+·  ()                 ()  ()
+   ,                  ,
+
+                          ,
+
+· Until has converged
+
+                                                               6
+Training Neural Nets through Gradient
+
+                          Descent
+
+Total training Loss:
+
+· Gradient descent algorithm:        Assuming the bias is also
+· Initialize all weights and biases  represented as a weight
+
+     ­ Using the extended notation: the bias is also a weight
+
+· Do:
+
+    ­ For every layer for all update:
+
+·  ()                 ()  ()
+   ,                  ,
+
+                          ,
+
+· Until has converged
+
+                                                               7
+               The derivative
+
+Total training Loss:
+
+   · Computing the derivative
+
+ Total derivative:
+
+                                                                                                                                                                       8
+               The derivative
+
+Total training Loss:
+
+  · Computing the derivative
+
+Total derivative:
+
+· So we must first figure out how to compute the
+
+derivative of divergences of individual training
+
+inputs                                            9
+    Calculus Refresher: Basic rules of
+                    calculus
+
+For any differentiable function
+with derivative
+the following must hold for sufficiently small
+
+                                                                                                                                                                 10
+    Calculus Refresher: Basic rules of
+                    calculus
+
+For any differentiable function
+with derivative
+the following must hold for sufficiently small
+
+                                                                                 Introducing the
+                                                                                 "influence" diagram:
+                                                                                 x influences y
+
+                                                                                                                                                                 11
+    Calculus Refresher: Basic rules of
+                    calculus
+
+For any differentiable function
+
+with derivative
+
+the following must hold for sufficiently small
+
+                                                                                 Introducing the
+                                                                                 "influence" diagram:
+                                                                                 x influences y
+
+                                                                                The derivative graph:
+                                                                                The edge carries the
+                                                                                derivative.
+
+                                                                                Node and edge weights
+                                                                                multiply
+
+                                                                                                                                                                 12
+Calculus Refresher: Basic rules of calculus
+
+        For any differentiable function
+        with partial derivatives
+
+        the following must hold for sufficiently small
+
+What is the influence diagram relating  and ?
+
+                                               13
+Calculus Refresher: Basic rules of calculus
+
+        For any differentiable function
+        with partial derivatives
+        the following must hold for sufficiently small
+
+                                                                   The derivative diagram?
+
+                                                                                                                                                                   14
+Calculus Refresher: Basic rules of calculus
+
+        For any differentiable function
+        with partial derivatives
+        the following must hold for sufficiently small
+
+                                                                                                                                                                   15
+Calculus Refresher: Basic rules of calculus
+
+        For any differentiable function
+        with partial derivatives
+        the following must hold for sufficiently small
+
+                                                                                                                                                                   16
+    Calculus Refresher: Chain rule
+
+For any nested function
+
+                                                                                                                                                                 17
+    Calculus Refresher: Chain rule
+
+For any nested function
+
+                       ()
+                                                                                                                                            ()
+
+                                                                                                                                                                 18
+Distributed Chain Rule: Influence
+               Diagram
+
+Shorthand:
+
+                                                                                                                                                  19
+   Distributed Chain Rule: Influence
+                  Diagram
+
+              Derivative rule?
+
+· affects through each of
+
+                                                                                                                                                            20
+Distributed Chain Rule: Influence
+               Diagram
+
+       
+       
+    
+    
+  
+        
+       
+ 
+
+                                   21
+     Calculus Refresher: Chain rule
+                  summary
+
+For
+         where
+
+                                                                                                                                                             22
+Calculus Refresher: Chain rule
+
+summary
+
+For any nested function  where
+
+For
+         where
+
+                                                                                                                                                        23
+                Poll 1
+
+1. The chain rule of derivatives can be derived from the basic definition of derivatives, dy = derivative
+    * dx, true or false
+     True (correct)
+     False
+
+2. Which of the following is true of the "influence diagram"
+     It graphically shows all paths (and variables) through which one variable influences the other
+         (true)
+     The derivative of the influenced (outcome) variable with respect to the influencer (input)
+         variable must be summed over all outgoing paths from the influencer variable (true)
+
+                                                                                                                                                       24
+                Poll 1
+
+1. The chain rule of derivatives can be derived from the basic definition of derivatives, dy = derivative
+    * dx, true or false
+     True (correct)
+     False
+
+2. Which of the following is true of the "influence diagram"
+     It graphically shows all paths (and variables) through which one variable influences the other
+         (true)
+     The derivative of the influenced (outcome) variable with respect to the influencer (input)
+         variable must be summed over all outgoing paths from the influencer variable (true)
+
+                                                                                                                                                       25
+Our problem for today
+
+· How to compute  for a single data
+  instance
+
+                                     26
+ A first closer look at the network
+
+· Showing a tiny 2-input network for illustration
+
+   ­ Actual network would have many more neurons
+      and inputs
+
+                                                                                                                                                            27
+A first closer look at the network
+
++  +
+
+      +
+
++  +
+
+· Showing a tiny 2-input network for illustration
+
+    ­ Actual network would have many more neurons and inputs
+
+· Explicitly separating the affine function of inputs from the
+   activation
+
+                                                                                                                                                            28
+A first closer look at the network
+
+        ()            ()           ()
+                                    ,
+        ,+            ,+
+                            + ( )
+        ()             ()
+         ,              ,    ,
+
+    ()  ()        ()  ()          ()
+     ,             ,               ,
+        ,+            ,+
+()            ()
+ ,        ()   ,        ()
+
+           ,             ,
+
+· Showing a tiny 2-input network for illustration
+
+    ­ Actual network would have many more neurons and inputs
+
+· Expanded with all weights shown
+· Let's label the other variables too...
+
+                                                                                                                                                            29
+Computing the derivative for a single
+                   input
+
+           ()                    ()
+
+           ,      ()             ,          ()
+                                 ()
+                                                   ()
+       + ( )          1                 +2
+                                                      ()
+        ,                        ()                    ,
+
+                                 ,
+
+                                                             ()
+
+                             ()                           +      3  Div
+
+                             ,                     ()
+
+    ()                                             ,
+
+    ,
+
+              ()  ()                ()      ()     ()
+
+              ,+      1      ()        + ,      2
+
+()
+
+,             ()         ()                           ()
+                                                       ,
+               ,         ,       ()
+
+                                    ,
+
+                                                                    30
+Computing the derivative for a single
+
+                                       input                             (,)
+
+           ()                    ()                          What   is:    ()
+                                                                           ,
+           ,                     ,
+                  ()             ()         ()
+
+       + ( )          1                 +2         ()
+
+        ,                        ()                   ()
+                                                       ,
+                                 ,
+
+                                                             ()
+
+                             ()                           +      3         Div
+
+                             ,                     ()
+
+    ()                                             ,
+
+    ,
+
+              ()  ()                ()      ()     ()
+
+              ,+      1      ()        + ,      2
+
+()
+
+,             ()         ()                           ()
+                                                       ,
+               ,         ,          ()
+
+                                    ,
+
+                                                                               31
+Computing the gradient
+
+· Note: computation of the derivative  requires
+
+intermediate and final output values of the network in
+
+response to the input                                   32
+y(0)              The "forward pass"
+
+         z(1)  y(1) z(2)  y(2) z(3)  y(3)  z(N-1)  y(N-1)
+
+                                                           z(N)                                                                                              y(N)
+
+                                                                 fN
+
+                                                                 fN
+
+1              1          1                        1
+
+   We will refer to the process of computing the output from an input as
+   the forward pass
+
+   We will illustrate the forward pass in the following slides
+
+                                                                                                                                                         33
+y(0)              The "forward pass"
+
+         z(1)  y(1) z(2)  y(2) z(3)           y(3)  z(N-1)  y(N-1)
+
+                                                                      z(N)      y(N)
+
+                                                                            fN
+
+                                                                            fN
+
+1              1          1                                 1
+
+Setting ( )       for notational convenience
+
+Assuming ( ) ( ) and ( ) -- assuming the bias is a weight and extending
+
+the output of every layer by a constant 1, to account for the biases        34
+y(0)              The "forward pass"
+
+         z(1)  y(1) z(2)  y(2) z(3)  y(3)  z(N-1)  y(N-1)
+
+                                                           z(N)      y(N)
+
+                                                                 fN
+
+                                                                 fN
+
+1              1          1                        1
+
+                                                                 35
+y(0)                  The "forward pass"
+
+         z(1)  y(1) z(2)  y(2) z(3)  y(3)  z(N-1)  y(N-1)
+
+                                                           z(N)      y(N)
+
+                                                                 fN
+
+                                                                 fN
+
+1              1          1                        1
+
+()             () ()
+
+                                                                 36
+y(0)           y(1) z(2)  y(2) z(3)  y(3)  z(N-1)  y(N-1)
+
+         z(1)
+
+                                                           z(N)      y(N)
+
+                                                                 fN
+
+                                                                 fN
+
+1              1          1                        1
+
+()             () () ()      ()
+
+                                                                 37
+y(0)           y(1) z(2)  y(2) z(3)      y(3)  z(N-1)  y(N-1)
+
+         z(1)
+
+                                                               z(N)      y(N)
+
+                                                                     fN
+
+                                                                     fN
+
+1              1          1                            1
+
+()             () () ()      ()      ()        () ()
+
+                                                                     38
+y(0)           y(1) z(2)  y(2) z(3)      y(3)  z(N-1)  y(N-1)
+
+         z(1)
+
+                                                               z(N)      y(N)
+
+                                                                     fN
+
+                                                                     fN
+
+1              1          1                            1
+
+()             () () ()      ()      ()        () () ()        ()
+
+                                                                     39
+y(0)           y(1) z(2)  y(2) z(3)      y(3)  z(N-1)  y(N-1)
+
+         z(1)
+
+                                                               z(N)      y(N)
+
+                                                                     fN
+
+                                                                     fN
+
+1              1          1                            1
+
+()             () () ()      ()      ()        () () ()        ()
+
+                  ()         () ()
+
+                                                                     40
+y(0)           y(1) z(2)  y(2) z(3)      y(3)  z(N-1)  y(N-1)
+
+         z(1)
+
+                                                               z(N)      y(N)
+
+                                                                     fN
+
+                                                                     fN
+
+1              1          1                            1
+
+()             () () ()      ()      ()        () () ()        ()
+
+                  ()         () () ()          ()
+
+                                                                     41
+y(0)           y(1) z(2)  y(2) z(3)  y(3)    z(N-1)  y(N-1)
+
+         z(1)
+
+                                                             z(N)          y(N)
+
+                                                                   fN
+
+                                                                   fN
+
+1              1          1                          1
+
+   ()             ()      ()         () ( )          ()            ()
+
+                                                                       42
+y(0)              Forward Computation
+
+         z(1)  y(1) z(2)  y(2) z(3)  y(3)  z(N-1)  y(N-1)
+
+                                                           z(N)      y(N)
+
+                                                                 fN
+
+                                                                 fN
+
+1              1          1                        1
+
+               ITERATE FOR k = 1:N for j = 1:layer-width
+
+                                                                 43
+                Forward "Pass"
+
+· Input: dimensional vector
+
+· Set:          , is the width of the 0th (input) layer
+
+    ­
+
+­                   ;
+
+· For layer         Dk is the size of the kth layer
+
+    ­ For           () ( )
+                    ,
+          · ()
+
+        · ()    ()
+
+· Output:
+
+­
+                                                                                                                                                   44
+               Computing derivatives
+
+y(0)                         y(N-2)
+
+         z(1)  y(1)  z(N-2)          z(N-1)  y(N-1)
+
+                                                     z(N)      y(N)
+
+                                                           fN
+
+                                                           fN
+
+1                            1               1
+
+   We have computed all these intermediate values in the
+   forward computation
+
+   We must remember them ­ we will need them to compute
+
+   the derivatives                                                   45
+               Computing derivatives
+
+y(0)                         y(N-2)
+
+         z(1)  y(1)  z(N-2)          z(N-1)  y(N-1)
+
+                                                     z(N)      y(N)
+
+                                                           fN        Div(Y,d)
+
+                                                           fN
+
+1                            1               1
+
+   First, we compute the divergence between the output of the net y = y(N) and the
+   desired output
+
+                                                                                                                                                       46
+               Computing derivatives
+
+y(0)                         y(N-2)
+
+         z(1)  y(1)  z(N-2)          z(N-1)  y(N-1)
+
+                                                     z(N)      y(N)
+
+                                                           fN        Div(Y,d)
+
+                                                           fN
+
+ 1                           1               1
+
+We then compute ( )  the derivative of the divergence w.r.t. the final output of the
+network y(N)
+
+                                                                     47
+               Computing derivatives
+
+y(0)                         y(N-2)
+
+         z(1)  y(1)  z(N-2)          z(N-1)  y(N-1)
+
+                                                     z(N)      y(N)
+
+                                                           fN        Div(Y,d)
+
+                                                           fN
+
+1                            1               1
+
+We then compute ( )  the derivative of the divergence w.r.t. the final output of the
+network y(N)
+
+We then compute ( )  the derivative of the divergence w.r.t. the pre-activation affine
+
+combination z(N) using the chain rule
+
+                                                                                                                                                                 48
+               Computing derivatives
+
+y(0)                                y(N-2)
+
+         z(1)  y(1)  z(N-2)                 z(N-1)     y(N-1)
+
+                                                               z(N)      y(N)
+
+                                                                     fN        Div(Y,d)
+
+                                                                     fN
+
+1                                   1                  1
+
+Continuing on, we will compute ( )          the derivative of the divergence with respect
+
+to the weights of the connections to the output layer
+
+                                                                               49
+               Computing derivatives
+
+y(0)                                y(N-2)
+
+         z(1)  y(1)  z(N-2)                 z(N-1)     y(N-1)
+
+                                                               z(N)      y(N)
+
+                                                                     fN        Div(Y,d)
+
+                                                                     fN
+
+1                                   1                  1
+
+Continuing on, we will compute ( )          the derivative of the divergence with respect
+
+to the weights of the connections to the output layer
+
+Then continue with the chain rule to compute ( )          the derivative of the
+divergence w.r.t. the output of the N-1th layer
+                                                                                                           50
+               Computing derivatives
+
+y(0)                         y(N-2)
+
+         z(1)  y(1)  z(N-2)          z(N-1)       y(N-1)
+
+                                                          z(N)      y(N)
+
+                                                                fN        Div(Y,d)
+
+                                                                fN
+
+1                            1                    1
+
+We continue our way backwards in the order shown
+
+                                                                          51
+y(0)                      y(N-2)
+                                 z(N-1)
+      z(1)  y(1)  z(N-2)                          y(N-1)
+
+                                                          z(N)      y(N)
+
+                                                                fN        Div(Y,d)
+
+                                                                fN
+
+1                         1                       1
+
+We continue our way backwards in the order shown
+
+                                                                          52
+y(0)                      y(N-2)
+                                 z(N-1)
+      z(1)  y(1)  z(N-2)                          y(N-1)
+
+                                                          z(N)      y(N)
+
+                                                                fN        Div(Y,d)
+
+                                                                fN
+
+1                         1                       1
+
+We continue our way backwards in the order shown
+
+                                                                          53
+y(0)                      y(N-2)
+                                 z(N-1)
+      z(1)  y(1)  z(N-2)                          y(N-1)
+
+                                                          z(N)      y(N)
+
+                                                                fN        Div(Y,d)
+
+                                                                fN
+
+1                         1                       1
+
+We continue our way backwards in the order shown
+
+                                                                          54
+y(0)                      y(N-2)
+                                 z(N-1)
+      z(1)  y(1)  z(N-2)                          y(N-1)
+
+                                                          z(N)      y(N)
+
+                                                                fN        Div(Y,d)
+
+                                                                fN
+
+1                         1                       1
+
+We continue our way backwards in the order shown
+
+                                                                          55
+y(0)                      y(N-2)
+                                 z(N-1)
+      z(1)  y(1)  z(N-2)                          y(N-1)
+
+                                                          z(N)      y(N)
+
+                                                                fN        Div(Y,d)
+
+                                                                fN
+
+1                         1                       1
+
+We continue our way backwards in the order shown
+
+                                                                          56
+y(0)                      y(N-2)
+                                 z(N-1)
+      z(1)  y(1)  z(N-2)                 y(N-1)
+
+                                                 z(N)      y(N)
+
+                                                       fN        Div(Y,d)
+
+                                                       fN
+
+1                         1              1
+
+We continue our way backwards in the order shown
+
+                                                                                                                                                                 57
+      Backward Gradient Computation
+
+· Let's actually see the math..
+
+                                                                                                                                                            58
+               Computing derivatives
+
+y(0)                         y(N-2)
+
+         z(1)  y(1)  z(N-2)          z(N-1)  y(N-1)
+
+                                                     z(N)      y(N)
+
+                                                           fN        Div(Y,d)
+
+                                                           fN
+
+1                            1               1
+
+                                                                     59
+               Computing derivatives
+
+y(0)                         y(N-2)
+
+         z(1)  y(1)  z(N-2)          z(N-1)  y(N-1)
+
+                                                     z(N)      y(N)
+
+                                                           fN        Div(Y,d)
+
+                                                           fN
+
+1                            1               1
+
+The derivative w.r.t the actual output of the
+final layer of the network is simply the derivative
+w.r.t to the output of the network
+
+                                                                                                                                                                    60
+Calculus Refresher: Chain rule
+
+For any nested function  where
+
+For
+         where
+
+                                                                                                                                                        61
+               Computing derivatives
+
+y(0)                         y(N-2)
+
+         z(1)  y(1)  z(N-2)          z(N-1)  y(N-1)
+
+                                                     z(N)      y(N)
+
+                                                           fN        Div(Y,d)
+
+                                                           fN
+
+1                            1               1
+
+                                                                     62
+               Computing derivatives
+
+y(0)                         y(N-2)
+
+         z(1)  y(1)  z(N-2)          z(N-1)  y(N-1)
+
+                                                     z(N)      y(N)
+
+                                                           fN                Div(Y,d)
+
+                                                           fN
+
+1                            1               1
+
+                                                           Already computed
+
+                                                                             63
+               Computing derivatives
+
+y(0)                         y(N-2)
+
+         z(1)  y(1)  z(N-2)          z(N-1)  y(N-1)
+
+                                                     z(N)      y(N)
+
+                                                           fN             Div(Y,d)
+
+                                                           fN
+
+                                                               ()
+
+1                            1               1
+
+                                                     Derivative of
+                                                     activation function
+
+                                                                          64
+               Computing derivatives
+
+y(0)                         y(N-2)
+
+         z(1)  y(1)  z(N-2)          z(N-1)  y(N-1)
+
+                                                     z(N)      y(N)
+
+                                                           fN             Div(Y,d)
+
+                                                           fN
+
+                                                               ()
+
+1                            1               1
+
+                                                     Derivative of
+                                                     activation function
+
+                                                     Computed in forward
+                                                     pass
+
+                                                                                         65
+               Computing derivatives
+
+y(0)                         y(N-2)
+
+         z(1)  y(1)  z(N-2)          z(N-1)  y(N-1)
+
+                                                     z(N)      y(N)
+
+                                                           fN        Div(Y,d)
+
+                                                           fN
+
+1                            1               1
+
+                                                                     66
+               Computing derivatives
+
+y(0)                          y(N-2)
+
+         z(1)  y(1)   z(N-2)          z(N-1)      y(N-1)
+
+                                                          z(N)      y(N)
+
+                                                                fN        Div(Y,d)
+
+                                                                fN        67
+
+                                                                ()
+
+1                             1                   1
+
+                                                          ()
+
+                                              ()
+
+               ()
+
+   ()          () ()
+               Computing derivatives
+
+y(0)                          y(N-2)
+
+         z(1)  y(1)   z(N-2)          z(N-1)  y(N-1)
+
+                                                      z(N)      y(N)
+
+                                                            fN        Div(Y,d)
+
+                                                            fN
+
+1                             1               1
+
+               ()
+
+   ()          () ()                  Just computed
+
+                                                                      68
+               Computing derivatives
+
+y(0)                          y(N-2)
+
+         z(1)  y(1)   z(N-2)          z(N-1)  y(N-1)
+
+ 1                                                     z(N)       y(N)
+
+           ()                                                fN                         Div(Y,d)
+
+                                                             fN
+
+                                                              ()
+
+                              1               1                                     ()
+                                                             ()
+
+                                              Because
+
+               ()                     ()      ()       () ( )
+               () ()
+
+                                                                                        69
+               Computing derivatives
+
+y(0)                          y(N-2)
+
+         z(1)  y(1)   z(N-2)          z(N-1)  y(N-1)
+
+ 1                                                     z(N)       y(N)
+
+           ()                                                fN                         Div(Y,d)
+
+                                                             fN
+
+                                                              ()
+
+                              1               1                                     ()
+                                                             ()
+
+                                              Because
+
+               ()                     ()      ()        () ( )
+
+               () ()
+
+                              Computed in forward pass                                  70
+               Computing derivatives
+
+y(0)                             y(N-2)
+
+         z(1)  y(1)      z(N-2)          z(N-1)  y(N-1)
+
+ 1                                                       z(N)       y(N)
+
+                                                               fN                         Div(Y,d)
+
+                                                               fN
+
+                                                                ()
+
+                                 1               1                                    ()
+                                                               ()
+
+               ()
+
+()                   ()
+
+                                                                                          71
+               Computing derivatives
+
+y(0)                             y(N-2)
+
+         z(1)  y(1)      z(N-2)          z(N-1)  y(N-1)
+
+                                                         z(N)      y(N)
+
+                                                               fN        Div(Y,d)
+
+                                                               fN
+
+1                                1               1
+
+               ()                For the bias term ( )
+
+   ()                ()
+
+                                                                         72
+Calculus Refresher: Chain rule
+
+For any nested function  where
+
+For
+         where
+
+                                                                                                                                                        73
+               Computing derivatives
+
+y(0)                         y(N-2)
+
+         z(1)  y(1)  z(N-2)          z(N-1)      y(N-1)
+
+                                                         z(N)      y(N)
+
+                                                               fN        Div(Y,d)
+
+                                                               fN
+
+1                            1                   1
+
+                      ()                     ()
+                     ( ) ()
+   ()
+
+                                                                         74
+               Computing derivatives
+
+y(0)                         y(N-2)
+
+         z(1)  y(1)  z(N-2)          z(N-1)  y(N-1)
+
+                                                       z(N)      y(N)
+
+                                                             fN        Div(Y,d)
+
+                                                             fN
+
+1                            1               1
+
+   ()                 ()                        ()
+                     ( ) ()
+                                     Already computed
+
+                                                                       75
+               Computing derivatives
+
+y(0)                         y(N-2)
+
+         z(1)  y(1)  z(N-2)                   z(N-1)  y(N-1)
+
+                                                                  z(N)      y(N)
+
+                                                                        fN        Div(Y,d)
+
+                                                                        fN
+
+1                                          1                   1
+
+      ()              ()                              ()
+                     ( ) ()
+                                                      Because
+
+                                              ()      ()          () ( )
+
+                                                                                  76
+               Computing derivatives
+
+y(0)                         y(N-2)
+
+         z(1)  y(1)  z(N-2)          z(N-1)  y(N-1)
+
+                                                     z(N)      y(N)
+
+                                                           fN        Div(Y,d)
+
+                                                           fN
+
+1                            1               1
+
+   ()          ()
+                         ()
+
+                                                                     77
+               Computing derivatives
+
+y(0)                         y(N-2)
+
+         z(1)  y(1)  z(N-2)          z(N-1)  y(N-1)
+
+                                                     z(N)      y(N)
+
+                                                           fN        Div(Y,d)
+
+                                                           fN
+
+1                            1               1
+
+   ()          ()
+                         ()
+
+                                                                     78
+               Computing derivatives
+
+y(0)                         y(N-2)
+
+         z(1)  y(1)  z(N-2)          z(N-1)       y(N-1)
+
+                                                          z(N)      y(N)
+
+                                                                fN        Div(Y,d)
+
+                                                                fN
+
+1                            1                    1
+
+We continue our way backwards in the order shown
+
+                     ()
+
+   ()                        ()
+
+                                                                          79
+y(0)                      y(N-2)
+                                 z(N-1)
+      z(1)  y(1)  z(N-2)                          y(N-1)
+
+                                                          z(N)      y(N)
+
+                                                                fN        Div(Y,d)
+
+                                                                fN
+
+1                         1                       1
+
+We continue our way backwards in the order shown
+
+            ()            For the bias term ( )
+
+      ()          ()
+
+                                                                          80
+y(0)                      y(N-2)
+                                 z(N-1)
+      z(1)  y(1)  z(N-2)                          y(N-1)
+
+                                                          z(N)      y(N)
+
+                                                                fN        Div(Y,d)
+
+                                                                fN
+
+1                         1                       1
+
+We continue our way backwards in the order shown
+
+                  ()      ()
+                                        ()
+
+                                                                          81
+y(0)                      y(N-2)
+                                 z(N-1)
+      z(1)  y(1)  z(N-2)                          y(N-1)
+
+                                                          z(N)      y(N)
+
+                                                                fN        Div(Y,d)
+
+                                                                fN
+
+1                         1                       1
+
+We continue our way backwards in the order shown
+
+                  ()
+
+      ()                  ()
+
+                                                                          82
+y(0)                          y(N-2)
+                                     z(N-1)
+      z(1)  y(1)      z(N-2)                      y(N-1)
+
+                                                          z(N)      y(N)
+
+                                                                fN        Div(Y,d)
+
+                                                                fN
+
+1                             1                   1
+
+We continue our way backwards in the order shown
+
+                              ()
+
+                  ()              ()
+
+                                                                          83
+y(0)                              y(N-2)
+                                         z(N-1)
+      z(1)      y(1)      z(N-2)                  y(N-1)
+
+                                                          z(N)      y(N)
+
+                                                                fN        Div(Y,d)
+
+                                                                fN
+
+1                                 1               1
+
+We continue our way backwards in the order shown
+
+                      ()
+
+            ()            ()
+
+                                                                          84
+y(0)                      y(N-2)
+                                 z(N-1)
+      z(1)  y(1)  z(N-2)                          y(N-1)
+
+                                                          z(N)      y(N)
+
+                                                                fN        Div(Y,d)
+
+                                                                fN
+
+1                         1                       1
+
+                                                                ()
+
+We continue our way backwards in the order shown     ()             ()
+
+                                                                          85
+Gradients: Backward Computation
+
+z(k-1)  y(k-1) z(k)      y(k) z(N-1)                          y(N-1)
+
+                                                                      z(N)      y(N)
+
+                                                                            fN                  Div(Y,d)
+
+                                                                                      Div(Y,d)
+
+                                                                            fN
+
+                                                                      Figure assumes, but does not show
+                                                                      the "1" bias nodes
+
+Initialize: Gradient                                          ()                                ()
+w.r.t network output                                                                                        ()
+                                                                      ()              ()
+                                                          ()
+            ()
+
+        ()                                                                            ()
+
+()                   ()                                                     ()                 ()
+
+                                                                                                                     86
+                      Backward Pass
+
+· Output layer         :
+
+     ­ For            ( , ) [This is the derivative of the divergence]
+
+            · ()
+
+· ()                  ()
+
+                  ()
+
+·            ()   ( ) ( ) for
+
+· For layer           ()
+
+     ­ For                             ()
+
+· ()
+
+· ()                  ()
+
+                  ()
+
+·            ()   ( ) ( ) for
+
+                                                                        87
+                     Backward Pass
+
+· Output layer :
+
+     ­ For
+
+· ()             (,)                      Called "Backpropagation" because
+                                          the derivative of the loss is
+· ()                  ()                  propagated "backwards" through
+                                          the network
+                 ()
+
+·            ()  ( ) ( ) for
+
+· For layer          ()                   Very analogous to the forward pass:
+
+     ­ For                            ()     Backward weighted combination
+                                             of next layer
+· ()                          ()
+                                             Backward equivalent of activation
+                 ()
+· ()
+
+·            ()  ( ) ( ) for
+
+                                          88
+Using notation      Backward Pass ( , ) etc (overdot represents derivative of w.r.t variable)
+
+· Output layer (N) :            Called "Backpropagation" because
+                                the derivative of the loss is
+     ­ For                      propagated "backwards" through
+                                the network
+            · ()
+
+· ()                ()  ()
+
+·               ()  ( ) ( )for
+
+· For layer             ( )( )  Very analogous to the forward pass:
+
+     ­ For          ()  ()      Backward weighted combination
+                                of next layer
+            · ()                Backward equivalent of activation
+
+            · ()
+
+·               ()  ( ) ( )for
+
+                                89
+For comparison: the forward pass
+
+                    again
+
+· Input: dimensional vector
+
+· Set:        , is the width of the 0th (input) layer
+
+    ­
+
+­                 ;
+
+· For layer
+
+    ­ For
+
+        · ()  () ( )
+              ,
+
+        · ()  ()
+
+· Output:
+
+­
+                                                                                                                                                   90
+                 Poll 2
+
+After Slide 82
+How does backpropagation relate to training the network (pick one)
+
+     Backpropagation is the process of training the network
+     Backpropagation is used to update the model parameters during training
+     Backpropagation is used to compute the derivatives of the divergence with respect to model
+
+         parameters, to be used in gradient descent. (correct)
+
+                                                                                                                                                          91
+                 Poll 2
+
+After Slide 82
+How does backpropagation relate to training the network (pick one)
+
+     Backpropagation is the process of training the network
+     Backpropagation is used to update the model parameters during training
+     Backpropagation is used to compute the derivatives of the divergence with respect to model
+
+         parameters, to be used in gradient descent. (correct)
+
+                                                                                                                                                          92
+             Special cases
+
+· Have assumed so far that
+
+      1. The computation of the output of one neuron does not directly affect
+            computation of other neurons in the same (or previous) layers
+
+      2. Inputs to neurons only combine through weighted addition
+      3. Activations are actually differentiable
+      ­ All of these conditions are frequently not applicable
+
+· Will not discuss all of these in class, but explained in slides
+
+      ­ Will appear in quiz. Please read the slides
+
+                                                                                                                                                             93
+Special Case 1. Vector activations
+
+y(k-1) z(k)  y(k)  y(k-1) z(k)  y(k)
+
+· Vector activations: all outputs are functions of
+  all inputs
+
+                                                                                                                                                            94
+Special Case 1. Vector activations
+y(k-1) z(k)                     y(k-1) z(k)
+             y(k)                            y(k)
+
+Scalar activation: Modifying a  Vector activation: Modifying a
+only changes corresponding         potentially changes all,
+
+                                                   95
+"Influence" diagram
+
+y(k-1) z(k)  y(k)        y(k-1) z(k)  y(k)
+
+Scalar activation: Each  Vector activation: Each
+influences one           influences all,
+
+                                                                                            96
+Scalar Activation: Derivative rule
+
+y(k-1) z(k)  y(k)
+
+· In the case of scalar activation functions, the
+  derivative of the loss w.r.t to the input to the unit
+  is a simple product of derivatives
+
+                                                                                                                                                            97
+Derivatives of vector activation
+
+y(k-1) z(k)  y(k)
+
+                       Div
+
+                                                   Note: derivatives of scalar activations
+                                                    are just a special case of vector
+                                                   activations:
+
+                                                                                            ()
+                                                                                            ()
+
+· For vector activations the derivative of the loss w.r.t. to
+   any input is a sum of partial derivatives
+
+    ­ Regardless of the number of outputs
+                                                                                                                                                            98
+Example Vector Activation: Softmax
+
+y(k-1) z(k)  y(k)                               ()
+                        ()
+
+                                                  ()
+
+                   Div
+
+                                                      99
+Example Vector Activation: Softmax
+
+y(k-1) z(k)  y(k)                               ()
+                        ()
+
+                                                  ()
+
+                                                      ()
+
+                        ()  () ()
+
+                   Div
+
+                                                          100
+Example Vector Activation: Softmax
+
+y(k-1) z(k)  y(k)                               ()
+                        ()
+
+                                                  ()
+
+                            ()                ()
+                                    () ()
+                   Div
+                                       ()
+                        ()      ()
+
+                        ()
+
+                                                      101
+Example Vector Activation: Softmax
+
+y(k-1) z(k)  y(k)                               ()
+                        ()
+
+                                                  ()
+
+                                                                        ()                ()
+                                                                                () ()
+                   Div
+                                                                                   ()
+                        ()                                                  ()
+
+                        ()
+
+                                                                                ()            ()
+
+                                                                    ()      ()
+
+· For future reference                                                                            102
+· is the Kronecker delta:
+Backward Pass for softmax output
+
+· Output layer :                          layer                     d
+                                                          y(N)
+­ For                                            z(N)
+
+· ()                 (,)                         softmax  KL Div       Div
+
+· ()                 (,) ( )              ()
+
+                     ()
+
+·            ()  ( ) ( ) for
+
+· For layer          ()
+
+     ­ For                            ()
+
+· ()
+
+· ()                      ()
+
+                 ()
+
+·            ()  ( ) ( ) for
+
+                                                                       103
+             Special cases
+
+· Examples of vector activations and other
+  special cases on slides
+
+   ­ Please look up
+   ­ Will appear in quiz!
+
+                                                                                                                                                           104
+             Vector Activations
+
+y(k-1) z(k)  y(k)
+
+· In reality the vector combinations can be anything
+
+    ­ E.g. linear combinations, polynomials, logistic (softmax),
+       etc.
+
+                                                                                                                                                           105
+Special Case 2: Multiplicative
+            networks
+
+z(k-1)  y(k-1)
+
+                o(k)
+                     W(k)
+
+                              (k 1) (k 1)
+                Forward:   o  y y (k )
+                           i  j         l
+
+· Some types of networks have multiplicative combination
+
+    ­ In contrast to the additive combination we have seen so far
+
+· Seen in networks such as LSTMs, GRUs, attention models,
+   etc.
+
+                                                                                                                                                           106
+        Backpropagation: Multiplicative
+
+                                    Networks
+
+z(k-1)      y(k-1)
+
+                            o(k)               Forward:
+                                 W(k)
+                                                                 (k 1) (k 1)
+                                                        o  y y (k )
+                                                        i        j   l
+
+Backward: ( )                          ()
+                                                    ()
+
+Div           oi(k )        Div       y (k 1)  Div      Div         y (k 1)  Div
+                            oi(k )      l      oi(k )   yl(k 1)       j      oi(k )
+y  (k   1)    y     (k  1)
+   j                j
+
+· Some types of networks have multiplicative
+
+   combination                                                                107
+Multiplicative combination as a case
+
+of vector activations
+
+y(k-1) z(k)  y(k)
+
+· A layer of multiplicative combination is a special case of vector activation
+
+                                                                                                                                                        108
+Multiplicative combination: Can be
+
+viewed as a case of vector activations
+
+y(k-1) z(k)  y(k)
+
+                           ()
+
+                   Y, Div
+
+                           ()                                                                                                                                ()
+
+· A layer of multiplicative combination is a special case of vector activation
+                                                                                                                                                        109
+Gradients: Backward Computation
+
+z(k-1)  y(k-1) z(k)  y(k) z(N-1)  y(N-1)
+
+                                          z(N)         y(N)
+
+                                                fN                     Div
+
+                                                             Div(Y,d)
+
+                                                fN
+
+                                  ()
+
+For k = N...1          If layer has vector activation  Else if activation is scalar
+
+For i = 1:layer width                           ()                                    ()
+
+                       ()                 () ()              ()        () ()
+
+                                          ()                           ()
+                                                   ()
+                       ()                                    ()                  ()
+
+                                                                            110
+        Special Case : Non-differentiable
+
+x                             activations
+
+x       
+
+x                                                z1
+
+   .           +          ()       
+
+   .
+
+   . 
+
+x  .                                             z2
+                                                                    y
+   . 
+
+x
+
+1         
+
+        () =                                     z3
+
+() = 0
+
+            
+
+                                                 z4
+
+   · Activation functions are sometimes not actually differentiable
+
+        ­ E.g. The RELU (Rectified Linear Unit)
+
+            · And its variants: leaky RELU, randomized leaky RELU
+
+        ­ E.g. The "max" function
+
+   · Must use "subgradients" where available
+
+        ­ Or "secants"                                                 111
+           The subgradient
+
+· A subgradient of a function at a point is any vector such that
+
+       ­ Any direction such that moving in that direction increases the function
+
+· Guaranteed to exist only for convex functions
+
+       ­ "bowl" shaped functions
+       ­ For non-convex functions, the equivalent concept is a "quasi-secant"
+
+· The subgradient is a direction in which the function is guaranteed to increase
+· If the function is differentiable at , the subgradient is the gradient
+
+       ­ The gradient is not always the subgradient though
+
+                                                                                                                                                           112
+Non-differentiability: RELU
+
+                                           = 
+
+· At 0 a negative perturbation  < 0 results in no change of ()
+
+­ = 0
+
+· A positive perturbation  > 0 results in   = 
+
+­  = 1
+
+· Peering very closely, we can imagine that the curve is rotating continuously from slope = 0 to slope
+
+= 1 at  = 0
+
+­ So any slope between 0 and 1 is valid                         113
+    Subgradients and the RELU
+
+· The subderivative of a RELU is the slope of any line that lies entirely under it
+
+       ­ The subgradient is a generalization of the subderivative
+       ­ At the differentiable points on the curve, this is the same as the gradient
+
+· Can use any subgradient at 0
+
+       ­ Typically, will use the equation given
+
+                                                                                                                                                           114
+     Subgradients and the Max
+
+         z1
+
+         z2
+                       y
+
+         zN
+
+· Vector equivalent of subgradient
+
+    ­ 1 w.r.t. the largest incoming input
+
+          · Incremental changes in this input will change the output
+
+    ­ 0 for the rest
+
+          · Incremental changes to these inputs will not change the output
+                                                                                                                                                           115
+                Poll 3
+
+We have y = max(z1, z2, z3), computed at z1 = 1, z2 = 2, z3 = 3. Select all that are true
+     dy/dz1 = 1
+     dy/dz1 = 0 (correct)
+     dy/dz2 = 1
+     dy/dz2 = 0 (correct)
+     dy/dz3 = 1 (correct)
+     dy/dz3 = 0
+
+                                                                                                                                                   116
+                Poll 3
+
+We have y = max(z1, z2, z3), computed at z1 = 1, z2 = 2, z3 = 3. Select all that are true
+     dy/dz1 = 1
+     dy/dz1 = 0 (correct)
+     dy/dz2 = 1
+     dy/dz2 = 0 (correct)
+     dy/dz3 = 1 (correct)
+     dy/dz3 = 0
+
+                                                                                                                                                   117
+    Subgradients and the Max
+
+z1          y1
+
+z2          y2
+            y3
+
+zN          yM
+
+· Multiple outputs, each selecting the max of a different subset of
+
+inputs
+
+    ­ Will be seen in convolutional networks
+
+· Gradient for any output:
+
+    ­ 1 for the specific component that is maximum in corresponding input
+
+    subset
+
+    ­ 0 otherwise                                                    118
+             Backward Pass: Recap
+
+· Output layer (N) :
+
+     ­ For
+
+· ()             (,)
+
+· ()                       ()                         ()
+                 () ()
+                                           ( ) ( ) (vector activation)
+·            ()  ( ) ( ) for
+                                                  These may be subgradients
+· For layer          ()
+                                                    ()
+     ­ For                            ()
+                           ()             ( ) ( ) (vector activation)
+· ()             () ()
+                                                                                                                   119
+· ()
+
+·            ()  ( ) ( ) for
+          Overall Approach
+
+· For each data instance
+
+     ­ Forward pass: Pass instance forward through the net. Store all
+        intermediate outputs of all computation.
+
+     ­ Backward pass: Sweep backward through the net, iteratively compute
+        all derivatives w.r.t weights
+
+· Actual loss is the sum of the divergence over all training instances
+
+· Actual gradient is the sum or average of the derivatives computed
+   for each training instance
+
+     ­
+
+                                                                                                                                                           120
+                  Training by BackProp
+
+· Initialize weights for all layers
+· Do: (Gradient descent iterations)
+
+­ Initialize              ; For all       , initialize ( )
+
+                                                                      ,
+
+­ For all                 (Iterate over training instances)
+
+· Forward pass: Compute
+
+       ­ Output 
+       ­  += (, )
+
+· Backward pass: For all :
+
+­ Compute                 (,)
+
+                                  ()
+
+                             ,
+
+               ­  ( ) +=  (,)
+
+­ For all                         ()
+
+                  ,       ,
+
+                     update:
+
+                          ()          ()
+
+                          ,           ,   ()
+
+                                          ,
+
+· Until has converged                                                    121
+         Vector formulation
+
+· For layered networks it is generally simpler to
+  think of the process in terms of vector
+  operations
+
+   ­ Simpler arithmetic
+   ­ Fast matrix libraries make operations much faster
+
+· We can restate the entire process in vector
+  terms
+
+   ­ This is what is actually used in any real system
+
+                                                                                                                                                           122
+               Vector formulation
+
+()         () ()   ()                           ()               ()
+
+()             ()  ()                           ()                 ()
+                                                        
+
+                                                ()                 ()
+
+                             ()  ()                 ()                 ()
+
+                             ()  ()                 ()                 ()
+
+    ()                                                         
+
+()      ,                    ()  ()                 ()                 ()
+
+               ()  ()
+
+           ()
+
+· Arrange the inputs to neurons of the kth layer as a vector
+
+· Arrange the outputs of neurons in the kth layer as a vector
+
+· Arrange the weights to any layer as a matrix
+
+    ­ Similarly with biases                                            123
+               Vector formulation
+
+()         () ()   ()                   ()                         ()
+
+()             ()  ()                            ()                 ()
+                                                         
+
+                                                 ()                 ()
+
+                              ()  ()                 ()                 ()
+
+                              ()  ()                 ()                 ()
+
+    ()                                                   
+
+()      ,                     ()  ()                 ()                 ()
+
+               ()  ()
+
+           ()
+
+· The computation of a single layer is easily expressed in matrix
+
+    notation as (setting  ):
+
+                                                                        124
+   The forward pass: Evaluating the
+                  network
+
+
+
+                                                                                                                                                         125
+    The forward pass
+
+  
+
+   
+
+                      126
+  The forward pass
+
+  
+
+                                                  1
+
+The Complete computation
+
+                                                                                                                                                          127
+  The forward pass
+
+    
+
+                                                                   2
+
+The Complete computation
+
+                                                                                                                                                          128
+  The forward pass
+
+      
+
+                                                                                   2
+
+The Complete computation
+
+                                                                                                                                                          129
+  The forward pass
+
+                            
+
+                              N
+
+The Complete computation         N
+                                                 130
+  The forward pass
+
+      
+
+                    N
+
+                                                                                                                                                       
+
+The Complete computation
+
+                                                                                                                                                          131
+               Forward pass
+
+                                                                                          Div(Y,d)
+
+Forward pass:
+
+         Initialize
+         For k = 1 to N:
+         Output
+
+                                                                                                                                                                 132
+          The Forward Pass
+
+· Set
+· Iterate through layers:
+
+   ­ For layer k = 1 to N:
+
+· Output:
+
+                                                                                                                                                           133
+         The Backward Pass
+
+· Have completed the forward pass
+· Before presenting the backward pass, some
+
+  more calculus...
+
+   ­ Vector calculus this time
+
+                                                                                                                                                           134
+ Vector Calculus Notes 1: Definitions
+
+· A derivative is a multiplicative factor that multiplies a
+   perturbation in the input to compute the corresponding
+   perturbation of the output
+
+· For a scalar function of a vector argument
+
+· If is an  vector, is a            vector
+
+   ­ The shape of the derivative is the transpose of the shape of
+
+·  is called the gradient of w.r.t
+
+                                    (influence diagram)
+
+                                                                                 135
+   Vector Calculus Notes 1: Definitions
+
+· For a vector function of a vector argument
+
+· If is an  vector, and is an      is an
+
+matrix                                                                136
+
+­ Or the dimensions won't match
+
+· is called the Jacobian of w.r.t
+    Calculus Notes: The Jacobian
+
+· The derivative of a vector function w.r.t. vector input is called
+   a Jacobian
+
+· It is the matrix of partial derivatives given below
+
+Using vector notation
+
+                       Check:
+
+                                                                                                                                                            137
+Jacobians can describe the derivatives
+of neural activations w.r.t their input
+
+z  y
+
+· For scalar activations (shorthand notation):
+
+    ­ Jacobian is a diagonal matrix
+    ­ Diagonal entries are individual derivatives of outputs w.r.t inputs
+
+                                                                                                                                                           138
+   For Vector activations
+
+z  y
+
+· Jacobian is a full matrix
+
+   ­ Entries are partial derivatives of individual outputs
+      w.r.t individual inputs
+
+                                                                                                                                                           139
+   Special case: Affine functions
+
+· Matrix and bias operating on vector to
+  produce vector
+
+· The Jacobian of w.r.t is simply the matrix
+
+                                                                                                                                                           140
+   Vector Calculus Notes 2: Chain rule
+
+· For nested functions we have the following
+  chain rule
+
+This holds regardless of whether is scalar or vector
+
+Note the order: The derivative of the outer function comes first  141
+   Vector Calculus Notes 2: Chain rule
+
+· For nested functions we have the following
+  chain rule
+
+Check
+
+Note the order: The derivative of the outer function comes first  142
+   Vector Calculus Notes 2: Chain rule
+
+· Chain rule for Jacobians:
+· For vector functions of vector inputs:
+
+                   Check
+
+Note the order: The derivative of the outer function comes first  143
+   Vector Calculus Notes 2: Chain rule
+
+· Combining Jacobians and Gradients
+· For scalar functions of vector inputs ( is vector):
+
+                    Check
+
+     Note the order: The derivative of the outer function comes first
+     Extended Chain rule
+
+How do we compute the derivative of D w.r.t. x, z1, y1, z2 and y2, from the
+local derivatives shown on the edges?
+
+                                                                                                                                              145
+Extended Chain rule
+
+                                                                                                                         146
+Extended Chain rule
+
+                                                                                  
+
+Note the order: The derivative of the outer function comes first                    147
+Extended Chain rule
+
+
+
+Note the order: The derivative of the outer function comes first  148
+Extended Chain rule
+
+Note the order: The derivative of the outer function comes first  149
+Extended Chain rule
+
+Note the order: The derivative of the outer function comes first  150
+Extended Chain rule
+
+Note the order: The derivative of the outer function comes first  151
+   Vector Calculus Notes 2: Chain rule
+
+· For nested functions we have the following
+  chain rule
+
+         Note the order: The derivative of the outer function comes first
+
+                                                                                                                                                               152
+   Vector Calculus Notes 2: Chain rule
+
+· For nested functions we have the following
+  chain rule
+
+         Note the order: The derivative of the outer function comes first
+
+                                                                                                                                                               153
+     More calculus: Special Case
+
+· Scalar functions of Affine functions
+
+                                                                                                                                                               154
+     More calculus: Special Case
+
+· Scalar functions of Affine functions
+
+                                                                                                                                                               155
+     More calculus: Special Case
+
+· Scalar functions of Affine functions
+
+                                                                                                                                                               156
+      More calculus: Special Case
+
+· Scalar functions of Affine functions
+
+· The derivative of a scalar divergence
+    w.r.t. an Nx1 vector is 1xN
+
+· The derivative of a scalar divergence
+    w.r.t. an NxM matrix is MxN
+
+· If z is Nx1 and y is Mx1...
+
+      ­ What is the size of W
+      ­ Verify that  is the correct size
+
+                                                                                                                                                                157
+     More calculus: Special Case
+
+· Scalar functions of Affine functions
+
+                                                                                        Derivatives w.r.t
+                                                                                        parameters
+
+ · Note: the derivative shapes are the transpose
+    of the shapes of and
+
+                                                                                                                                                               158
+     More calculus: Special Case
+
+· Scalar functions of Affine functions
+  · Writing the transpose
+
+                                                                                                                                                               159
+      Special Case: Application to a
+                    network
+
+· Scalar functions of Affine functions
+
+                                            The divergence is a scalar function of
+                                            Applying the above rule
+
+                                                                                                                                                               160
+      Special Case: Application to a
+                    network
+
+· Scalar functions of Affine functions
+
+                                                                                                                                                               161
+               Poll 4
+
+We are given the function  = (( ( ))), where  and  are vectors, and  and  also compute
+vector outputs.
+Select the correct formula for the derivative of  w.r.t. . We use the notation () to represent the
+derivative of  w.r.t .
+
+     () () ()
+      ()() () (correct)
+     Both are correct
+
+                                                                                                                                                  162
+               Poll 4
+
+We are given the function  = (( ( ))), where  and  are vectors, and  and  also compute
+vector outputs.
+Select the correct formula for the derivative of  w.r.t. . We use the notation () to represent the
+derivative of  w.r.t .
+
+     () () ()
+      ()() () (correct)
+     Both are correct
+
+                                                                                                                                                  163
+The backward pass
+
+· The network again (with variables shown)...
+
+· With the divergence we will minimize...
+
+· And the entire influence diagram (with derivatives)
+
+­ Variable subscripts not shown in  for brevity        164
+The backward pass
+
+· The network again (with variables shown)...
+
+· With the divergence we will minimize...
+
+· And the entire influence diagram (with derivatives)
+
+­ Variable subscripts not shown in  for brevity        165
+The backward pass
+
+· The network again (with variables shown)...
+
+· With the divergence we will minimize...
+
+· And the entire influence diagram (with derivatives)
+
+­ Variable subscripts not shown in  for brevity        166
+         The backward pass
+
+· The network is a nested function
+· The divergence for any is also a nested function
+
+                                                                                                                                                           167
+The backward pass
+
+· The network again (with variables shown)...
+
+· With the divergence we will minimize...
+
+· And the entire influence diagram (with derivatives)
+
+­ Variable subscripts not shown in  for brevity        168
+          The backward pass
+
+In the following slides we will also be using the notation  to represent the derivative
+of any w.r.t any
+Note that for activation functions, these are actually Jacobians
+
+                                                                                                                                                           169
+  The backward pass
+
+                                                       
+
+· The network again (with variables shown)...
+
+· With the divergence we will minimize...
+
+· And the entire influence diagram (with derivatives)
+
+­ Variable subscripts not shown in  for brevity          170
+  The backward pass
+
+                                                       
+
+· The network again (with variables shown)... These are Jacobians
+
+· With the divergence we will minimize...
+
+· And the entire influence diagram (with derivatives)
+
+­ Variable subscripts not shown in  for brevity          171
+  The backward pass
+
+                                                       
+
+· The network again (with variables shown)... What are these?
+
+· With the divergence we will minimize...
+
+· And the entire influence diagram (with derivatives)
+
+­ Variable subscripts not shown in  for brevity          172
+The backward pass
+
+                                                       
+
+· The network again (with variables shown)...
+
+· With the divergence we will minimize...
+
+· And the entire influence diagram (with derivatives)
+
+­ Variable subscripts not shown in  for brevity          173
+The backward pass
+
+                                                      
+
+First compute the derivative of the divergence w.r.t. .
+The actual derivative depends on the divergence function.
+
+N.B: The gradient is the transpose of the derivative       174
+The backward pass
+
+                                                       
+                                                                            175
+Compute the derivative w.r.t from the derivative at
+using the chain rule
+
+Already computed New term
+The backward pass
+
+                                                       
+
+Compute the derivative w.r.t from the derivative at
+using the chain rule
+
+Already computed Jacobian    is just the Jacobian of the activation
+                           function
+
+                                                                                                        176
+The backward pass
+
+    
+
+  We now have the derivative for
+
+                                  177
+The backward pass
+
+                                                                 
+                                                                                  178
+Compute the derivative w.r.t           from the derivative at
+  using the chain rule
+
+                                     
+The backward pass
+
+                                                               
+                                                                                179
+Compute the derivative w.r.t         from the derivative at
+  using the chain rule
+
+Already computed New term
+
+                                                   
+The backward pass
+
+                                                         
+
+Compute the derivative w.r.t  from the derivative at
+  using the chain rule
+
+Already computed New term                            Must also compute the derivative w.r.t the
+                                                     and using the rule for affine transforms
+                                                   
+                                                                                                                                 180
+The backward pass
+
+                            
+
+Affine parameter rules
+
+                              181
+The backward pass
+
+                    
+
+                We now have the derivative for
+
+  182
+The backward pass
+
+                                                         
+
+Compute the derivative w.r.t  from the derivative at
+   using the chain rule
+
+Already computed New term
+
+                                                                                                                                             183
+The backward pass
+
+                                                             
+
+Compute the derivative w.r.t    from the derivative at
+   using the chain rule
+                                                            is the Jacobian of
+              Already computed
+                                                        the activation function.
+
+                                Jacobian                It is a diagonal matrix for
+
+                                                        scalar activations           184
+The backward pass
+
+     
+
+    We now have the derivative for
+
+                                                                              185
+The backward pass
+
+                         
+                                                            186
+Already computed New
+The backward pass
+
+                         
+                                                            187
+Already computed New
+The backward pass
+
+  
+
+                   188
+The backward pass
+
+                 In some problems we will also want to compute
+                 the derivative w.r.t. the input
+
+                                                                                                                      189
+             The backward pass
+
+Initialize:  For k = N downto 1:
+
+                                    
+
+                                      
+
+                                      190
+       The Backward Pass
+
+· Set  ,
+
+· Initialize: Compute
+
+· For layer k = N downto 1:
+
+    ­ Compute
+
+          · Will require intermediate values computed in the forward pass
+
+    ­ Backward recursion step:
+
+­ Gradient computation:
+
+                                                                           191
+       The Backward Pass
+
+· Set      ,
+
+· Initialize: Compute
+
+· For layer k = N downto 1:
+
+­ Compute
+
+       · Will require intermediate values computed in the forward pass
+
+­ Backward recursion step:   Note analogy to forward pass
+
+­ Gradient computation:
+
+                                                                        192
+For comparison: The Forward Pass
+
+· Set
+· For layer k = 1 to N :
+
+   ­ Forward recursion step:
+
+· Output:
+
+                                                                                                                                                           193
+Neural network training algorithm
+
+· Initialize all weights and biases
+
+· Do:
+
+­
+
+­ For all , initialize               , 
+
+­ For all          # Loop through training instances
+
+       · Forward pass : Compute
+
+               ­ Output ()
+               ­ Divergence (, )
+               ­  += (, )
+
+       · Backward pass: For all  compute:
+
+           ­   =   
+
+           ­   =    
+           ­  (, ) =   ;   ,  =  
+           ­   +=  (, );   +=  (, )
+
+­ For all update:
+
+               =  -   ;   =  -  
+
+· Until has converged
+
+                                                      194
+    Setting up for digit recognition
+
+              Training data
+
+( , 0) ( , 1)
+
+( , 1) ( , 0)                                                            Sigmoid output
+                                                                         neuron
+( , 0) ( , 1)
+                                                                                          195
+    · Simple Problem: Recognizing "2" or "not 2"
+    · Single output with sigmoid activation
+
+             ­   (0,1)
+             ­    0  1
+
+    · Use KL divergence
+    · Backpropagation to compute derivatives
+
+             ­ To apply in gradient descent to learn network parameters
+Recognizing the digit
+
+Training data
+
+( , 5) ( , 2)                                     Y1 Y2 Y3 Y4     Y0
+
+( , 2) ( , 4)
+
+( , 0) ( , 2)
+
+· More complex problem: Recognizing digit
+
+· Network with 10 (or 11) outputs
+
+­ First ten outputs correspond to the ten digits
+
+· Optional 11th is for none of the above
+
+· Softmax output layer:
+
+­ Ideal output: One of the outputs goes to 1, the others go to 0
+
+· Backpropagation with KL divergence
+
+­ To compute derivatives for gradient descent updates to learn network  196
+              Story so far
+
+· Neural networks must be trained to minimize the average
+   divergence between the output of the network and the desired
+   output over a set of training instances, with respect to network
+   parameters.
+
+· Minimization is performed using gradient descent
+
+· Gradients (derivatives) of the divergence (for any individual
+   instance) w.r.t. network parameters can be computed using
+   backpropagation
+
+     ­ Which requires a "forward" pass of inference followed by a
+        "backward" pass of gradient computation
+
+· The computed gradients can be incorporated into gradient descent
+
+                                                                                                                                                           197
+                  Issues
+
+· Convergence: How well does it learn
+
+   ­ And how can we improve it
+
+· How well will it generalize (outside training
+  data)
+
+· What does the output really mean?
+· Etc..
+
+                                                                                                                                                           198
+                Next up
+
+· Convergence and generalization
+
+                                                                                                                                                           199
+

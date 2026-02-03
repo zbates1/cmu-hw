@@ -1,0 +1,2222 @@
+     Neural Networks:
+   Optimization Part 1
+
+Intro to Deep Learning, Spring 2026
+
+                                                                                                                                         1
+              Story so far
+
+· Neural networks are universal approximators
+
+    ­ Can model any odd thing
+    ­ Provided they have the right architecture
+
+· We must train them to approximate any function
+
+    ­ Specify the architecture
+    ­ Learn their weights and biases
+
+· Networks are trained to minimize total "loss" on a training
+   set
+
+    ­ We do so through empirical risk minimization
+
+· We use variants of gradient descent to do so
+· The gradient of the error with respect to network
+
+   parameters is computed through backpropagation
+
+                                                                                                                                                              2
+ Recap: Gradient Descent Algorithm
+
+· In order to minimize any function w.r.t.
+· Initialize:
+
+   ­
+   ­
+
+· Do
+
+   ­
+   ­
+
+· while
+
+                                                                                                                                                              3
+Recap: Training Neural Nets by Gradient
+
+                       Descent
+
+Total training error:
+
+· Gradient descent algorithm:
+· Initialize all weights
+· Do:
+
+    ­ For every layer compute:
+
+·                                                    Computed using backprop
+
+         ·                                                                                             4
+
+· Until                has converged
+     Recap: Vector derivatives
+
+· At any layer, forward pass
+
+                 Jacobian
+
+· Backward pass
+
+                                5
+Neural network training algorithm
+
+· Initialize all weights and biases
+
+· Do:
+
+­
+
+­ For all , initialize                 ,
+
+­ For all               # Loop through training instances
+
+       · Forward pass : Compute                            Computing
+                                                           gradient
+       ­ Output  ,                                         (uses
+                                                           backprop)
+       ­ Divergence        
+                                                           Gradient
+       · Backward pass: For all compute:                   descent
+
+       ­     ,                                                             6
+
+       ­                              ;        
+
+­ For all update:
+
+                                 ;          
+
+· Until has converged
+                  Issues
+
+· Convergence: How well does it learn
+
+   ­ And how can we improve it
+
+· How well will it generalize (outside training
+  data)
+
+· What does the output really mean?
+· Etc..
+
+                                                                                                                                                              7
+          Poll 0
+
+Backpropagating from the kth layer, which is the derivative for
+the weights ?
+
+          : The product of the output of the th layer and the
+
+  derivative for the affine value of the th layer (in that order)
+
+          : The product of the derivative for the affine value at the
+
+  th layer and the output of the th layer (in that order)
+
+          : The product of the transpose of the output of the
+
+  th layer and the derivative for the affine value of the th layer (in that
+
+  order)
+
+          : The product of the derivative for the affine value at the
+
+  th layer and the transpose output of the th layer (in that order)
+
+                                                                             8
+          Poll 0
+
+Backpropagating from the kth layer, which is the derivative for
+the weights ?
+
+    : The product of the output of the  th layer and the
+
+  derivative for the affine value of the th layer (in that order)
+
+          : The product of the derivative for the affine value at the
+
+  th layer and the output of the th layer (in that order)
+
+          : The product of the transpose of the output of the
+
+  th layer and the derivative for the affine value of the th layer (in that
+
+  order)
+
+          : The product of the derivative for the affine value at the
+
+  th layer and the transpose output of the th layer (in that order)
+
+                                                                             9
+Onward
+
+                                                                                               10
+                Onward
+
+· Does backprop always work?
+· Convergence of gradient descent
+
+   ­ Rates, restrictions,
+   ­ Hessians
+   ­ Acceleration and Nestorov
+   ­ Alternate approaches
+
+· Modifying the approach: Stochastic gradients
+· Speedup extensions: RMSprop, Adagrad
+
+                                                                                                                                                            11
+Does backprop do the right thing?
+
+· Is backprop always right?
+
+   ­ Assuming it actually finds the minimum of the
+      divergence function?
+
+(Actual question: Does gradient descent find the
+right solution, even when it finds the actual
+minimum)
+
+                                                                                                                                                            12
+   Recap: The differentiable activation
+
+y                                      y
+
+        T1                     x                                                    T2      x
+
+   · Threshold activation: Equivalent to counting errors
+
+   ­ Shifting the threshold from T1 to T2 does not change classification error
+   ­ Does not indicate if moving the threshold left was good or not
+
+   0.5                            0.5
+
+            T1                                                                  T2
+
+   · Differentiable activation: Computes "distance to answer"
+
+   ­ "Distance" == divergence
+
+   ­ Perturbing the function changes this quantity,
+
+        · Even if the classification error itself doesn't change                        13
+Does backprop do the right thing?
+
+· Is backprop always right?
+
+    ­ Assuming it actually finds the global minimum of the loss
+       (average divergence)?
+
+· In classification problems, the classification error is a
+   non-differentiable function of weights
+
+· The divergence function minimized is only a proxy for
+   classification error
+
+· Minimizing divergence may not minimize classification
+   error
+
+                                                                                                                                                            14
+Backprop fails to separate where
+       perceptron succeeds
+
+            (0,1), +1
+
+(-1,0), -1             (1,0), +1
+
+· Brady, Raghavan, Slawny, '89
+· Simple problem, 3 training instances, single neuron
+· Perceptron training rule trivially finds a perfect solution
+
+                                                                                                                                                            15
+Backprop vs. Perceptron
+
+            (-1,0), -1  (0,1), +1
+                                    (1,0), +1
+
+· Back propagation using logistic function and
+
+divergence
+
+· Unique minimum trivially proved to exist, backprop
+
+finds it                                              16
+Unique solution exists
+
+                   (-1,0), -1  (0,1), +1
+                                           (1,0), +1
+
+· Let
+
+       ­ E.g.  =  0.99 representing a 99% confidence in the class
+
+· From the three points we get three independent equations:
+
+· Unique solution              exists
+
+­ represents a unique line regardless of the value of              17
+Backprop vs. Perceptron
+
+(-1,0), -1  (0,1), +1
+                        (1,0), +1
+
+                                                 (0,-t), +1
+
+· Now add a fourth point
+· is very large (point near )
+· Perceptron trivially finds a solution (may take t2
+
+   iterations)
+                                                                                                                                                            18
+                                        Backprop
+
+Notation:                                                              (0,1), +1
+            = logistic activation                                                  (1,0), +1
+
+                            (-1,0), -1
+
+· Consider backprop:                                                   (0,-t), +1
+· Contribution of fourth point
+
+   to derivative of L2 error:
+
+                                                                    2
+
+                                                                                              1- is the actual
+                                                                                              achievable value
+
+                                                                                                                                         19
+                 Backprop
+
+Notation:
+            = logistic activation
+
+                                                              2
+
+· For very large positive ,           (where                     )
+
+·                            as
+
+·  exponentially as
+
+· Therefore, for very large positive
+
+                                                                 20
+                       Backprop
+
+(-1,0), -1                          (0,1), +1
+                                                (1,0), +1
+
+                                    (0,-t), +1
+
+· The fourth point at  does not change the gradient of the L2
+
+divergence near the optimal solution for 3 points
+
+· The optimum solution for 3 points is also a broad local minimum (0
+
+gradient) for the 4-point problem!
+
+­ Will be found by backprop nearly all the time
+
+· Although the global minimum with unbounded weights will separate the classes correctly 21
+            Backprop
+
+(-1,0), -1  (0,1), +1
+                        (1,0), +1
+
+                                                 (0,-t), +1
+
+· Local optimum solution found by backprop
+· Does not separate the points even though the
+
+  points are linearly separable!
+                                                                                                                                                            22
+                        Backprop
+
+            (-1,0), -1        (0,1), +1
+                                          (1,0), +1
+
+                              (0,-t), +1
+
+· Solution found by backprop
+
+· Does not separate the points even though the points are linearly
+
+separable!
+
+· Compare to the perceptron: Backpropagation fails to separate
+
+where the perceptron succeeds                                       23
+Backprop fails to separate where
+       perceptron succeeds
+
+· Brady, Raghavan, Slawny, '89
+
+· Several linearly separable training examples
+
+· Simple setup: both backprop and perceptron
+
+algorithms find solutions                       24
+A more complex problem
+
+· Adding a "spoiler" (or a small number of spoilers)
+
+­ Perceptron finds the linear separator,
+
+­ Backprop does not find a separator
+
+· A single additional input does not change the loss function
+
+significantly                                                  25
+A more complex problem
+
+· Adding a "spoiler" (or a small number of spoilers)
+
+­ Perceptron finds the linear separator,
+
+­ Backprop does not find a separator
+
+· A single additional input does not change the loss function
+
+significantly
+
+­ Assuming weights are constrained to be bounded               26
+A more complex problem
+
+· Adding a "spoiler" (or a small number of spoilers)
+
+­ Perceptron finds the linear separator,
+
+­ For bounded , backprop does not find a separator
+
+· A single additional input does not change the loss function
+
+significantly                                                  27
+A more complex problem
+
+· Adding a "spoiler" (or a small number of spoilers)
+
+­ Perceptron finds the linear separator,
+
+­ For bounded , backprop does not find a separator
+
+· A single additional input does not change the loss function
+
+significantly                                                  28
+A more complex problem
+
+· Adding a "spoiler" (or a small number of spoilers)
+
+­ Perceptron finds the linear separator,
+
+­ For bounded , backprop does not find a separator
+
+· A single additional input does not change the loss function
+
+significantly                                                  29
+    So what is happening here?
+
+· The perceptron may change greatly upon adding just a
+   single new training instance
+
+    ­ But it fits the training data well
+    ­ The perceptron rule has low bias
+
+          · Makes no errors if possible
+
+    ­ But high variance
+
+          · Swings wildly in response to small changes to input
+
+· Backprop is minimally changed by new training
+   instances
+
+    ­ Prefers consistency over perfection
+    ­ It is a low-variance estimator, at the potential cost of bias
+
+                                                                                                                                                            30
+Backprop fails to separate even when
+                  possible
+
+· This is not restricted to single perceptrons
+· An MLP learns non-linear decision boundaries that are
+
+   determined from the entirety of the training data
+· Adding a few "spoilers" will not change their behavior
+
+                                                                                                                                                            31
+Backprop fails to separate even when
+                  possible
+
+· This is not restricted to single perceptrons
+· An MLP learns non-linear decision boundaries that are
+
+   determined from the entirety of the training data
+· Adding a few "spoilers" will not change their behavior
+
+                                                                                                                                                            32
+Backpropagation: Finding the separator
+
+· Backpropagation will often not find a separating
+   solution even though the solution is within the
+   class of functions learnable by the network
+
+· This is because the separating solution is not a
+   feasible optimum for the loss function
+
+· One resulting benefit is that a backprop-trained
+   neural network classifier has lower variance than
+   an optimal classifier for the training data
+
+                                                                                                                                                              33
+                 Poll 1
+
+Minimizing the (differentiable) loss function will also minimize classification error, true or false
+     True
+     False (true)
+
+                                                                                                                                                        34
+                 Poll 1
+
+Minimizing the (differentiable) loss function will also minimize classification error, true or false
+     True
+     False (true)
+
+                                                                                                                                                        35
+           The Loss Surface
+
+· The example (and statements)
+  earlier assumed the loss
+  objective had a single global
+  optimum that could be found
+
+   ­ Statement about variance is
+      assuming global optimum
+
+· What about local optima
+
+                                                                                                                                                            36
+               The Loss Surface
+
+· Popular hypothesis:
+
+     ­ In large networks, saddle points are far more
+        common than local minima
+
+            · Frequency of occurrence exponential in network size
+
+     ­ Most local minima are equivalent
+
+            · And close to global minimum
+
+     ­ This is not true for small networks
+
+· Saddle point: A point where
+
+­ The slope is zero
+
+­ The surface increases in some directions, but
+   decreases in others
+
+· Some of the Eigenvalues of the Hessian are positive;
+   others are negative
+
+­ Gradient descent algorithms often get "stuck" in
+
+saddle points                                                      37
+  The Controversial Loss Surface
+
+· Baldi and Hornik (89), "Neural Networks and Principal Component
+    Analysis: Learning from Examples Without Local Minima" : An MLP with a
+    single hidden layer has only saddle points and no local Minima
+
+· Dauphin et. al (2015), "Identifying and attacking the saddle point problem
+    in high-dimensional non-convex optimization" : An exponential number of
+    saddle points in large networks
+
+· Chomoranksa et. al (2015), "The loss surface of multilayer networks" : For
+    large networks, most local minima lie in a band and are equivalent
+
+      ­ Based on analysis of spin glass models
+
+· Swirscz et. al. (2016), "Local minima in training of deep networks", In
+    networks of finite size, trained on finite data, you can have horrible local
+    minima
+
+· Watch this space...
+
+                                                                                                                                                            38
+              Story so far
+
+· Neural nets can be trained via gradient descent that minimizes a
+   loss function
+
+· Backpropagation can be used to derive the derivatives of the loss
+
+· Gradient descent is not guaranteed to find a "true" solution, even if
+   it exists, is unique, and lies within the capacity of the network to
+   model
+
+     ­ The optimum for the loss function may not be the "true" solution
+
+· For large networks, the loss function may have a large number of
+   unpleasant saddle points or local minima
+
+     ­ Which backpropagation may find
+
+                                                                                                                                                            39
+             Convergence
+
+· In the discussion so far, we have assumed that
+  the training arrives at a local minimum
+
+· Does it always converge?
+· How long does it take?
+
+· Hard to analyze for an MLP, but we can look at
+  the problem through the lens of convex
+  optimization
+
+                                                                                                                                                            40
+A quick tour of (convex) optimization
+
+                                                                                                                                                          41
+Convex Loss Functions
+
+· A surface is "convex" if it is         Contour plot of convex function
+   continuously curving upward
+
+    ­ We can connect any two points
+        on or above the surface without
+        intersecting it
+
+    ­ Many mathematical definitions
+        that are equivalent
+
+· Caveat: Neural network loss
+   surface is generally not convex
+
+    ­ Streetlight effect
+
+                                         42
+Convergence of gradient descent
+
+· An iterative algorithm is said to          converging
+   converge to a solution if the value      jittering
+   updates arrive at a fixed point          diverging
+
+     ­ Where the gradient is 0 and further
+        updates do not change the estimate
+
+· The algorithm may not actually
+   converge
+
+     ­ It may jitter around the local
+        minimum
+
+     ­ It may even diverge
+
+· Conditions for convergence?
+
+                                                         43
+Convergence and convergence rate
+
+· Convergence rate: How fast the              converging
+   iterations arrive at the solution
+
+· Generally quantified as
+
+­ ( )is the k-th iteration
+­ is the optimal value of
+
+· If is a constant (or upper bounded),
+
+the convergence is linear
+
+­ In reality, its arriving at the solution
+
+exponentially fast
+
+()                          ()              
+
+                                                          44
+Convergence for quadratic surfaces
+
+                                               Gradient descent with fixed step size
+                                               to estimate scalar parameter
+
+                             · Gradient descent to find the
+                                optimum of a quadratic,
+                                starting from
+
+                             · Assuming fixed step size
+                             · What is the optimal step size
+
+                                  to get there fastest?
+
+  ()
+
+                                                                                                                                                      45
+Convergence for quadratic surfaces
+
+            · Any quadratic objective can be written as
+
+                     ()                      ()
+
+        ()                      ()           ()
+
+()  ()
+
+            ­ Taylor expansion
+
+            · Minimizing w.r.t , we get (Newton's method)
+
+            · Note:
+
+                     ()
+                                         ()
+
+            · Comparing to the gradient descent rule, we see
+                that we can arrive at the optimum in a single step
+                using the optimum step size
+
+                                                                              
+
+                                                                                                               46
+With non-optimal step size
+
+Gradient descent with fixed step size
+to estimate scalar parameter
+
+· For        the algorithm
+
+will converge monotonically
+
+· For                       we
+
+have oscillating
+
+convergence
+
+· For        we get
+
+divergence
+
+                                47
+For generic differentiable convex
+              objectives
+
+        approx
+
+· Any differentiable convex objective                                        
+
+        ()                             can be approximated as
+
+()  ()                                                                      ()
+                                                      ()
+
+      ­ Taylor expansion
+
+· Using the same logic as before, we get (Newton's method)
+
+                                       ()
+
+· We can get divergence if
+
+                                                                                                                                                           48
+ For functions of multivariate inputs
+
+               , is a vector
+
+· Consider a simple quadratic convex (paraboloid) function
+
+­ Since  ( is scalar), can always be made symmetric
+
+· For strictly convex , is always positive definite, and has positive eigenvalues
+
+· When is diagonal:
+
+­ The s are uncoupled
+­ For paraboloid (convex) , the values are all positive
+­ Just a sum of independent quadratic functions
+
+                                                                                                                                                   49
+Multivariate Quadratic with Diagonal
+
+· Equal-value contours will ellipses with
+  principal axes parallel to the spatial axes
+
+                                                                                                                                                             50
+Multivariate Quadratic with Diagonal
+
+· Equal-value contours will be parallel to the axes
+
+     ­ All "slices" parallel to an axis are shifted versions of one another
+
+                                                                                                                                                             51
+Multivariate Quadratic with Diagonal
+
+· Equal-value contours will be parallel to the axis
+
+     ­ All "slices" parallel to an axis are shifted versions of one another
+
+                                                                                                                                                             52
+"Descents" are uncoupled
+
+,  ,
+
+· The optimum of each coordinate is not affected by the other coordinates
+
+     ­ I.e. we could optimize each coordinate independently
+
+· Note: Optimal learning rate is different for the different coordinates
+
+                          53
+         Vector update rule
+
+          ()
+                         ()
+
+· Conventional vector update rules for gradient descent:
+   update entire vector against direction of gradient
+
+    ­ Note : Gradient is perpendicular to equal value contour
+    ­ The same learning rate is applied to all components
+
+                                                                                                                                                            54
+Problem with vector update rule
+
+· This optimal step size can be different for
+  different directions
+
+    ­ The optimal step size in one direction can even cause
+      divergence in another
+
+                                                                                                                                                           55
+Dependence on learning rate
+
+·,              ,
+
+·         ,
+
+·      ,
+
+·         ,
+
+·   ,
+
+·            ,
+
+                             56
+ Problem with vector update rule
+
+· The learning rate must be lower than twice the smallest
+   optimal learning rate for any component
+
+    ­ Otherwise, the learning will diverge
+
+· This, however, makes the learning very slow
+
+    ­ And will oscillate in all directions where
+
+                                                                                                                                                            57
+    Dependence on learning rate
+
+·
+
+                                                                                                                                                              58
+Generic differentiable multivariate
+           convex functions
+
+· For generic convex multivariate functions (not necessarily quadratic), we can employ
+
+quadratic Taylor series expansions and much of the analysis still applies
+
+· Taylor expansion
+
+()                    ()  ()  ()     ()                                    ()
+
+· The optimal step size is inversely proportional to the Eigen values of the Hessian
+
+       ­ The second derivative along the orthogonal coordinates
+       ­ For the smoothest convergence, these must all be equal
+
+                                                                                                                                                                 59
+Convergence
+
+· Convergence behaviors become increasingly unpredictable as dimensions
+    increase
+
+· For the fastest convergence, ideally, the learning rate must be close to
+    both, the largest , and the smallest ,
+
+      ­ To ensure convergence in every direction
+      ­ Generally infeasible
+
+                                                                                         ,  is large
+
+· Convergence is particularly slow if
+                                                                                         ,
+
+      ­ The "condition" number
+
+              · Must be close to 1.0 for fast convergence
+
+· Following (hidden) slides discuss solutions that "normalize the space by
+    stretching different directions differently to standardize optimal step size
+
+      ­ A big topic for optimization
+      ­ Unfortunately, infeasible for neural networks
+
+                                                                                                                                                            60
+    Comments on the quadratic
+
+· Why are we talking about quadratics?
+
+       ­ Quadratic functions form some kind of benchmark
+       ­ Convergence of gradient descent is linear
+
+                · Meaning it converges to solution exponentially fast
+
+· The convergence for other kinds of functions can be viewed against this
+    benchmark
+
+· Actual losses will not be quadratic, but may locally have other structure
+
+       ­ Local between current location and nearest local minimum
+
+· Some examples in the following slides..
+
+       ­ Strong convexity
+       ­ Lifschitz continuity
+       ­ Lifschitz smoothness
+
+       ­ ..and how they affect convergence of gradient descent
+
+                                                                                                                                                            61
+        Quadratic convexity
+
+· A quadratic function has the form
+
+­ Every "slice" is a quadratic bowl
+
+· In some sense, the "standard" for gradient-descent based optimization
+
+­ Others convex functions will be steeper in some regions, but flatter in others
+
+· Gradient descent solution will have linear convergence
+
+­ Take  steps to get within of the optimal solution                               62
+            Strong convexity
+
+· A strongly convex function is at least quadratic in its convexity
+
+       ­ Has a lower bound to its second derivative
+
+· The function sits within a quadratic bowl
+
+       ­ At any location, you can draw a quadratic bowl of fixed convexity (quadratic constant equal to
+           lower bound of 2nd derivative) touching the function at that point, which contains it
+
+· Convergence of gradient descent algorithms at least as good as that of the enclosing
+    quadratic
+
+                                                                                                                                                               63
+            Strong convexity
+
+· A strongly convex function is at least quadratic in its convexity
+
+       ­ Has a lower bound to its second derivative
+
+· The function sits within a quadratic bowl
+
+       ­ At any location, you can draw a quadratic bowl of fixed convexity (quadratic constant equal to
+           lower bound of 2nd derivative) touching the function at that point, which contains it
+
+· Convergence of gradient descent algorithms at least as good as that of the enclosing
+    quadratic
+
+                                                                                                                                                               64
+         Types of continuity
+
+                                                                      From wikipedia
+
+· Most functions are not strongly convex (if they are convex)
+· Instead we will talk in terms of Lifschitz smoothness
+· But first : a definition
+· Lifschitz continuous: The function always lies outside a cone
+
+     ­ The slope of the outer surface is the Lifschitz constant
+     ­
+
+                                                                                                                                                            65
+        Lifschitz smoothness
+
+· Lifschitz smooth: The function's derivative is Lifschitz continuous
+
+      ­ Need not be convex (or even differentiable)
+      ­ Has an upper bound on second derivative (if it exists)
+
+· Can always place a quadratic bowl of a fixed curvature within the function
+
+      ­ Minimum curvature of quadratic must be >= upper bound of second
+         derivative of function (if it exists)
+
+                                                                                                                                                            66
+        Lifschitz smoothness
+
+· Lifschitz smooth: The function's derivative is Lifschitz continuous
+
+      ­ Need not be convex (or even differentiable)
+      ­ Has an upper bound on second derivative (if it exists)
+
+· Can always place a quadratic bowl of a fixed curvature within the function
+
+      ­ Minimum curvature of quadratic must be >= upper bound of second
+         derivative of function (if it exists)
+
+                                                                                                                                                            67
+Types of smoothness
+
+· A function can be both strongly convex and Lipschitz smooth
+
+       ­ Second derivative has upper and lower bounds
+       ­ Convergence depends on curvature of strong convexity (at least linear)
+
+· A function can be convex and Lifschitz smooth, but not strongly convex
+
+­ Convex, but upper bound on second derivative
+
+­ Weaker convergence guarantees, if any (at best linear)
+
+­ This is often a reasonable assumption for the local structure of your loss function  68
+Types of smoothness
+
+· A function can be both strongly convex and Lipschitz smooth
+
+       ­ Second derivative has upper and lower bounds
+       ­ Convergence depends on curvature of strong convexity (at least linear)
+
+· A function can be convex and Lifschitz smooth, but not strongly convex
+
+­ Convex, but upper bound on second derivative
+
+­ Weaker convergence guarantees, if any (at best linear)
+
+­ This is often a reasonable assumption for the local structure of your loss function  69
+         Convergence Problems
+
+· For quadratic (strongly) convex functions, gradient descent is exponentially
+    fast
+
+      ­ Linear convergence
+
+              · Assuming learning rate is non-divergent
+
+· For generic (Lifschitz Smooth) convex functions however, it is very slow
+
+         ()                                    ()    
+
+­ And inversely proportional to learning rate
+
+         ()                                    ()  
+
+­ Takes  iterations to get to within of the solution
+
+­ An inappropriate learning rate will destroy your happiness
+
+· Second order methods will locally convert the loss function to quadratic
+
+      ­ Convergence behavior will still depend on the nature of the original function
+
+· Continuing with the quadratic-based explanation...
+                                                                                                                                                               70
+          Convergence
+
+· Convergence behaviors become increasingly
+   unpredictable as dimensions increase
+
+· For the fastest convergence, ideally, the learning rate
+
+must be close to both, the largest          and the
+
+smallest
+
+­ To ensure convergence in every direction
+
+­ Generally infeasible
+
+· Convergence is particularly slow if       is large
+
+­ The "condition" number is small
+
+                                                                                                                                                   71
+    One reason for the problem
+
+· The objective function has different eccentricities in different directions
+
+       ­ Resulting in different optimal learning rates for different directions
+       ­ The problem is more difficult when the ellipsoid is not axis aligned: the steps along the two
+
+           directions are coupled! Moving in one direction changes the gradient along the other
+
+· Solution: Normalize the objective to have identical eccentricity in all directions
+
+       ­ Then all of them will have identical optimal learning rates
+       ­ Easier to find a working learning rate
+
+                                                                                                                                                            72
+       Solution: Scale the axes
+
+· Scale (and rotate) the axes, such that all of them have identical (identity) "spread"
+
+       ­ Equal-value contours are circular
+       ­ Movement along the coordinate axes become independent
+
+· Note: equation of a quadratic surface with circular equal-value contours can be
+    written as
+
+                                                                                                                                                            73
+           Scaling the axes
+
+· Original equation:
+· We want to find a (diagonal) scaling matrix such that
+
+· And
+
+                                                                                                                                                            74
+           Scaling the axes
+
+· Original equation:
+
+· We want to find a (diagonal) scaling matrix such that
+
+· And  By inspection:
+
+                                   75
+           Scaling the axes
+
+· We have
+
+· Equating linear and quadratic coefficients, we get
+
+· Solving:  ,                                         76
+           Scaling the axes
+
+· We have
+
+· Solving for we get
+                           ,
+
+                                                                                                                                                            77
+           Scaling the axes
+
+· We have
+
+· Solving for we get
+                           ,
+
+                                                                                                                                                            78
+   The Inverse Square Root of A
+
+· For any positive definite , we can write
+
+    ­ Eigen decomposition
+    ­ is an orthogonal matrix
+    ­ is a diagonal matrix of non-zero diagonal entries
+
+· Defining
+
+    ­ Check
+
+· Defining
+
+    ­ Check:
+
+                                                                                                                                                            79
+     Returning to our problem
+
+·
+
+· Computing the gradient, and noting that is
+  symmetric, we can relate and :
+
+                                                                                                                                                            80
+     Returning to our problem
+
+·
+
+· Gradient descent rule:
+
+    ­
+    ­ Learning rate is now independent of direction
+
+· Using  , and
+
+                                                     81
+        Modified update rule
+
+                                                                                  .
+
+·
+· Leads to the modified gradient descent rule
+
+                                                                                                                                                            82
+ For non-axis-aligned quadratics..
+
+· If is not diagonal, the contours are not axis-aligned
+
+       ­ Because of the cross-terms   
+       ­ The major axes of the ellipsoids are the Eigenvectors of , and their diameters are
+
+           proportional to the Eigen values of 
+
+· But this does not affect the discussion
+
+       ­ This is merely a rotation of the space from the axis-aligned case
+       ­ The component-wise optimal learning rates along the major and minor axes of the equal-
+
+           contour ellipsoids will be different, causing problems
+
+                · The optimal rates along the axes are Inversely proportional to the eigenvalues of 
+
+                                                                                                                                                            83
+For non-axis-aligned quadratics..
+
+· The component-wise optimal learning rates along the major and
+   minor axes of the contour ellipsoids will differ, causing problems
+
+     ­ Inversely proportional to the eigenvalues of
+
+· This can be fixed as before by rotating and resizing the different
+
+directions to obtain the same normalized update rule as before:
+
+()  ()
+
+                                                                       84
+Generic differentiable multivariate
+           convex functions
+
+· Taylor expansion
+
+()                    ()  ()  ()     ()  ()
+
+                                             85
+Generic differentiable multivariate
+           convex functions
+
+· Taylor expansion
+
+()                             ()        ()        ()                ()  ()
+
+· Note that this has the form
+
+· Using the same logic as before, we get the normalized update rule
+
+                      ()             ()      ()    ( ) 
+
+· For a quadratic function, the optimal is 1 (which is exactly Newton's method)
+
+­ And should not be greater than 2!
+
+                                                                                 86
+Minimization by Newton's method
+
+                                                                                         Fit a quadratic at each
+                                                                                         point and find the
+                                                                                         minimum of that
+                                                                                         quadratic
+
+ · Iterated localized optimization with quadratic approximations
+
+       ­
+
+                                                                                                                                                                     87
+Minimization by Newton's method
+
+ · Iterated localized optimization with quadratic approximations
+
+       ­
+
+                                                                                                                                                                     88
+Minimization by Newton's method
+
+ · Iterated localized optimization with quadratic approximations
+
+       ­
+
+                                                                                                                                                                     89
+Minimization by Newton's method
+
+ · Iterated localized optimization with quadratic approximations
+
+       ­
+
+                                                                                                                                                                     90
+Minimization by Newton's method
+
+· Iterated localized optimization with quadratic approximations
+
+    ­
+
+                                                                                                                                                                 91
+Minimization by Newton's method
+
+· Iterated localized optimization with quadratic approximations
+
+    ­
+
+                                                                                                                                                                 92
+Minimization by Newton's method
+
+· Iterated localized optimization with quadratic approximations
+
+    ­
+
+                                                                                                                                                                 93
+Minimization by Newton's method
+
+· Iterated localized optimization with quadratic approximations
+
+    ­
+
+                                                                                                                                                                 94
+Minimization by Newton's method
+
+· Iterated localized optimization with quadratic approximations
+
+    ­
+
+                                                                                                                                                                 95
+Minimization by Newton's method
+
+· Iterated localized optimization with quadratic approximations
+
+    ­
+
+                                                                                                                                                                 96
+Minimization by Newton's method
+
+· Iterated localized optimization with quadratic approximations
+
+    ­
+
+                                                                                                                                                                 97
+        Issues: 1. The Hessian
+
+· Normalized update rule
+
+· For complex models such as neural networks, with a
+  very large number of parameters, the Hessian
+               is extremely difficult to compute
+
+    ­ For a network with only 100,000 parameters, the Hessian
+      will have 1010 cross-derivative terms
+
+    ­ And its even harder to invert, since it will be enormous
+
+                                                                                                                                                                 98
+       Issues: 1. The Hessian
+
+· For non-convex functions, the Hessian may not be
+   positive semi-definite, in which case the algorithm can
+   diverge
+
+    ­ Goes away from, rather than towards the minimum
+    ­ Now requires additional checks to avoid movement in
+
+       directions corresponding to ­ve Eigenvalues of the Hessian
+
+                                                                                                                                                               99
+       Issues: 1. The Hessian
+
+· For non-convex functions, the Hessian may not be
+   positive semi-definite, in which case the algorithm can
+   diverge
+
+    ­ Goes away from, rather than towards the minimum
+    ­ Now requires additional checks to avoid movement in
+
+       directions corresponding to ­ve Eigenvalues of the Hessian
+
+                                                                                                                                                              100
+          Issues: 1 ­ contd.
+
+· A great many approaches have been proposed in the
+   literature to approximate the Hessian in a number of ways
+   and improve its positive definiteness
+
+    ­ Boyden-Fletcher-Goldfarb-Shanno (BFGS)
+
+           · And "low-memory" BFGS (L-BFGS)
+           · Estimate Hessian from finite differences
+
+    ­ Levenberg-Marquardt
+
+           · Estimate Hessian from Jacobians
+           · Diagonal load it to ensure positive definiteness
+
+    ­ Other "Quasi-newton" methods
+
+· Hessian estimates may even be local to a set of variables
+
+· Not particularly popular anymore for large neural networks..
+
+                                                                                                                                                            101
+    Issues: 2. The learning rate
+
+· Much of the analysis we just saw was based on trying
+   to ensure that the step size was not so large as to cause
+   divergence within a convex region
+
+    ­
+
+                                                                                                                                                           102
+Issues: 2. The learning rate
+
+· For complex models such as neural networks the loss
+   function is often not convex
+
+­ Having  can actually help escape local optima
+
+· However always having              will ensure that you
+
+never ever actually find a solution
+
+                                                       103
+       Decaying learning rate
+
+                    Note: this is actually a
+                    reduced step size
+
+· Start with a large learning rate
+
+   ­ Greater than 2 (assuming Hessian normalization)
+   ­ Gradually reduce it with iterations
+
+                                                                                                                                                           104
+    Decaying learning rate
+
+· Typical decay schedules  , where
+
+    ­ Linear decay:
+    ­ Quadratic decay:
+    ­ Exponential decay:
+
+· A common approach (for nnets):
+
+1. Train with a fixed learning rate until loss (or performance on
+     a held-out data set) stagnates
+
+2.  , where                (typically 0.1)
+
+3. Return to step 1 and continue training from where we left off
+
+                                            105
+     Story so far : Convergence
+
+· Gradient descent can miss obvious answers
+
+    ­ And this may be a good thing
+
+· Convergence issues abound
+
+    ­ The loss surface has many saddle points
+
+         · Although, perhaps, not so many bad local minima
+         · Gradient descent can stagnate on saddle points
+
+    ­ Vanilla gradient descent may not converge, or may
+      converge toooooo slowly
+
+         · The optimal learning rate for one component may be too
+            high or too low for others
+
+                                                                                                                                                           106
+                 Poll 2
+
+Slide 117
+Mark all true statements
+
+     Step sizes that are greater than twice the inverse of the second derivative can cause gradient
+         descent to diverge (true)
+
+     This is always a bad thing
+     Gradient descent will not converge without decaying learning rates
+
+                                                                                                                                                        107
+                 Poll 2
+
+Slide 117
+Mark all true statements
+
+     Step sizes that are greater than twice the inverse of the second derivative can cause gradient
+         descent to diverge (true)
+
+     This is always a bad thing
+     Gradient descent will not converge without decaying learning rates
+
+                                                                                                                                                        108
+ Story so far : Second-order methods
+
+· Second-order methods "normalize" the variation
+  along the components to mitigate the problem of
+  different optimal learning rates for different
+  components
+
+    ­ But this requires computation of inverses of second-
+      order derivative matrices
+
+    ­ Computationally infeasible
+    ­ Not stable in non-convex regions of the loss surface
+    ­ Approximate methods address these issues, but
+
+      simpler solutions may be better
+
+                                                                                                                                                           109
+     Story so far : Learning rate
+
+· Divergence-causing learning rates may not be a
+  bad thing
+
+    ­ Particularly for ugly loss functions
+
+· Decaying learning rates provide good
+  compromise between escaping poor local minima
+  and convergence
+
+· Many of the convergence issues arise because we
+  force the same learning rate on all parameters
+
+                                                                                                                                                           110
+        Lets take a step back
+
+              ()
+                             ()
+
+· Problems arise because of requiring a fixed
+  step size across all dimensions
+
+   ­ Because steps are "tied" to the gradient
+
+· Let's try releasing this requirement
+
+                                                                                                                                                           111
+  Derivative-inspired algorithms
+
+· Algorithms that use derivative information for
+  trends, but do not follow them absolutely
+
+· Rprop
+· Quick prop
+
+                                                                                                                                                           112
+                  RProp
+
+· Resilient propagation
+· Simple algorithm, to be followed independently for each
+
+   component
+
+     ­ I.e. steps in different directions are not coupled
+
+· At each time
+
+     ­ If the derivative at the current location recommends continuing in the
+        same direction as before (i.e. has not changed sign from earlier):
+
+            · increase the step, and continue in the same direction
+
+     ­ If the derivative has changed sign (i.e. we've overshot a minimum)
+
+            · reduce the step and reverse direction
+
+                                                                                                                                                           113
+          Rprop
+
+Slope
+is -ve
+
+                 Orange arrow shows
+                 direction of derivative, i.e.
+                 direction of increasing E(w)
+
+· Select an initial value and compute the derivative
+
+­ Take an initial step against the derivative
+
+· In the direction that reduces the function
+
+­  ()
+
+­
+
+                                                                                                                                114
+Slope   Slope   Rprop
+is -ve  is -ve
+                                          Orange arrow shows
+                                          direction of derivative, i.e.
+                                          direction of increasing E(w)
+
+· Compute the derivative in the new location
+
+    ­ If the derivative has not changed sign from the previous
+       location, increase the step size and take a longer step
+
+ >1 · =
+          ·
+
+                                                                                                                                                           115
+Slope   Slope      Rprop
+is -ve  is -ve
+                Slope
+                is -ve
+
+                          Orange arrow shows
+                          direction of derivative, i.e.
+                          direction of increasing E(w)
+
+· Compute the derivative in the new location
+
+    ­ If the derivative has not changed sign from the previous
+       location, increase the step size and take a step
+
+ >1 · =
+          ·
+
+                                                                                                                                                           116
+                           Rprop
+
+Slope   Slope
+is -ve  is -ve
+
+                   Slope
+                   is -ve
+
+                                   Slope      Orange arrow shows
+                                   is +ve     direction of derivative, i.e.
+                                              direction of increasing E(w)
+
+· Compute the derivative in the new location
+
+­ If the derivative has changed sign
+
+­ Return to the previous location
+
+·  =  + 
+
+­ Shrink the step
+
+·  = 
+
+­ Take the smaller step forward
+
+·  =  -                                       117
+                           Rprop
+
+Slope   Slope
+is -ve  is -ve
+
+                   Slope
+                   is -ve
+
+                                   Slope      Orange arrow shows
+                                   is +ve     direction of derivative, i.e.
+                                              direction of increasing E(w)
+
+· Compute the derivative in the new location
+
+­ If the derivative has changed sign
+
+­ Return to the previous location
+
+·  =  + 
+
+­ Shrink the step
+
+·  = 
+
+­ Take the smaller step forward
+
+·  =  -                                       118
+     Slope   Slope         Rprop
+     is -ve  is -ve
+                        Slope
+                        is -ve
+
+                                              Orange arrow shows
+                                              direction of derivative, i.e.
+                                              direction of increasing E(w)
+
+· Compute the derivative in the new location
+
+     ­ If the derivative has changed sign
+
+     ­ Return to the previous location
+
+     ·  =  + 
+
+< 1  ­ Shrink the step
+
+     ·  = 
+
+     ­ Take the smaller step forward
+
+     ·  =  -                                  119
+                        Rprop
+
+                                              Orange arrow shows
+                                              direction of derivative, i.e.
+                                              direction of increasing E(w)
+
+· Compute the derivative in the new location
+
+     ­ If the derivative has changed sign
+
+     ­ Return to the previous location
+
+     ·  =  + 
+
+< 1  ­ Shrink the step
+
+     ·  = 
+
+     ­ Take the smaller step forward
+
+     ·  =  -                                  120
+                Rprop (simplified)
+
+· Set      ,
+
+· For each layer , for each :
+
+­ Initialize , , , , , ,
+
+­                       ( ,, )
+
+                             ,,
+
+­      ,,                          ,,
+
+­ While not converged:
+
+       ·  , , =  , , -  , ,
+
+       ·  , ,  =  ( ,, )                Ceiling and floor on step
+
+                   ,,                                                                  121
+
+       · If sign  , ,  == sign  , ,  :
+
+           ­  , , = min( , , ,  )
+           ­  , ,  =  , , 
+
+       · else:
+
+           ­  , , =  , , +  , ,
+           ­  , , = max( , , ,  )
+              Rprop (simplified)
+
+· Set      ,
+
+· For each layer , for each :
+
+­ Initialize , , , , , ,
+
+­                       ( ,, )
+
+                             ,,
+
+­      ,,                        , , Obtained via backprop
+
+­ While not converged:                  Note: Different parameters updated
+                                        independently
+       ·  , , =  , , -  , ,
+
+       ·  , ,  =  ( ,, )
+
+                   ,,
+
+       · If sign  , ,  == sign  , ,  :
+
+              ­  , , =  , ,
+              ­  , ,  =  , , 
+       · else:
+
+               ­  , , =  , , +  , ,
+               ­  , , =  , ,
+
+                                                                                                                                                122
+                  RProp
+
+· A remarkably simple first-order algorithm,
+  that is frequently much more efficient than
+  gradient descent.
+
+   ­ And can even be competitive against some of the
+      more advanced second-order methods
+
+· Only makes minimal assumptions about the
+  loss function
+
+   ­ No convexity assumption
+
+                                                                                                                                                           123
+                  Poll 3
+
+The derivative of the loss w.r.t a parameter w, computed at the current estimate is positive. After taking
+a step (updating the parameter by a increment dw) the sign of the derivative becomes negative. Mark
+all true statements
+
+     Rprop will revert to the earlier estimate and take a smaller step (true)
+     Rprop will change direction and begin taking steps in the opposite direction
+
+                                                                                                                                                            124
+                  Poll 3
+
+The derivative of the loss w.r.t a parameter w, computed at the current estimate is positive. After taking
+a step (updating the parameter by a increment dw) the sign of the derivative becomes negative. Mark
+all true statements
+
+     Rprop will revert to the earlier estimate and take a smaller step (true)
+     Rprop will change direction and begin taking steps in the opposite direction
+
+                                                                                                                                                            125
+    QuickProp
+
+· Quickprop employs the Newton updates with two modifications
+
+()  ()                        ()    ( ) 
+
+· But with two modifications
+
+                                                               126
+QuickProp: Modification 1
+
+                                                        Within each component
+
+                                                        ()
+
+                                                                               
+
+· It treats each dimension independently
+· For
+
+· This eliminates the need to compute and invert expensive Hessians
+                                                                                                                                                           127
+QuickProp: Modification 2
+
+                                                        Within each component
+
+                                                        ()
+
+                                                                               
+
+· It approximates the second derivative through finite differences
+· For
+
+· This eliminates the need to compute expensive double derivatives
+
+                                                                                                                                                           128
+           QuickProp
+
+()     ()                                     ()
+                                                                        ()
+
+                                   ()
+
+   Finite-difference approximation to double derivative
+   obtained assuming a quadratic
+
+· Updates are independent for every parameter
+
+· For every layer , for every connection from node in the                   th
+
+layer to node in the th layer:
+
+                   ()
+
+()                 ,                           ()
+
+,          ()                       ()         ,
+
+           ,                        ,
+
+    ()         ()               ()
+
+    ,          ,                ,
+
+                                                                            129
+           QuickProp
+
+()     ()                                     ()
+                                                                        ()
+
+                                   ()
+
+   Finite-difference approximation to double derivative
+   obtained assuming a quadratic
+
+· Updates are independent for every parameter
+
+· For every layer , for every connection from node in the                   th
+
+layer to node in the th layer:
+
+                   ()
+
+()                 ,                           ()
+
+,          ()                       ()         ,
+
+           ,                        ,
+
+    ()         ()               ()             Computed using
+                                               backprop
+    ,          ,                ,
+
+                                                                            130
+               Quickprop
+
+· Employs Newton updates with empirically
+  derived derivatives
+
+· Prone to some instability for non-convex
+  objective functions
+
+· But is still one of the fastest training
+  algorithms for many problems
+
+                                                                                                                                                           131
+     Story so far : Convergence
+
+· Gradient descent can miss obvious answers
+
+    ­ And this may be a good thing
+
+· Vanilla gradient descent may be too slow or unstable due to
+   the differences between the dimensions
+
+· Second order methods can normalize the variation across
+   dimensions, but are complex
+
+· Adaptive or decaying learning rates can improve convergence
+
+· Methods that decouple the dimensions can improve
+   convergence
+
+                                                                                                                                                           132
+   A closer look at the convergence
+                  problem
+
+· With dimension-independent learning rates, the solution will converge
+    smoothly in some directions, but oscillate or diverge in others
+
+· Proposal:
+
+      ­ Keep track of oscillations
+      ­ Emphasize steps in directions that converge smoothly
+      ­ Shrink steps in directions that bounce around..
+
+                                                                                                                                                           133
+   A closer look at the convergence
+                  problem
+
+· With dimension-independent learning rates, the solution will converge
+    smoothly in some directions, but oscillate or diverge in others
+
+· Proposal:
+
+      ­ Keep track of oscillations
+      ­ Emphasize steps in directions that converge smoothly
+      ­ Shrink steps in directions that bounce around..
+
+                                                                                                                                                           134
+     The momentum methods
+
+· Maintain a running average of all
+   past steps
+
+    ­ In directions in which the
+        convergence is smooth, the
+        average will have a large value
+
+    ­ In directions in which the
+        estimate swings, the positive and
+        negative swings will cancel out in
+        the average
+
+· Update with the running
+   average, rather than the current
+   gradient
+
+                                                                                                                                                           135
+Momentum Update
+
+Plain gradient update            With momentum
+
+· The momentum method maintains a running average of all gradients until
+    the current step
+
+()                           ()
+
+                        ()   ()  ()
+
+­ Typical value is 0.9
+
+· The running average steps
+
+­ Get longer in directions where gradient retains the same sign
+
+­ Become shorter in directions where the sign keeps flipping     136
+    Training by gradient descent
+
+· Initialize all weights
+· Do:
+
+    ­ For all , initialize
+    ­ For all
+
+         · For every layer :
+
+                 ­ Compute
+                 ­ Compute
+
+    ­ For every layer :
+
+                                                                                
+
+· Until has converged
+
+                                                                                                                                                           137
+       Training with momentum
+
+· Initialize all weights
+
+· Do:
+
+­ For all layers , initialize                                                     ,
+
+­ For all
+
+       · For every layer :
+
+            ­ Compute gradient
+
+       ­
+
+­ For every layer
+
+                                                                                
+
+· Until has converged
+
+                                                                                                                                                           138
+         Momentum Update
+
+· The momentum method
+· At any iteration, to compute the current step:
+
+    ­ First computes the gradient step at the current location
+    ­ Then adds in the historical average step
+
+                                                                                                                                                           139
+         Momentum Update
+
+· The momentum method
+· At any iteration, to compute the current step:
+
+    ­ First computes the gradient step at the current location
+    ­ Then adds in the historical average step
+
+                                                                                                                                                           140
+         Momentum Update
+
+· The momentum method
+· At any iteration, to compute the current step:
+
+    ­ First computes the gradient step at the current location
+    ­ Then adds in the scaled previous step
+
+          · Which is actually a running average
+
+                                                                                                                                                           141
+         Momentum Update
+
+· The momentum method
+· At any iteration, to compute the current step:
+
+    ­ First computes the gradient step at the current location
+    ­ Then adds in the scaled previous step
+
+           · Which is actually a running average
+
+    ­ To get the final step
+
+                                                                                                                                                           142
+         Momentum update
+
+                                                           1
+                                                                               2
+
+· Momentum update steps are actually computed in two stages
+
+     ­ First: We take a step against the gradient at the current location
+     ­ Second: Then we add a scaled version of the previous step
+
+· The procedure can be made more optimal by reversing the order of
+   operations..
+
+                                                                                                                                                           143
+ Nestorov's Accelerated Gradient
+
+· Change the order of operations
+· At any iteration, to compute the current step:
+
+    ­ First extend by the (scaled) historical average
+    ­ Then compute the gradient at the resultant position
+    ­ Add the two to obtain the final step
+
+                                                                                                                                                           144
+ Nestorov's Accelerated Gradient
+
+· Change the order of operations
+· At any iteration, to compute the current step:
+
+    ­ First extend the previous step
+    ­ Then compute the gradient at the resultant position
+    ­ Add the two to obtain the final step
+
+                                                                                                                                                           145
+ Nestorov's Accelerated Gradient
+
+· Change the order of operations
+· At any iteration, to compute the current step:
+
+    ­ First extend the previous step
+    ­ Then compute the gradient step at the resultant
+
+      position
+    ­ Add the two to obtain the final step
+
+                                                                                                                                                           146
+ Nestorov's Accelerated Gradient
+
+· Change the order of operations
+· At any iteration, to compute the current step:
+
+    ­ First extend the previous step
+    ­ Then compute the gradient step at the resultant
+
+      position
+    ­ Add the two to obtain the final step
+
+                                                                                                                                                           147
+ Nestorov's Accelerated Gradient
+
+· Nestorov's method
+
+                                                                                                                                                           148
+ Nestorov's Accelerated Gradient
+
+· Comparison with momentum (example from
+  Hinton)
+
+· Converges much faster
+
+                                                                                                                                                          149
+       Training with Nestorov
+
+· Initialize all weights
+
+· Do:
+
+­ For all layers , initialize  ,
+
+­ For every layer
+
+    ­ For all
+
+           · For every layer :
+
+                    ­ Compute gradient
+
+                    ­
+
+    ­ For every layer
+
+                                                                                           
+                                                                                               
+
+· Until has converged
+
+                                                                                                                                                           150
+     Momentum and trend-based
+                 methods..
+
+· We will return to this topic again, very soon..
+
+                                                                                                                                                           151
+                Poll 4
+
+On a flat surface of constant slope momentum methods will converge faster than vanilla gradient
+descent, true or false
+
+     True
+     False (correct) ­ momentum only changes step size
+
+                                                                                                                                                     152
+                Poll 4
+
+On a flat surface of constant slope momentum methods will converge faster than vanilla gradient
+descent, true or false
+
+     True
+     False (correct) ­ momentum only changes step size
+
+                                                                                                                                                     153
+              Story so far
+
+· Gradient descent can miss obvious answers
+
+     ­ And this may be a good thing
+
+· Vanilla gradient descent may be too slow or unstable due to the
+   differences between the dimensions
+
+· Second order methods can normalize the variation across
+   dimensions, but are complex
+
+· Adaptive or decaying learning rates can improve convergence
+
+· Methods that decouple the dimensions can improve convergence
+
+· Momentum methods which emphasize directions of steady
+   improvement are demonstrably superior to other methods
+
+                                                                                                                                                           154
+               Coming up
+
+· Incremental updates
+· Revisiting "trend" algorithms
+· Generalization
+· Tricks of the trade
+
+   ­ Divergences..
+   ­ Activations
+   ­ Normalizations
+
+                                                                                                                                                           155
+
