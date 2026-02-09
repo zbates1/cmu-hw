@@ -1,0 +1,1777 @@
+    Training Neural Networks:
+Normalization, Regularization etc.
+
+    Intro to Deep Learning, Spring 2026
+
+                                                                                                                                                     1
+                      Recap
+
+· We train a network by minimizing a "loss"
+
+      ­ Average divergence between true and desired outputs over "training" inputs
+      ­ Approximation to "true" risk ­ expected divergence between desired and true outputs
+
+· We minimize it through gradient descent
+
+      ­ Iterative updates against the gradient of the loss w.r.t.
+
+· Batch updates must process the entire training data before each update
+
+      ­ Incremental update algorithms, like SGD and minibatch update, speed it up by
+         updating using random individual inputs or subsets of the input
+
+      ­ Faster to converge, but greater variance may result in worse estimates
+
+· Trend algorithms smooth out the variations in incremental update methods by
+    considering long-term trends in gradients.
+
+      ­ This can lead to faster, and better convergence
+
+                                                                                                                                                                     2
+Quick Recap: Training a network
+
+Total loss  Average over all Divergence between desired output and
+            training instances actual output of net for a given input
+
+                                                            Output of net in
+                                                            response to input
+
+                                                     Desired output
+                                                     in response to input
+
+· Define a total "loss" over all training instances
+
+­ Quantifies the difference between desired output and the actual
+
+output, as a function of weights
+
+· Find the weights that minimize the loss                                      3
+Quick Recap: Training networks by
+           gradient descent
+
+                                Computed using
+                                backpropagation
+
+                             Solved through
+                             gradient descent as
+
+                                                                                                                                                      4
+   Recap: Incremental methods
+
+· Batch methods that consider all training points before making an update
+    to the parameters can be terribly inefficient
+
+· Online methods that present training instances incrementally make
+    quicker updates
+
+      ­ "Stochastic Gradient Descent" updates parameters after individual randomly-
+         chosen instances
+
+      ­ "Mini batch descent" updates them after minibatches of randomly-chosen
+         instances
+
+      ­ Require shrinking learning rates to converge
+
+              · Not absolute summable
+              · But square summable
+
+· Online methods have greater variance than batch methods
+
+      ­ Potentially leading to worse model estimates
+
+                                                                                                                                                              5
+      Recap: Trend Algorithms
+
+· Trend algorithms smooth out the variations in incremental update
+   methods by considering long-term trends in gradients
+
+     ­ Leading to faster and more assured convergence
+
+· Momentum and Nestorov's method improve convergence by
+   obtained a "better" estimate of the direction of update
+
+     ­ The "smoothed" or "averaged" gradient
+
+· Second-moment methods consider the variation (second moment)
+   of the derivatives to optimize the learning rate
+
+     ­ RMS Prop only operates on the learning rate, but not the gradient
+     ­ ADAM and its siblings adjust both, the learning rate and the gradient
+     ­ All of them typically provide considerably faster than simple gradient
+
+        descent
+
+                                                                                                                                                              6
+   Moving on: Topics for the day
+
+· Generalization
+· Tricks of the trade
+
+   ­ Divergences..
+   ­ Normalizations
+   ­ Dropout
+   ­ Other tricks
+
+         · Gradient clipping
+         · Data augmentation
+         · Other hacks.
+
+                                                                                                                                                              7
+Training Neural Nets by Gradient Descent:
+                The Divergence
+
+Total training loss:
+
+   · The convergence of the gradient descent
+     depends on the divergence
+
+       ­ Ideally, must have a shape that results in a
+         significant gradient in the right direction outside
+         the optimum
+
+             · To "guide" the algorithm to the right solution
+
+                                                                                                                                                                       8
+ Desiderata for a good divergence
+
+· Must be smooth and not have many poor local optima
+· Low slopes far from the optimum == bad
+
+    ­ Initial estimates far from the optimum will take forever to
+       converge
+
+· High slopes near the optimum == bad
+
+    ­ Steep gradients
+
+                                                                                                                                                              9
+ Desiderata for a good divergence
+
+· Functions that are shallow far from the optimum will result in very small steps during optimization
+
+        ­ Slow convergence of gradient descent
+
+· Functions that are steep near the optimum will result in large steps and overshoot during
+     optimization
+
+        ­ Gradient descent will not converge easily
+
+· The best type of divergence is steep far from the optimum, but shallow at the optimum
+
+        ­ But not too shallow: ideally quadratic in nature
+
+                                                                                                                                                            10
+                  Choices for divergence
+
+                  1 2 34                    0
+
+                                   Softmax
+
+ Desired output:  Desired output:
+L2
+KL
+
+· Most common choices: The L2 divergence and the KL divergence
+· L2 is popular for networks that perform numeric prediction/regression
+· KL is popular for networks that perform classification
+
+                                                                                                                                                            11
+                L2 or KL?
+
+· The L2 divergence has long been favored in most
+  applications
+
+· It is particularly appropriate when attempting to
+  perform regression
+
+    ­ Numeric prediction
+
+· The KL divergence is better when the intent is
+  classification
+
+    ­ The output is a probability vector
+
+                                                                                                                                                            12
+L2 or KL
+
+                       We can also compute L2
+                       divergences between target
+                       and actual output
+                       probabilities for classification
+
+                       Figure shows L2 and KL
+                       divergences for a target
+                       output of p = 0.5, as a
+                       function of sigmoid output y.
+
+                       Both are convex, and L2 may
+                       appear more bowl-like and
+                       "nice" (KL appears to flatten
+                       badly near the minimum)
+
+                                                                                              13
+L2 or KL
+
+But as a function of the argument z of the sigmoid, only one of them is convex  14
+                L2 or KL
+
+· Plot of L2 and KL divergences for a single perceptron, as
+   function of weights
+
+    ­ Setup: 2-dimensional input
+    ­ 100 training examples randomly generated
+
+                                                                                                                                                            15
+                L2 or KL
+
+          NOTE: L2 divergence is not convex while KL is convex
+          However, L2 also has a unique global minimum
+
+· Plot of L2 and KL divergences for a single perceptron, as
+   function of weights
+
+    ­ Setup: 2-dimensional input
+    ­ 100 training examples randomly generated
+
+                                                                                                                                                            16
+A note on derivatives
+
+1 2 34      0                         1 2 34             0
+
+                                                Softmax
+
+· Note: For both regression models with linear output layer and L2
+    divergence, and classification models with softmax output layer and KL
+    divergence the gradient w.r.t. the final affine value of the network is just
+    the error
+
+        
+          
+
+· We literally "propagate" the error  backward
+
+­ Which is why the method is sometimes called "error backpropagation"             17
+                  Poll 1
+
+Which of the following losses is convex with respect to the weights of the final softmax layer
+     KL
+     L2
+
+For the most popular networks (regression network with linear final layer using L2 loss, and classification
+network with softmax output layer and cross-entropy loss) the gradient w.r.t. the final affine value z is
+
+     The error y - d
+     The ratio 1/y
+     It is different for the two networks
+
+                                                                                                                                                              18
+                   Poll 1
+
+Which of the following losses is convex with respect to the weights of the final softmax layer
+     KL
+     L2
+
+For the most popular networks (regression network with linear final layer using L2 loss, and classification
+network with softmax output layer and cross-entropy loss) the gradient w.r.t. the final affine value z is
+
+     The error y - d
+     The ratio 1/y
+     It is different for the two networks
+
+                                                                                                                                                               19
+              Story so far
+
+· Gradient descent can be sped up by
+  incremental updates
+
+· Convergence can be improved using
+  smoothed updates
+
+· The choice of divergence affects both the
+  learned network and results
+
+                                                                                                                                                            20
+  The problem of covariate shifts
+
+· Training assumes the training data are all similarly distributed
+
+     ­ Minibatches have similar distribution
+
+· In practice, each minibatch may have a different distribution
+
+     ­ A "covariate shift"
+
+· Covariate shifts can affect training badly
+
+                                                                                                                                                            21
+  The problem of covariate shifts
+
+· Training assumes the training data are all similarly distributed
+
+     ­ Minibatches have similar distribution
+
+· In practice, each minibatch may have a different distribution
+
+     ­ A "covariate shift"
+     ­ Which may occur in each layer of the networkg badly
+
+                                                                                                                                                            22
+  The problem of covariate shifts
+
+· Training assumes the training data are all similarly distributed
+
+      ­ Minibatches have similar distribution
+
+· In practice, each minibatch may have a different distribution
+
+      ­ A "covariate shift"
+
+· The shifts can be large!
+
+      ­ Can affect training badly
+
+                                                                                                                                                            23
+    Solution: Move all minibatches to a
+              "standard" location
+
+· "Move" all batches to a "standard" location of the space
+
+    ­ But where?
+    ­ To determine, we will follow a two-step process
+
+                                                                                                                                                              24
+Move all minibatches to a "standard" location
+
+     · "Move" all batches to have a mean of 0 and unit
+        standard deviation
+
+          ­ Eliminates covariate shift between batches
+
+                                                                                                                                                                    25
+Move all minibatches to a "standard" location
+
+     · "Move" all batches to have a mean of 0 and unit
+        standard deviation
+
+          ­ Eliminates covariate shift between batches
+
+                                                                                                                                                                    26
+Move all minibatches to a "standard" location
+
+     · "Move" all batches to have a mean of 0 and unit
+        standard deviation
+
+          ­ Eliminates covariate shift between batches
+
+                                                                                                                                                                    27
+Move all minibatches to a "standard" location
+
+     · "Move" all batches to have a mean of 0 and unit
+        standard deviation
+
+          ­ Eliminates covariate shift between batches
+
+                                                                                                                                                                    28
+Move all minibatches to a "standard" location
+
+     · "Move" all batches to have a mean of 0 and unit
+        standard deviation
+
+          ­ Eliminates covariate shift between batches
+
+                                                                                                                                                                    29
+         (Mini)Batch Normalization
+
+· "Move" all batches to have a mean of 0 and unit standard
+   deviation
+
+     ­ Eliminates covariate shift between batches
+
+· Then move the entire collection to the appropriate location
+
+                                                                                                                                                           30
+                Poll 2
+
+Batch norm accounts for covariate shift between
+     Minibatches
+     Individual training instances
+     The entire training data
+
+                                                                                                                                                     31
+                  Poll 2
+
+Batch norm accounts for covariate shift between
+     Minibatches
+     Individual training instances
+     The entire training data
+
+                                                                                                                                                             32
+   Batch normalization
+
++  +
+
+      +
+
++  +
+
+· Batch normalization is a shift-adjustment unit that happens after
+   the weighted addition of inputs but before the application of
+   activation
+
+     ­ Is done independently for each unit, to simplify computation
+
+· Training: The adjustment occurs over individual minibatches
+
+                                                                                                                                                               33
+Batch normalization: Training
+
++               Batch normalization
+
+Minibatch size  Minibatch mean
+                            Minibatch standard deviation
+
+· BN aggregates the statistics over a minibatch and normalizes the
+
+   batch by them
+
+· Normalized instances are "shifted" to a unit-specific location
+
+                                                                                                                                                            34
+Batch normalization: Training
+
++  Batch normalization
+
+Normalize minibatch to   Shift to right
+zero-mean unit variance  position
+
+· BN aggregates the statistics over a minibatch and normalizes the
+
+   batch by them
+
+· Normalized instances are "shifted" to a unit-specific location
+
+                                                                                                                                                            35
+A better picture for batch norm
+
++  Batch normalization
+
++  +
+
+                                 36
+    A note on derivatives: Usual
+
+· In conventional training:
+
+· The minibatch loss is the average of the divergence between the actual and
+    desired outputs of the network for all inputs in the minibatch
+
+· The derivative of the minibatch loss w.r.t. network parameters is the average of the
+    derivatives of the divergences for the individual training instances w.r.t. parameters
+
+()  ()
+
+,   ,
+
+· The output of the network in response to an input, and the derivative of the
+    divergence for any input are independent of other inputs in the minibatch
+
+· If we use Batch Norm, the above relation gets a little complicated
+
+                                                                                37
+A note on derivatives: BatchNorm
+
+· The outputs are now functions of and
+  which are functions of the entire minibatch
+
+· The Divergence for each depends on all the
+  within the minibatch
+
+    ­ Training instances within the minibatch are no longer
+      independent
+
+                                                                                                                                                            38
+  The actual divergence with BN
+
+· The actual divergence for any minibatch with terms explicity written
+
+· We need the derivative for this function
+· To derive the derivative lets consider the dependencies at a single neuron
+
+      ­ Shown pictorially in the following slide
+
+                                                                                                                                                            39
+Batchnorm is a vector function over
+             the minibatch
+
+Instances from a  Normalized
+minibatch         Instances from a
+                  minibatch
+
+· Batch normalization is really a vector function applied over all the inputs from a
+    minibatch
+
+       ­ Every  affects every 
+       ­ Shown on the next slide
+
+· To compute the derivative of the minibatch loss w.r.t any , we must consider all
+         in the batch
+
+                                                                                                                                                            40
+               Or more explicitly
+
+                        -     =  + 
+                =
+
+                         + 
+
+· The computation of mini-batch normalized 's is a vector function
+
+­ Invoking mean and variance statistics across the minibatch
+
+· The subsequent shift and scaling is individually applied to each to compute the
+
+corresponding                                                                      41
+               Or more explicitly
+
+                        -     =  + 
+                =
+                                            We can compute
+                         +                         individually
+
+                                            for each because
+                                            the processing after
+                                            the computation of
+
+                                               is independent for
+                                            each
+
+· The computation of mini-batch normalized 's is a vector function
+
+­ Invoking mean and variance statistics across the minibatch
+
+· The subsequent shift and scaling is individually applied to each to compute the
+
+corresponding                                                                      42
+Batch normalization: Forward pass
+
++  Batch normalization
+
+                        43
+Batch normalization:
+  Backpropagation
+
++  Batch normalization
+
+                        44
+Batch normalization:
+  Backpropagation
+
+                      Parameters to be
+                      learned
+
++
+
+                   Batch normalization
+
+                                                                                                    45
+Batch normalization:
+  Backpropagation
+
+                      Parameters to be
+                      learned
+
++
+
+                   Batch normalization
+
+                                                                                                    46
+Batch normalization:
+  Backpropagation
+
+                      Parameters to be
+                      learned
+
++
+
+                   Batch normalization
+
+                                                                                                    47
+Propogating the derivative
+
+                                                  Derivatives computed
+                                                  for every u
+
+· We now have  for every
+
+· We must propagate the derivative through the first stage of BN
+
+­ Which is a vector operation over the minibatch                  48
+                 Poll 3
+
+Mark all true statements
+     In BatchNorm the normalized value u_i for any z_i depends on all the other z_is in the
+         minibatch
+     In BatchNorm the normalized value u_i for any z_i depends on all the other u_is in the
+         minibatch
+
+Batch norm at any neuron is a vector operation over all the inputs in a minibatch, true or false
+     True
+     False
+
+                                                                                                                                                          49
+               Poll 3
+
+Mark all true statements
+     In BatchNorm the normalized value u_i for any z_i depends on all the other z_is in the
+         minibatch
+     In BatchNorm the normalized value u_i for any z_i depends on all the other u_is in the
+         minibatch
+
+Batch norm at any neuron is a vector operation over all the inputs in a minibatch, true or false
+     True
+     False
+
+                                                                                                                                                  50
+The first stage of batchnorm
+
+                               Batch norm stage 1
+
+· The complete dependency figure for the first "normalization" stage of
+    Batchnorm
+
+      ­ Which computes the centered " "s from the " "s for the minibatch
+
+· Note : inputs and outputs are different instances in a minibatch
+
+      ­ The diagram represents BN occurring at a single neuron
+
+· Let's complete the figure and work out the derivatives                  51
+    The first stage of Batchnorm
+
+                                  Batch norm stage 1
+
+· The complete derivative of the mini-batch loss w.r.t.
+
+                                                                                                                                                            52
+The first stage of Batchnorm
+
+                        Batch norm stage 1
+
+· The complete derivative of the mini-batch loss w.r.t.
+
+Already computed                                         53
+    The first stage of Batchnorm
+
+                                  Batch norm stage 1
+
+· The complete derivative of the mini-batch loss w.r.t.
+
+                 Must compute for every i,j pair 54
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "through" line ( )
+
+                                                                                                                                                            55
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "through" line ( )
+
+                                                                                                                                                            56
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "through" line ( )
+
+                                                                                                                                                            57
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "through" line ( )
+
+                                                                                                                                                            58
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "through" line ( )
+
+                                                                                                                                                            59
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "through" line ( )
+
+                                                                                                                                                            60
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· From the highlighted relation
+
+                                                                                                                                                            61
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "through" line ( )
+
+                                                                                                                                                            62
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "through" line ( )
+
+                                                                                                                                                            63
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· From the highlighted relation
+
+                                                                                                                                                            64
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "through" line ( )
+
+                                                                                                                                                            65
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "through" line ( )
+
+                                                                                                                                                            66
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· From the highlighted relation
+
+                                                                                                                                                            67
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "through" line ( )
+
+                                                                                                                                                            68
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "through" line ( )
+
+                                                                                                                                                            69
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "through" line ( )
+
+                                                                                                                                                            70
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· From the highlighted equation
+
+                                                                                                                                                            71
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "through" line ( )
+
+                                                                                                                                                            72
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "through" line ( )
+
+                                                                                                                                                            73
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· From the highlighted equations
+
+                                                                                                                                                            74
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· From the highlighted equations
+
+                                                                                                                                                            75
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· From the highlighted equations
+
+                                                                                                                                                            76
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· From the highlighted equations
+
+                                                                                                                                                            77
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· From the highlighted equations
+
+                                                                                                                                                            78
+The first stage of Batchnorm
+
+                                        Batch norm stage 1
+
+                                                                                                                                             79
+The first stage of Batchnorm
+
+                                        Batch norm stage 1
+
+· From the highlighted equations  0
+
+                                                            80
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· From the highlighted equations
+
+                                                                                                                                                            81
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "through" line ( )
+
+                                                                                                                                                            82
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "through" line ( )
+
+                                                                                                                                                            83
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "through" line ( )
+
+                                                                                                                                                            84
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "cross" lines ( )
+
+                                                                                                                                                            85
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "cross" lines ( )
+
+                                                                                                                                                            86
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "cross" lines ( )
+
+                                                                                                                                                            87
+      The first stage of Batchnorm
+
+                                                        Batch norm stage 1
+
+   · The derivative for the "cross" lines ( )
+
+This is similar to the equation for , without the first "through" ter88m
+    The first stage of Batchnorm
+
+                                                  Batch norm stage 1
+
+· The derivative for the "cross" lines ( )
+
+                                                                                                                                                            89
+The first stage of Batchnorm
+
+                        Batch norm stage 1
+
+                                                                                                                                             90
+    The first stage of Batchnorm
+
+                                  Batch norm stage 1
+
+· The complete derivative of the mini-batch loss w.r.t.
+
+                                                                                                                                                            91
+    The first stage of Batchnorm
+
+· The complete derivative of the mini-batch loss w.r.t.
+
+                                                                                                                                                              92
+Batch normalization:
+  Backpropagation
+
+     +
+
+                                    Batch normalization
+
+                         The rest of backprop continues from
+
+                                                                                                                        93
+                  Poll 4
+
+Batch normalization effectively blocks backpropagation and prevents gradient computation if all the
+instances in a minibatch are identical, or very similar. True or false
+
+     True
+     False
+
+                                                                                                                                                           94
+                  Poll 4
+
+Batch normalization effectively blocks backpropagation and prevents gradient computation if all the
+instances in a minibatch are identical, or very similar. True or false
+
+     True
+     False
+
+                                                                                                                                                              95
+Batch normalization: Inference
+
++  Batch normalization
+
+· On test data, BN requires  and  .
+· We will use the average over all training minibatches
+
+              1                                           ()
+ =
+
+        
+
+                                                          ()
+ =
+
+        ( - 1)
+
+· Note: these are neuron-specific
+
+        ­  () and  () here are obtained from the final converged network
+        ­ The /( - 1) term gives us an unbiased estimator for the variance
+
+                                                                                                                                                               96
+Batch normalization
+
++  +
+
+      +
+
++  +
+
+· Batch normalization may only be applied to some layers
+
+     ­ Or even only selected neurons in the layer
+
+· Improves both convergence rate and neural network performance
+
+     ­ Anecdotal evidence that BN eliminates the need for dropout
+     ­ To get maximum benefit from BN, learning rates must be increased
+
+        and learning rate decay can be faster
+
+            · Since the data generally remain in the high-gradient regions of the activations
+
+     ­ Also needs better randomization of training data order
+
+                                                                                                                                                               97
+  Batch Normalization: Typical result
+
+· Performance on Imagenet, from Ioffe and Szegedy, JMLR
+   2015
+
+                                                                                                                                                            98
+              Story so far
+
+· Gradient descent can be sped up by incremental
+   updates
+
+· Convergence can be improved using smoothed updates
+
+· The choice of divergence affects both the learned
+   network and results
+
+· Covariate shift between training minibatches may
+   cause problems and may be handled by batch
+   normalization
+
+                                                                                                                                                            99
+           The problem of data
+            underspecification
+
+· The figures shown to illustrate the learning
+  problem so far were fake news..
+
+                                                                                                                                                           100
+         Learning the network
+
+· We attempt to learn an entire function from just
+  a few snapshots of it
+
+                                                                                                                                                               101
+General approach to training
+
+Blue lines: error when     Black lines: error when
+function is below desired  function is above desired
+output                     output
+
+· Define a divergence between the actual network output
+   for any parameter value and the desired output
+
+    ­ Typically L2 divergence or KL divergence
+                                                                                                                                                               102
+               Overfitting
+
+· Problem: Network may just learn the values at the inputs
+
+     ­ Learn the red curve instead of the dotted blue one
+
+            · Given only the red vertical bars as inputs
+
+· Need additional "smoothing" constraints that will "fill in" the missing
+   regions acceptably
+
+     ­ Generalization
+
+                                                                                                                                                              103
+      Data under-specification
+
+· Consider a binary 100-dimensional input
+· There are 2100=1030 possible inputs
+· Complete specification of the function will require specification of 1030 output
+
+    values
+· A training set with only 1015 training instances will be off by a factor of 1015
+
+                                                                                                                                                           104
+ Data under-specification in learning
+
+                                                                   Find the function!
+
+· Consider a binary 100-dimensional input
+· There are 2100=1030 possible inputs
+· Complete specification of the function will require specification of 1030 output
+
+    values
+· A training set with only 1015 training instances will be off by a factor of 1015
+
+                                                                                                                                                           105
+     Overfitting and Smoothing
+
+· Problem: Network may just learn the values at the inputs
+
+     ­ Learn the red curve instead of the dotted blue one
+
+            · Given only the red vertical bars as inputs
+
+· Need additional "smoothing" constraints that will "fill in" the missing
+   regions acceptably
+
+     ­ Generalization
+
+                                                                                                                                                              106
+      Smoothness through weight
+               manipulation
+
+                                            y
+
+                                                                                      x
+
+· Illustrative example: Simple binary classifier
+
+   ­ The "desired" output is generally smooth
+   ­ The "overfit" model has fast changes
+
+                                                                                                                                                           107
+      Smoothness through weight
+               manipulation
+
+                                            y
+
+                                                                                      x
+
+· Illustrative example: Simple binary classifier
+
+    ­ The "desired" output is generally smooth
+
+          · Capture statistical or average trends
+
+    ­ An unconstrained model will model individual instances
+       instead
+
+                                                                                                                                                           108
+     The unconstrained model
+
+                                            y
+
+                                                                                      x
+
+· Illustrative example: Simple binary classifier
+
+    ­ The "desired" output is generally smooth
+
+          · Capture statistical or average trends
+
+    ­ An unconstrained model will model individual instances
+       instead
+
+                                                                                                                                                           109
+          Why overfitting
+
+                                         y
+
+                                                                                    x
+                      These sharp changes happen because ..
+..the perceptrons in the network are individually capable of sharp changes
+in output
+
+                                                                                                                                                       110
+     The individual perceptron
+
+· Using a sigmoid activation
+
+   ­ As increases, the response becomes steeper
+
+                                                                                                                                                           111
+      Smoothness through weight
+               manipulation
+
+               y
+
+                                      x
+
+· Steep changes that enable overfitted responses are
+   facilitated by perceptrons with large
+
+· Constraining the weights to be low will force slower
+   perceptrons and smoother output response
+
+                                                                                                                                                           112
+      Smoothness through weight
+               manipulation
+
+               y
+
+                                      x
+
+· Steep changes that enable overfitted responses are
+   facilitated by perceptrons with large
+
+· Constraining the weights to be low will force slower
+   perceptrons and smoother output response
+
+                                                                                                                                                           113
+     Objective function for neural
+                  networks
+
+                                    Desired output of network:
+   Error on i-th training input:
+Training loss:
+
+· Conventional training: minimize the loss:
+
+                                                                                                                                                           114
+      Smoothness through weight
+                 constraints
+
+· Regularized training: minimize the loss while also minimizing the
+   weights
+
+· is the regularization parameter whose value depends on how
+   important it is for us to want to minimize the weights
+
+· Increasing assigns greater importance to shrinking the weights
+
+     ­ Make greater error on training data, to obtain a more acceptable network
+
+                                                                                                                                                           115
+              Regularizing the weights
+
+                             1                            1
+                  ,  , ... ,  = ( ,  ) +  
+                                                          2
+
+· Batch mode:
+
+                          1
+                  =    ,  + 
+
+                          
+
+· SGD:            =    ,  + 
+· Minibatch:
+
+                          1        ,  + 
+                  =
+
+                          
+
+· Update rule:
+
+                                                       1     ,  - 
+                   -   =  -  
+
+                                           1                 , 
+                  (1 - ) - 
+
+                                           
+
+                                                                    116
+Incremental Update: Mini-batch
+
+                                    update
+
+· Given   ,                         ,...,
+
+· Initialize all weights                      ;
+
+· Do:
+
+­ Randomly permute                         ,     ,...,
+
+­ For
+
+       ·
+
+       · For every layer k:
+
+          ­  = 0
+
+       · For t' = t : t+b-1
+
+              ­ For every layer :
+                      » Compute  ( ,  )
+
+          »  =  +    ,  
+
+       · Update
+
+              ­ For every layer k:
+
+· Until has converged                                   117
+Smoothness through network structure
+
+· Smoothness constraints can also be imposed through the network
+    structure
+
+· For a given number of parameters deeper networks impose more
+    smoothness than shallow ones
+
+      ­ Each layer works on the already smooth surface output by the previous layer118
+Minimal correct architectures are
+             hard to train
+
+· Typical results (varies with initialization)
+
+· 1000 training points ­ orders of magnitude more than you
+
+usually get
+
+· All the training tricks known to mankind      119
+But depth and training data help
+
+3 layers  4 layers   3 layers                               4 layers
+
+6 layers  11 layers  6 layers                               11 layers
+
+· Deeper networks seem to learn better, for                 10000 training instances
+   the same number of total neurons
+                                                                                                        120
+     ­ Implicit smoothness constraints
+
+            · As opposed to explicit constraints from more
+                conventional regularization methods
+
+· Training with more data is also better 
+              Story so far
+
+· Gradient descent can be sped up by incremental updates
+· Convergence can be improved using smoothed updates
+
+· The choice of divergence affects both the learned network
+   and results
+
+· Covariate shift between training minibatches may cause
+   problems and may be handled by batch normalization
+
+· Data underspecification can result in overfitted models and
+   must be handled by regularization and more constrained
+   (generally deeper) network architectures
+
+                                                                                                                                                           121
+            Regularization..
+
+· Other techniques have been proposed to
+  improve the smoothness of the learned
+  function
+
+   ­ L1 regularization of network activations
+   ­ Regularizing with added noise..
+
+· Possibly the most influential method has been
+  "dropout"
+
+                                                                                                                                                           122
+      A brief detour.. Bagging
+
+· Popular method proposed by Leo Breiman:
+
+    ­ Sample training data and train several different classifiers
+    ­ Classify test instance with entire ensemble of classifiers
+    ­ Vote across classifiers for final decision
+    ­ Empirically shown to improve significantly over training a single
+
+        classifier from combined data
+
+· Returning to our problem....
+
+                                                                                                                                                           123
+                Dropout
+
+                         Input
+                                                            Output
+
+· During training: For each input, at each iteration,
+  "turn off" each neuron with a probability 1-
+
+                                                                                                                                                           124
+          Dropout
+
+    Input
+
+    Output
+
+X1                 Y1
+
+· During training: For each input, at each iteration,
+  "turn off" each neuron with a probability 1-
+
+    ­ Also turn off inputs similarly
+                                                                                                                                                           125
+          Dropout
+
+    Input
+
+    Output
+
+X1                 Y1
+
+· During training: For each input, at each iteration, "turn off"
+   each neuron (including inputs) with a probability 1-
+
+    ­ In practice, set them to 0 according to the failure of a Bernoulli
+        random number generator with success probability 
+
+                                                                                                                                                           126
+                    Dropout
+
+    Input  Output       Input  Output       Input  Output
+X1              Y1  X2              Y2  X3              Y3
+
+                                                               The pattern of dropped nodes
+                                                               changes for each input
+                                                               i.e. in every pass through the net
+
+· During training: For each input, at each iteration, "turn off"
+   each neuron (including inputs) with a probability 1-
+
+    ­ In practice, set them to 0 according to the failure of a Bernoulli
+        random number generator with success probability 
+
+                                                                                                                                                           127
+                    Dropout
+
+    Input  Output       Input  Output      Input  Output
+X1              Y1  X2              Y2  X3             Y3
+
+                                                               The pattern of dropped nodes
+                                                               changes for each input
+                                                               i.e. in every pass through the net
+
+· During training: Backpropagation is effectively performed only over the remaining
+    network
+
+       ­ The effective network is different for different inputs
+       ­ Gradients are obtained only for the weights and biases from "On" nodes to "On" nodes
+
+                · For the remaining, the gradient is just 0
+
+                                                                                                                                                           128
+    Statistical Interpretation
+
+            Input          Input          Input
+
+    Output         Output         Output         Output
+
+X1  Y1      X1     Y1      X2     Y2      X3                                                                                                                        Y3
+
+    · For a network with a total of N neurons, there are 2N
+       possible sub-networks
+
+        ­ Obtained by choosing different subsets of nodes
+        ­ Dropout samples over all 2N possible networks
+
+        ­ Effectively learns a network that averages over all possible
+           networks
+
+              · Bagging
+
+                                                                                                                                                               129
+ Dropout as a mechanism to increase
+              pattern density
+
+· Dropout forces the neurons to
+   learn "rich" and redundant
+   patterns
+
+· E.g. without dropout, a non-
+   compressive layer may just
+   "clone" its input to its output
+
+     ­ Transferring the task of learning
+        to the rest of the network
+        upstream
+
+· Dropout forces the neurons to
+   learn denser patterns
+
+     ­ With redundancy
+
+                                                                                                                                                           130
+                 The forward pass
+
+· Input: dimensional vector
+
+· Set:      , is the width of the 0th (input) layer
+
+      ­                    ;  ( ...)
+      ­ ()
+
+· For layer
+
+      # Mask takes value 1 with prob. , 0 with prob
+      ­
+
+­( )            ()
+
+­ For               (  )(     ) + ( )
+                    ,
+       · ( ) = 
+
+   · ( ) =  ( )
+
+· Output:
+
+­           ()
+
+                                                     131
+             Backward Pass
+
+· Output layer (N) :
+
+­            ()
+
+­ ()                  ()
+
+· For layer
+
+    ­ For
+
+   · ()
+
+   · ()               ()
+
+   · ()                   for
+
+                               132
+Testing with Dropout
+
+· Dropout effectively trains networks
+· On test data the "Bagged" output, in principle, is the ensemble average over all
+
+    networks and is thus the statistical expectation of the output over all networks
+
+                                                                  ()
+
+­ Explicitly showing the network as a function of the outputs of individual neurons in the net
+
+· We cannot explicitly compute this expectation
+
+· Instead, we will use the following approximation
+
+()                                                  ()
+
+­ Where [( )] is the expected output of the jth neuron in the kth layer over all networks in
+    the ensemble
+
+­ I.e. approximate the expectation of a function as the function of expectations
+
+· We require ( ) to compute this
+
+                                                                                                133
+   What each neuron computes
+
+· Each neuron actually has the following activation:
+
+     ­ Where is a Bernoulli variable that takes a value 1 with probability 
+
+· may be switched on or off for individual sub networks, but over
+   the ensemble, the expected output of the neuron is
+                                
+
+· During test time, we will use the expected output of the neuron
+
+     ­ Consists of simply scaling the output of each neuron by 
+
+                                                                                                                                                           134
+Dropout during test: implementation
+
+    Input             apply  here (to the output of the neuron) OR..
+
+           Output
+
+X1         Y1
+
+                      Push the  to all outgoing weights
+
+                          ()  () ( ) ()
+
+           ()         ()      ( )  ()                    ()
+                      
+
+                               ()  ()                        ()
+
+· Instead of multiplying every output by , multiply
+
+    all weights by                                               135
+Inference with dropout (testing)
+
+· Input: dimensional vector
+
+· Set:        , is the width of the 0th (input) layer
+
+    ­
+
+­                 ;
+
+· For layer
+
+    ­ For
+
+        · ()  () ( ) ()
+              ,
+
+        · ()  ()
+
+· Output:
+
+­
+
+                                                       136
+Dropout : alternate implementation
+
+                                       Input
+
+                    Output
+
+X1                  Y1
+
+· Alternately, during training, replace the activation
+
+of all neurons in the network by 
+
+­ This does not affect the dropout procedure itself
+
+­ We will use as the activation during testing, and not
+
+modify the weights                                   137
+Dropout: Typical results
+
+· From Srivastava et al., 2013. Test error for different
+
+architectures on MNIST with and without dropout
+
+­ 2-4 hidden layers with 1024-2048 units                  138
+        Variations on dropout
+
+· Zoneout: For RNNs
+
+     ­ Randomly chosen units remain unchanged across a time transition
+
+· Dropconnect
+
+     ­ Drop individual connections, instead of nodes
+
+· Shakeout
+
+     ­ Scale up the weights of randomly selected weights
+
+            ·
+
+     ­ Fix remaining weights to a negative constant
+
+            ·
+
+· Whiteout
+
+     ­ Add or multiply weight-dependent Gaussian noise to the signal on
+        each connection
+
+                                                                                                                                                           139
+              Story so far
+
+· Gradient descent can be sped up by incremental updates
+· Convergence can be improved using smoothed updates
+
+· The choice of divergence affects both the learned network and
+   results
+
+· Covariate shift between training minibatches may cause problems
+   and may be handled by batch normalization
+
+· Data underspecification can result in overfitted models and must be
+   handled by regularization and more constrained (generally deeper)
+   network architectures
+
+· "Dropout" is a stochastic data/model erasure method that
+   sometimes forces the network to learn more robust models
+
+                                                                                                                                                           140
+Other heuristics: Early stopping
+
+error  validation
+
+                          training
+
+                                                   epochs
+
+· Continued training can result in over fitting to
+  training data
+
+    ­ Track performance on a held-out validation set
+    ­ Apply one of several early-stopping criterion to
+
+      terminate training when performance on validation
+      set degrades significantly
+
+                                                                                                                                                           141
+    Additional heuristics: Gradient
+                   clipping
+
+                Loss
+
+                                                                                w
+
+· Often the derivative will be too high
+
+    ­ When the divergence has a steep slope
+    ­ This can result in instability
+
+· Gradient clipping: set a ceiling on derivative value
+
+    ­ Typical value is 5
+
+                                                                                                                                                           142
+       Additional heuristics: Data
+              Augmentation
+
+· Available training data will often be small
+· "Extend" it by distorting examples in a variety of
+
+  ways to generate synthetic labelled examples
+
+    ­ E.g. rotation, stretching, adding noise, other distortion
+
+                                                                                                                                                           143
+              Other tricks
+
+· Normalize the input:
+
+    ­ Normalize entire training data to make it 0 mean, unit
+       variance
+
+    ­ Equivalent of batch norm on input
+
+· A variety of other tricks are applied
+
+    ­ Initialization techniques
+
+          · Xavier, Kaiming, SVD, etc.
+          · Key point: neurons with identical connections that are identically
+
+             initialized will never diverge
+
+    ­ Practice makes man perfect
+
+                                                                                                                                                           144
+        Setting up a problem
+
+· Obtain training data
+
+       ­ Use appropriate representation for inputs and outputs
+
+· Choose network architecture
+
+       ­ More neurons need more data
+       ­ Deep is better, but harder to train
+
+· Choose the appropriate divergence function
+
+       ­ Choose regularization
+
+· Choose heuristics (batch norm, dropout, etc.)
+· Choose optimization algorithm
+
+       ­ E.g. ADAM
+
+· Perform a grid search for hyper parameters (learning rate, regularization
+    parameter, ...) on held-out data
+
+· Train
+
+       ­ Evaluate periodically on validation data, for early stopping if required
+
+                                                                                                                                                           145
+               In closing
+
+· Have outlined the process of training neural
+  networks
+
+   ­ Some history
+   ­ A variety of algorithms
+   ­ Gradient-descent based techniques
+   ­ Regularization for generalization
+   ­ Algorithms for convergence
+   ­ Heuristics
+
+· Practice makes perfect..
+
+                                                                                                                                                           146
+
